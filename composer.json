@@ -1,0 +1,20 @@
+{
+    "name": "bizurkur/bitty",
+    "description": "A tiny and simple MVC framework. No fuss, no muss, no coconuts.",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Bizurkur",
+            "email": "bitty@bizurkur.com"
+        }
+    ],
+    "require": {},
+    "autoload":
+    {
+        "psr-4":
+        {
+            "Bizurkur\\Bitty\\" : "src/"
+        }
+    }
+}
