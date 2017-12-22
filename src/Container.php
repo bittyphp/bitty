@@ -40,35 +40,37 @@ class Container implements ContainerInterface
     }
 
     /**
-     * Sets a single parameter value.
-     *
-     * @param string $id ID of parameter.
-     * @param mixed $value Value to set.
+     * {@inheritDoc}
      */
-    public function setParameter($id, $value)
+    public function setParameter($name, $value)
     {
-        $this->parameters[$id] = $value;
+        $this->parameters[$name] = $value;
     }
 
     /**
      * {@inheritDoc}
      */
-    public function getParameter($id)
+    public function hasParameter($name)
     {
-        if (!isset($this->parameters[$id])) {
-            throw new NotFoundException(
-                sprintf('Parameter "%s" does not exist.', $id)
-            );
-        }
-
-        return $this->parameters[$id];
+        return isset($this->parameters[$name]);
     }
 
     /**
-     * Sets an instantiated service.
-     *
-     * @param string $id ID of service.
-     * @param object $object Object to add to the cache.
+     * {@inheritDoc}
+     */
+    public function getParameter($name)
+    {
+        if (!isset($this->parameters[$name])) {
+            throw new NotFoundException(
+                sprintf('Parameter "%s" does not exist.', $name)
+            );
+        }
+
+        return $this->parameters[$name];
+    }
+
+    /**
+     * {@inheritDoc}
      */
     public function set($id, $object)
     {
