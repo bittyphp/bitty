@@ -86,22 +86,22 @@ class Uri implements UriInterface
      */
     public function __construct(
         $scheme = '',
-        $user = '',
-        $pass = '',
         $host = '',
         $port = 0,
         $path = '',
         $query = '',
-        $fragment = ''
+        $fragment = '',
+        $user = '',
+        $pass = ''
     ) {
         $this->scheme = $this->filterScheme($scheme);
-        $this->user = (string) $user;
-        $this->pass = (string) $pass;
         $this->host = $this->filterHost($host);
         $this->port = $this->filterPort($port);
         $this->path = $this->filterPath($path);
         $this->query = $this->filterQuery($query);
         $this->fragment = $this->filterFragment($fragment);
+        $this->user = (string) $user;
+        $this->pass = (string) $pass;
     }
 
     /**
@@ -134,13 +134,13 @@ class Uri implements UriInterface
     {
         return new static(
             isset($data['scheme']) ? $data['scheme'] : '',
-            isset($data['user']) ? $data['user'] : '',
-            isset($data['pass']) ? $data['pass'] : '',
             isset($data['host']) ? $data['host'] : '',
             isset($data['port']) ? $data['port'] : '',
             isset($data['path']) ? $data['path'] : '',
             isset($data['query']) ? $data['query'] : '',
-            isset($data['fragment']) ? $data['fragment'] : ''
+            isset($data['fragment']) ? $data['fragment'] : '',
+            isset($data['user']) ? $data['user'] : '',
+            isset($data['pass']) ? $data['pass'] : ''
         );
     }
 
@@ -185,7 +185,7 @@ class Uri implements UriInterface
             $query = parse_url($params->get('REQUEST_URI', ''), PHP_URL_QUERY);
         }
 
-        return new static($scheme, $user, $pass, $host, $port, $path, $query);
+        return new static($scheme, $host, $port, $path, $query, '', $user, $pass);
     }
 
     /**
