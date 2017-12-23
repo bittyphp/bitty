@@ -23,7 +23,6 @@ class Stream implements StreamInterface
         } elseif (is_string($stream)) {
             $this->stream = fopen('php://temp', 'w+');
             fwrite($this->stream, $stream);
-            rewind($this->stream);
         } else {
             throw new \InvalidArgumentException(
                 sprintf(
@@ -33,6 +32,8 @@ class Stream implements StreamInterface
                 )
             );
         }
+
+        rewind($this->stream);
     }
 
     /**
@@ -226,7 +227,7 @@ class Stream implements StreamInterface
             return $metadata;
         }
 
-        if (array_key_exists($key, $metadata)) {
+        if (isset($metadata[$key]) || array_key_exists($key, $metadata)) {
             return $metadata[$key];
         }
 
