@@ -106,15 +106,17 @@ class Response extends AbstractMessage implements ResponseInterface
 
     /**
      * @param StreamInterface|string $body
-     * @param string[] $headers
      * @param int $statusCode
+     * @param string[] $headers
+     * @param Cookie[] $cookies
      * @param string $reasonPhrase
      * @param string $protocolVersion
      */
     public function __construct(
         $body = '',
-        $headers = [],
         $statusCode = 200,
+        $headers = [],
+        $cookies = [],
         $reasonPhrase = '',
         $protocolVersion = '1.0'
     ) {
@@ -122,6 +124,22 @@ class Response extends AbstractMessage implements ResponseInterface
             $this->body = $body;
         } else {
             $this->body = new Stream($body);
+        }
+
+        $this->cookies = [];
+        foreach ($cookies as $cookie) {
+            if ($cookie instanceof Cookie) {
+                $name = $cookie->getName();
+                $this->cookies[$name] = $cookie;
+            } else {
+                throw new \InvalidArgumentException(
+                    sprintf(
+                        'Cookie must be an instance of "%s"; %s given.',
+                        Cookie::class,
+                        gettype($cookie)
+                    )
+                );
+            }
         }
 
         $this->headers = [];
@@ -173,88 +191,86 @@ class Response extends AbstractMessage implements ResponseInterface
     }
 
     /**
-     * Sets the list of cookies.
-     *
-     * @param Cookie[] $cookies
-     */
-    public function setCookies(array $cookies)
-    {
-        $this->cookies = [];
-        foreach ($cookies as $cookie) {
-            $this->addCookie($cookie);
-        }
-    }
-
-    /**
      * Gets the list of cookies.
      *
-     * @return Cookie[]
+     * @return string[]
      */
     public function getCookies()
     {
-        return $this->cookies;
+        $cookies = [];
+        foreach ($this->cookies as $name => $cookie) {
+            $cookies[$name] = (string) $cookie;
+        }
+
+        return $cookies;
     }
 
     /**
      * Checks if a cookie has been set.
      *
-     * @param Cookie|string $cookie
+     * @param string $name
      *
      * @return bool
      */
-    public function hasCookie($cookie)
+    public function hasCookie($name)
     {
-        if ($cookie instanceof Cookie) {
-            $cookie = $cookie->getName();
-        }
-
-        return isset($this->cookies[$cookie]);
-    }
-
-    /**
-     * Adds a cookie.
-     *
-     * @param Cookie $cookie
-     */
-    public function addCookie(Cookie $cookie)
-    {
-        $this->cookies[$cookie->getName()] = $cookie;
-    }
-
-    /**
-     * Removes a cookie.
-     *
-     * @param Cookie|string $cookie
-     */
-    public function removeCookie($cookie)
-    {
-        if ($cookie instanceof Cookie) {
-            $cookie = $cookie->getName();
-        }
-
-        if (isset($this->cookies[$cookie])) {
-            unset($this->cookies[$cookie]);
-        }
+        return isset($this->cookies[$name]);
     }
 
     /**
      * Gets a cookie, if it exists.
      *
-     * @param Cookie|string $cookie
+     * @param string $name
      *
-     * @return Cookie|null
+     * @return string|null
      */
-    public function getCookie($cookie)
+    public function getCookie($name)
     {
-        if ($cookie instanceof Cookie) {
-            $cookie = $cookie->getName();
-        }
-
-        if (!isset($this->cookies[$cookie])) {
+        if (!isset($this->cookies[$name])) {
             return null;
         }
 
-        return $this->cookies[$cookie];
+        return (string) $this->cookies[$name];
+    }
+
+    /**
+     * Builds a new response, adding the given cookie.
+     *
+     * @param Cookie $cookie
+     *
+     * @return static
+     */
+    public function withCookie(Cookie $cookie)
+    {
+        $cookies = [];
+        foreach ($this->cookies as $name => $originalCookie) {
+            $cookies[$name] = clone $originalCookie;
+        }
+
+        $cookies[$cookie->getName()] = $cookie;
+
+        return $this->createFromArray(['cookies' => $cookies]);
+    }
+
+    /**
+     * Builds a new response, removing the given cookie.
+     *
+     * @param string $cookie
+     *
+     * @return static
+     */
+    public function withoutCookie($name)
+    {
+        $cookies = [];
+        foreach ($this->cookies as $key => $cookie) {
+            if (0 === strcasecmp($key, $name)) {
+                continue;
+            }
+
+            $cookies[$name] = clone $cookie;
+        }
+
+        return $this->createFromArray(['cookies' => $cookies]);
     }
 
     /**
@@ -341,6 +357,7 @@ class Response extends AbstractMessage implements ResponseInterface
         $data += [
             'body' => $this->body,
             'headers' => $this->headers,
+            'cookies' => $this->cookies,
             'statusCode' => $this->statusCode,
             'reasonPhrase' => $this->reasonPhrase,
             'protocolVersion' => $this->protocolVersion,
@@ -348,8 +365,9 @@ class Response extends AbstractMessage implements ResponseInterface
 
         return new static(
             $data['body'],
-            $data['headers'],
             $data['statusCode'],
+            $data['headers'],
+            $data['cookies'],
             $data['reasonPhrase'],
             $data['protocolVersion']
         );

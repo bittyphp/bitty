@@ -58,7 +58,7 @@ class Cookie
      *
      * @var bool
      */
-    protected $raw = false;
+    protected $raw = null;
 
     /**
      * @param string $name The cookie name.
@@ -66,8 +66,9 @@ class Cookie
      * @param int $expire The cookie expiration time.
      * @param string $path The cookie URI path.
      * @param string $domain The cookie domain.
-     * @param bool $secure The cookie is for HTTPS or not.
+     * @param bool $secure Whether the cookie is for HTTPS or not.
      * @param bool $httpOnly Disallow script access or not.
+     * @param bool $raw Whether or not the cookie should be written raw.
      */
     public function __construct(
         $name,
@@ -76,15 +77,55 @@ class Cookie
         $path = '',
         $domain = '',
         $secure = false,
-        $httpOnly = true
+        $httpOnly = true,
+        $raw = false
     ) {
-        $this->name = $name;
-        $this->value = $value;
-        $this->path = $path;
-        $this->domain = $domain;
-        $this->secure = $secure;
-        $this->httpOnly = $httpOnly;
-        $this->expire = $expire;
+        $this->name = (string) $name;
+        $this->value = (string) $value;
+        $this->path = (string) $path;
+        $this->domain = (string) $domain;
+        $this->secure = (bool) $secure;
+        $this->httpOnly = (bool) $httpOnly;
+        $this->expire = (int) $expire;
+        $this->raw = (bool) $raw;
+    }
+
+    /**
+     * Converts the cookie to a printable string.
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        $name = $this->raw ? $this->name : rawurlencode($this->name);
+        $parts = [];
+
+        if ($this->value) {
+            $parts[] = $this->raw ? $this->value : rawurlencode($this->value);
+            if (0 !== $this->expire) {
+                $parts[] = 'expires='.gmdate('D, d-M-Y H:i:s T', $this->expire);
+            }
+        } else {
+            $parts[] = 'deleted; expires=Thu, 01-Jan-1970 00:00:00 GMT';
+        }
+
+        if ($this->path) {
+            $parts[] = 'path='.$this->path;
+        }
+
+        if ($this->domain) {
+            $parts[] = 'domain='.$this->domain;
+        }
+
+        if ($this->secure) {
+            $parts[] = 'secure';
+        }
+
+        if ($this->httpOnly) {
+            $parts[] = 'httponly';
+        }
+
+        return $name.'='.implode('; ', $parts);
     }
 
     /**
