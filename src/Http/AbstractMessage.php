@@ -2,6 +2,7 @@
 
 namespace Bizurkur\Bitty\Http;
 
+use Bizurkur\Bitty\Http\Stream;
 use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\StreamInterface;
 
@@ -19,14 +20,28 @@ abstract class AbstractMessage implements MessageInterface
      *
      * @var string[]
      */
-    protected $headers = null;
+    protected $headers = [];
 
     /**
      * HTTP protocol version.
      *
      * @var string
      */
-    protected $protocolVersion = null;
+    protected $protocolVersion = '1.1';
+
+    /**
+     * List of valid HTTP protocol versions.
+     *
+     * Updated 2017-12-23
+     *
+     * @var string[]
+     */
+    protected $validProtocolVersions = [
+        '1.0',
+        '1.1',
+        '2.0',
+        '2',
+    ];
 
     /**
      * {@inheritDoc}
@@ -41,7 +56,10 @@ abstract class AbstractMessage implements MessageInterface
      */
     public function withProtocolVersion($version)
     {
-        return $this->createFromArray(['protocolVersion' => $version]);
+        $message = clone $this;
+        $message->protocolVersion = $this->filterProtocolVersion($version);
+
+        return $message;
     }
 
     /**
@@ -106,7 +124,10 @@ abstract class AbstractMessage implements MessageInterface
 
         $headers[$name] = $value;
 
-        return $this->createFromArray(['headers' => $headers]);
+        $message = clone $this;
+        $message->headers = $this->filterHeaders($headers);
+
+        return $message;
     }
 
     /**
@@ -131,7 +152,10 @@ abstract class AbstractMessage implements MessageInterface
             $headers[$name] = $value;
         }
 
-        return $this->createFromArray(['headers' => $headers]);
+        $message = clone $this;
+        $message->headers = $this->filterHeaders($headers);
+
+        return $message;
     }
 
     /**
@@ -148,7 +172,10 @@ abstract class AbstractMessage implements MessageInterface
             $headers[$header] = $values;
         }
 
-        return $this->createFromArray(['headers' => $headers]);
+        $message = clone $this;
+        $message->headers = $this->filterHeaders($headers);
+
+        return $message;
     }
 
     /**
@@ -164,7 +191,69 @@ abstract class AbstractMessage implements MessageInterface
      */
     public function withBody(StreamInterface $body)
     {
-        return $this->createFromArray(['body' => $body]);
+        $message = clone $this;
+        $message->body = $this->filterBody($body);
+
+        return $message;
+    }
+
+    /**
+     * Filters body content to make sure it's valid.
+     *
+     * @param StreamInterface|resource|string $body
+     *
+     * @return string
+     */
+    protected function filterBody($body)
+    {
+        if ($body instanceof StreamInterface) {
+            return $body;
+        }
+
+        return new Stream($body);
+    }
+
+    /**
+     * Filters headers to make sure they're valid.
+     *
+     * @param string[] $headers
+     *
+     * @return string[]
+     *
+     * @throws \InvalidArgumentException
+     */
+    protected function filterHeaders(array $headers)
+    {
+        foreach ($headers as $header => $values) {
+            $this->validateHeader($header, $values);
+            $headers[$header] = (array) $values;
+        }
+
+        return $headers;
+    }
+
+    /**
+     * Filters protocol version to make sure it's valid.
+     *
+     * @param string $protocolVersion
+     *
+     * @return string
+     *
+     * @throws \InvalidArgumentException
+     */
+    protected function filterProtocolVersion($protocolVersion)
+    {
+        if (!in_array($protocolVersion, $this->validProtocolVersions)) {
+            throw new \InvalidArgumentException(
+                sprintf(
+                    'Invalid protocol version "%s". Valid versions are: ["%s"]',
+                    $protocolVersion,
+                    implode('", "', $this->validProtocolVersions)
+                )
+            );
+        }
+
+        return $protocolVersion;
     }
 
     /**
@@ -204,13 +293,4 @@ abstract class AbstractMessage implements MessageInterface
             );
         }
     }
-
-    /**
-     * Creates a new message from an array.
-     *
-     * @param mixed[] $data
-     *
-     * @return static
-     */
-    abstract protected function createFromArray(array $data);
 }

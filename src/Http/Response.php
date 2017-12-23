@@ -3,7 +3,6 @@
 namespace Bizurkur\Bitty\Http;
 
 use Bizurkur\Bitty\Http\AbstractMessage;
-use Bizurkur\Bitty\Http\Cookie;
 use Bizurkur\Bitty\Http\Stream;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
@@ -19,7 +18,7 @@ class Response extends AbstractMessage implements ResponseInterface
      *
      * @var string[]
      */
-    protected $statusCodeList = [
+    protected $validStatusCodes = [
         100 => 'Continue',
         101 => 'Switching Protocols',
         102 => 'Processing',
@@ -98,69 +97,35 @@ class Response extends AbstractMessage implements ResponseInterface
     protected $reasonPhrase = null;
 
     /**
-     * Array of cookies to set.
-     *
-     * @var Cookie[]
-     */
-    protected $cookies = [];
-
-    /**
-     * @param StreamInterface|string $body
+     * @param StreamInterface|resource|string $body
      * @param int $statusCode
      * @param string[] $headers
-     * @param Cookie[] $cookies
-     * @param string $reasonPhrase
-     * @param string $protocolVersion
      */
     public function __construct(
         $body = '',
         $statusCode = 200,
-        $headers = [],
-        $cookies = [],
-        $reasonPhrase = '',
-        $protocolVersion = '1.0'
+        $headers = []
     ) {
-        if ($body instanceof StreamInterface) {
-            $this->body = $body;
-        } else {
-            $this->body = new Stream($body);
-        }
+        $this->body = $this->filterBody($body);
+        $this->headers = $this->filterHeaders($headers);
+        $this->statusCode = $this->filterStatusCode($statusCode);
+        $this->reasonPhrase = $this->filterReasonPhrase('');
+    }
 
-        $this->cookies = [];
-        foreach ($cookies as $cookie) {
-            if ($cookie instanceof Cookie) {
-                $name = $cookie->getName();
-                $this->cookies[$name] = $cookie;
-            } else {
-                throw new \InvalidArgumentException(
-                    sprintf(
-                        'Cookie must be an instance of "%s"; %s given.',
-                        Cookie::class,
-                        gettype($cookie)
-                    )
-                );
-            }
-        }
-
-        $this->headers = [];
-        foreach ($headers as $header => $values) {
-            $this->validateHeader($header, $values);
-            $this->headers[$header] = (array) $values;
-        }
-
-        if (!isset($this->statusCodeList[$statusCode])) {
-            throw new \InvalidArgumentException(
-                sprintf('Unknown HTTP status code "%s"', $statusCode)
-            );
-        }
-
-        if (empty($reasonPhrase)) {
-            $reasonPhrase = $this->statusCodeList[$statusCode];
-        }
-
-        $this->statusCode = $statusCode;
-        $this->reasonPhrase = $reasonPhrase;
-        $this->protocolVersion = $protocolVersion;
+    /**
+     * Creates a new response from an array.
+     *
+     * @param array $data
+     *
+     * @return static
+     */
+    public static function createFromArray(array $data)
+    {
+        return new static(
+            isset($data['body']) ? $data['body'] : '',
+            isset($data['statusCode']) ? $data['statusCode'] : 200,
+            isset($data['headers']) ? $data['headers'] : []
+        );
     }
 
     /**
@@ -174,103 +139,21 @@ class Response extends AbstractMessage implements ResponseInterface
     /**
      * {@inheritDoc}
      */
-    public function withStatus($code, $reasonPhrase = '')
-    {
-        return $this->createFromArray([
-            'statusCode' => $code,
-            'reasonPhrase' => $reasonPhrase,
-        ]);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     public function getReasonPhrase()
     {
         return $this->reasonPhrase;
     }
 
     /**
-     * Gets the list of cookies.
-     *
-     * @return string[]
+     * {@inheritDoc}
      */
-    public function getCookies()
+    public function withStatus($code, $reasonPhrase = '')
     {
-        $cookies = [];
-        foreach ($this->cookies as $name => $cookie) {
-            $cookies[$name] = (string) $cookie;
-        }
+        $message = clone $this;
+        $message->statusCode = $this->filterStatusCode($code);
+        $message->reasonPhrase = $this->filterReasonPhrase($reasonPhrase, $message->statusCode);
 
-        return $cookies;
-    }
-
-    /**
-     * Checks if a cookie has been set.
-     *
-     * @param string $name
-     *
-     * @return bool
-     */
-    public function hasCookie($name)
-    {
-        return isset($this->cookies[$name]);
-    }
-
-    /**
-     * Gets a cookie, if it exists.
-     *
-     * @param string $name
-     *
-     * @return string|null
-     */
-    public function getCookie($name)
-    {
-        if (!isset($this->cookies[$name])) {
-            return null;
-        }
-
-        return (string) $this->cookies[$name];
-    }
-
-    /**
-     * Builds a new response, adding the given cookie.
-     *
-     * @param Cookie $cookie
-     *
-     * @return static
-     */
-    public function withCookie(Cookie $cookie)
-    {
-        $cookies = [];
-        foreach ($this->cookies as $name => $originalCookie) {
-            $cookies[$name] = clone $originalCookie;
-        }
-
-        $cookies[$cookie->getName()] = $cookie;
-
-        return $this->createFromArray(['cookies' => $cookies]);
-    }
-
-    /**
-     * Builds a new response, removing the given cookie.
-     *
-     * @param string $cookie
-     *
-     * @return static
-     */
-    public function withoutCookie($name)
-    {
-        $cookies = [];
-        foreach ($this->cookies as $key => $cookie) {
-            if (0 === strcasecmp($key, $name)) {
-                continue;
-            }
-
-            $cookies[$name] = clone $cookie;
-        }
-
-        return $this->createFromArray(['cookies' => $cookies]);
+        return $message;
     }
 
     /**
@@ -299,29 +182,30 @@ class Response extends AbstractMessage implements ResponseInterface
             }
         }
 
-        foreach ($this->cookies as $cookie) {
-            if ($cookie->isRaw()) {
-                setrawcookie(
-                    $cookie->getName(),
-                    $cookie->getValue(),
-                    $cookie->getExpires(),
-                    $cookie->getPath(),
-                    $cookie->getDomain(),
-                    $cookie->getSecure(),
-                    $cookie->getHttpOnly()
-                );
-            } else {
-                setcookie(
-                    $cookie->getName(),
-                    $cookie->getValue(),
-                    $cookie->getExpires(),
-                    $cookie->getPath(),
-                    $cookie->getDomain(),
-                    $cookie->getSecure(),
-                    $cookie->getHttpOnly()
-                );
-            }
-        }
+        // TODO: Update this.
+        // foreach ($this->cookies as $cookie) {
+        //     if ($cookie->isRaw()) {
+        //         setrawcookie(
+        //             $cookie->getName(),
+        //             $cookie->getValue(),
+        //             $cookie->getExpires(),
+        //             $cookie->getPath(),
+        //             $cookie->getDomain(),
+        //             $cookie->getSecure(),
+        //             $cookie->getHttpOnly()
+        //         );
+        //     } else {
+        //         setcookie(
+        //             $cookie->getName(),
+        //             $cookie->getValue(),
+        //             $cookie->getExpires(),
+        //             $cookie->getPath(),
+        //             $cookie->getDomain(),
+        //             $cookie->getSecure(),
+        //             $cookie->getHttpOnly()
+        //         );
+        //     }
+        // }
     }
 
     /**
@@ -346,26 +230,41 @@ class Response extends AbstractMessage implements ResponseInterface
     }
 
     /**
-     * {@inheritDoc}
+     * Filters a status code to make sure it's valid.
+     *
+     * @param int $statusCode
+     *
+     * @return int
      */
-    protected function createFromArray(array $data)
+    protected function filterStatusCode($statusCode)
     {
-        $data += [
-            'body' => clone $this->body,
-            'headers' => $this->headers,
-            'cookies' => clone $this->cookies,
-            'statusCode' => $this->statusCode,
-            'reasonPhrase' => $this->reasonPhrase,
-            'protocolVersion' => $this->protocolVersion,
-        ];
+        if (!isset($this->validStatusCodes[(int) $statusCode])) {
+            throw new \InvalidArgumentException(
+                sprintf('Unknown HTTP status code "%s"', $statusCode)
+            );
+        }
 
-        return new static(
-            $data['body'],
-            $data['statusCode'],
-            $data['headers'],
-            $data['cookies'],
-            $data['reasonPhrase'],
-            $data['protocolVersion']
-        );
+        return (int) $statusCode;
+    }
+
+    /**
+     * Filters a reason phrase to make sure it's valid.
+     *
+     * @param string $reasonPhrase
+     * @param int|null $statusCode
+     *
+     * @return string
+     */
+    protected function filterReasonPhrase($reasonPhrase, $statusCode = null)
+    {
+        if (null === $statusCode) {
+            $statusCode = $this->statusCode;
+        }
+
+        if (empty($reasonPhrase) && !empty($statusCode)) {
+            return $this->validStatusCodes[$statusCode];
+        }
+
+        return (string) $reasonPhrase;
     }
 }
