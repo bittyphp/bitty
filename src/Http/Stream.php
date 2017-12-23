@@ -62,10 +62,11 @@ class Stream implements StreamInterface
      */
     public function detach()
     {
-        // TODO: detach?
-        fclose($this->stream);
+        $stream = $this->stream;
 
-        return $this->stream;
+        $this->stream = null;
+
+        return $stream;
     }
 
     /**
