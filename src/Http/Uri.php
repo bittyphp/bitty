@@ -2,6 +2,7 @@
 
 namespace Bizurkur\Bitty\Http;
 
+use Bizurkur\Bitty\Http\Parameters;
 use Psr\Http\Message\UriInterface;
 
 class Uri implements UriInterface
@@ -141,6 +142,50 @@ class Uri implements UriInterface
             isset($data['query']) ? $data['query'] : '',
             isset($data['fragment']) ? $data['fragment'] : ''
         );
+    }
+
+    /**
+     * Creates a new URI from parameters.
+     *
+     * The parameters are expected to have the same keys as $_SERVER would.
+     *
+     * @param Parameters $params
+     *
+     * @return static
+     */
+    public static function createFromParameters(Parameters $params)
+    {
+        $scheme = 'http';
+        $isHttps = $params->get('HTTPS');
+        if (!empty($isHttps) && 'off' !== strtolower($isHttps)) {
+            $scheme = 'https';
+        }
+
+        $user = $params->get('PHP_AUTH_USER', '');
+        $pass = $params->get('PHP_AUTH_PW', '');
+        $port = $params->get('SERVER_PORT');
+
+        if ($params->has('HTTP_HOST')) {
+            $host = $params->get('HTTP_HOST');
+            if (false !== ($pos = strrpos($host, ':'))) {
+                $port = substr($host, $pos + 1);
+                $host = substr($host, 0, $pos);
+            }
+        } else {
+            $host = $params->get('SERVER_NAME');
+        }
+
+        $path = parse_url($params->get('REQUEST_URI', ''), PHP_URL_PATH);
+        if (empty($path)) {
+            $path = $params->get('PATH_INFO');
+        }
+
+        $query = $params->get('QUERY_STRING', '');
+        if (empty($query)) {
+            $query = parse_url($params->get('REQUEST_URI', ''), PHP_URL_QUERY);
+        }
+
+        return new static($scheme, $user, $pass, $host, $port, $path, $query);
     }
 
     /**
