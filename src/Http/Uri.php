@@ -77,12 +77,12 @@ class Uri implements UriInterface
     /**
      * @param string $scheme
      * @param string $user
-     * @param string $pass
-     * @param string $host
      * @param int $port
      * @param string $path
      * @param string $query
      * @param string $fragment
+     * @param string $pass
+     * @param string $host
      */
     public function __construct(
         $scheme = '',
