@@ -346,18 +346,14 @@ class Response extends AbstractMessage implements ResponseInterface
     }
 
     /**
-     * Creates a new response from an array.
-     *
-     * @param mixed[] $data
-     *
-     * @return static
+     * {@inheritDoc}
      */
     protected function createFromArray(array $data)
     {
         $data += [
-            'body' => $this->body,
+            'body' => clone $this->body,
             'headers' => $this->headers,
-            'cookies' => $this->cookies,
+            'cookies' => clone $this->cookies,
             'statusCode' => $this->statusCode,
             'reasonPhrase' => $this->reasonPhrase,
             'protocolVersion' => $this->protocolVersion,
