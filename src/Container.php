@@ -98,6 +98,10 @@ class Container implements ContainerInterface
             return $this;
         }
 
+        if (isset($this->cache[$id])) {
+            return $this->cache[$id];
+        }
+
         if (!isset($this->services[$id])) {
             throw new NotFoundException(
                 sprintf('Service "%s" does not exist.', $id)
@@ -159,7 +163,7 @@ class Container implements ContainerInterface
         }
 
         if (empty($args)) {
-            $service = new $class;
+            $service = new $class();
         } else {
             ksort($args);
             $reflection = new \ReflectionClass($class);
