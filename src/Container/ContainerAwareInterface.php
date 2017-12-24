@@ -2,21 +2,21 @@
 
 namespace Bizurkur\Bitty\Container;
 
-use Bizurkur\Bitty\Container;
+use Bizurkur\Bitty\ContainerInterface;
 
 interface ContainerAwareInterface
 {
     /**
      * Sets the container.
      *
-     * @param Container $container
+     * @param ContainerInterface $container
      */
-    public function setContainer(Container $container);
+    public function setContainer(ContainerInterface $container);
 
     /**
      * Gets the container.
      *
-     * @return Container
+     * @return ContainerInterface
      */
     public function getContainer();
 }
