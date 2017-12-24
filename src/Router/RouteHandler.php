@@ -34,7 +34,7 @@ class RouteHandler implements RouteHandlerInterface, ContainerAwareInterface
      */
     public function handle(ServerRequestInterface $request)
     {
-        $path = $request->getUri()->getPath();
+        $path = '/'.ltrim($request->getUri()->getPath(), '/');
         $method = $request->getMethod();
 
         $route = $this->router->find($path, $method);
