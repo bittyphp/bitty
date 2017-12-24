@@ -1,6 +1,6 @@
 <?php
 
-namespace Bizurkur\Bitty\Container;
+namespace Bizurkur\Bitty\Container\Exception;
 
 use Psr\Container\ContainerExceptionInterface;
 

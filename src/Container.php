@@ -2,8 +2,8 @@
 
 namespace Bizurkur\Bitty;
 
-use Bizurkur\Bitty\Container\ContainerException;
-use Bizurkur\Bitty\Container\NotFoundException;
+use Bizurkur\Bitty\Container\Exception\ContainerException;
+use Bizurkur\Bitty\Container\Exception\NotFoundException;
 use Bizurkur\Bitty\ContainerInterface;
 
 class Container implements ContainerInterface
