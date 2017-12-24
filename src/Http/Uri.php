@@ -2,7 +2,7 @@
 
 namespace Bizurkur\Bitty\Http;
 
-use Bizurkur\Bitty\Http\Parameters;
+use Bizurkur\Bitty\CollectionInterface;
 use Psr\Http\Message\UriInterface;
 
 class Uri implements UriInterface
@@ -145,44 +145,44 @@ class Uri implements UriInterface
     }
 
     /**
-     * Creates a new URI from parameters.
+     * Creates a new URI from environment data.
      *
-     * The parameters are expected to have the same keys as $_SERVER would.
+     * The data is expected to have the same keys as $_SERVER would.
      *
-     * @param Parameters $params
+     * @param CollectionInterface $env
      *
      * @return static
      */
-    public static function createFromParameters(Parameters $params)
+    public static function createFromEnvironment(CollectionInterface $env)
     {
         $scheme = 'http';
-        $isHttps = $params->get('HTTPS');
+        $isHttps = $env->get('HTTPS');
         if (!empty($isHttps) && 'off' !== strtolower($isHttps)) {
             $scheme = 'https';
         }
 
-        $user = $params->get('PHP_AUTH_USER', '');
-        $pass = $params->get('PHP_AUTH_PW', '');
-        $port = $params->get('SERVER_PORT');
+        $user = $env->get('PHP_AUTH_USER', '');
+        $pass = $env->get('PHP_AUTH_PW', '');
+        $port = $env->get('SERVER_PORT');
 
-        if ($params->has('HTTP_HOST')) {
-            $host = $params->get('HTTP_HOST');
+        if ($env->has('HTTP_HOST')) {
+            $host = $env->get('HTTP_HOST');
             if (false !== ($pos = strrpos($host, ':'))) {
                 $port = substr($host, $pos + 1);
                 $host = substr($host, 0, $pos);
             }
         } else {
-            $host = $params->get('SERVER_NAME');
+            $host = $env->get('SERVER_NAME');
         }
 
-        $path = parse_url($params->get('REQUEST_URI', ''), PHP_URL_PATH);
+        $path = parse_url($env->get('REQUEST_URI', ''), PHP_URL_PATH);
         if (empty($path)) {
-            $path = $params->get('PATH_INFO');
+            $path = $env->get('PATH_INFO');
         }
 
-        $query = $params->get('QUERY_STRING', '');
+        $query = $env->get('QUERY_STRING', '');
         if (empty($query)) {
-            $query = parse_url($params->get('REQUEST_URI', ''), PHP_URL_QUERY);
+            $query = parse_url($env->get('REQUEST_URI', ''), PHP_URL_QUERY);
         }
 
         return new static($scheme, $host, $port, $path, $query, '', $user, $pass);
@@ -205,11 +205,7 @@ class Uri implements UriInterface
             $string .= '//'.$authority;
         }
 
-        $string .= '/'.ltrim($this->getPath(), '/');
-
-        if (!empty($this->query)) {
-            $string .= '?'.$this->query;
-        }
+        $string .= $this->getRequestTarget();
 
         if (!empty($this->fragment)) {
             $string .= '#'.$this->fragment;
@@ -244,6 +240,8 @@ class Uri implements UriInterface
 
         if (!empty($this->host)) {
             $string .= $this->host;
+        } elseif ('http' === $this->scheme || 'https' === $this->scheme) {
+            $string .= 'localhost';
         }
 
         $port = $this->getPort();
@@ -335,6 +333,48 @@ class Uri implements UriInterface
         }
 
         return $this->fragment;
+    }
+
+    /**
+     * Gets the request target.
+     *
+     * This is the path and query string combined.
+     *
+     * @return string
+     */
+    public function getRequestTarget()
+    {
+        $string = '/'.ltrim($this->getPath(), '/');
+
+        if (!empty($this->query)) {
+            $string .= '?'.$this->query;
+        }
+
+        return $string;
+    }
+
+    /**
+     * Sets the request target.
+     *
+     * This is the path and query string combined.
+     *
+     * @param string $requestTarget
+     *
+     * @return static
+     */
+    public function withRequestTarget($requestTarget)
+    {
+        if ($this->getRequestTarget() === $requestTarget) {
+            return $this;
+        }
+
+        $tmp = static::createFromString($requestTarget);
+
+        $uri = clone $this;
+        $uri->path = $this->filterPath($tmp->getPath());
+        $uri->query = $this->filterQuery($tmp->getQuery());
+
+        return $uri;
     }
 
     /**
