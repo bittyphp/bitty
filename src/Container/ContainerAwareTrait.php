@@ -3,9 +3,8 @@
 namespace Bizurkur\Bitty\Container;
 
 use Bizurkur\Bitty\ContainerInterface;
-use Bizurkur\Bitty\Container\ContainerAwareInterface;
 
-abstract class AbstractContainerAware implements ContainerAwareInterface
+trait ContainerAwareTrait
 {
     /**
      * @var ContainerInterface
