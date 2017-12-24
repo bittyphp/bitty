@@ -388,12 +388,7 @@ class Request extends AbstractMessage implements ServerRequestInterface
      */
     public function getUploadedFiles()
     {
-        $files = [];
-        foreach ($this->files->all() as $file) {
-            $files[] = clone $file;
-        }
-
-        return $files;
+        return $this->files->all();
     }
 
     /**
