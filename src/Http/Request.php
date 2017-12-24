@@ -109,7 +109,7 @@ class Request extends AbstractMessage implements ServerRequestInterface
     /**
      * List of callables to parse different content types.
      *
-     * @var callable[]
+     * @var callback[]
      */
     protected $contentTypeParsers = [];
 
@@ -459,7 +459,7 @@ class Request extends AbstractMessage implements ServerRequestInterface
      * Registers a callback to parse the specific content type.
      *
      * @param string $contentType
-     * @param callable $callback
+     * @param callback $callback
      */
     public function registerContentTypeParser($contentType, $callback)
     {
