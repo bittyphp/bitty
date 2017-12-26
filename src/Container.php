@@ -3,7 +3,6 @@
 namespace Bizurkur\Bitty;
 
 use Bizurkur\Bitty\Container\ContainerAwareInterface;
-use Bizurkur\Bitty\Container\Exception\ContainerException;
 use Bizurkur\Bitty\Container\Exception\NotFoundException;
 use Bizurkur\Bitty\Container\ServiceBuilderInterface;
 use Bizurkur\Bitty\ContainerInterface;
@@ -106,12 +105,12 @@ class Container implements ContainerInterface
      */
     public function get($id)
     {
-        if (isset($this->services[$id])) {
-            return $this->services[$id];
-        }
-
         if ('container' === $id) {
             return $this;
+        }
+
+        if (isset($this->services[$id])) {
+            return $this->services[$id];
         }
 
         if (null !== $this->builder) {
