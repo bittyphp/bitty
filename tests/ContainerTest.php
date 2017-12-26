@@ -31,23 +31,34 @@ class ContainerTest extends TestCase
         $this->assertInstanceOf(PsrContainerInterface::class, $this->fixture);
     }
 
-    public function testHasParameterTrue()
+    /**
+     * @dataProvider sampleHasParameter
+     */
+    public function testHasParameter($parameters, $name, $expected)
     {
-        $name = uniqid();
+        $this->fixture = new Container([], $parameters);
 
-        $this->fixture->setParameter($name, uniqid());
         $actual = $this->fixture->hasParameter($name);
 
-        $this->assertTrue($actual);
+        $this->assertSame($expected, $actual);
     }
 
-    public function testHasParameterFalse()
+    public function sampleHasParameter()
     {
         $name = uniqid();
 
-        $actual = $this->fixture->hasParameter($name);
-
-        $this->assertFalse($actual);
+        return [
+            'has true' => [
+                'parameters' => [$name => uniqid()],
+                'name' => $name,
+                'expected' => true,
+            ],
+            'has false' => [
+                'parameters' => [],
+                'name' => uniqid(),
+                'expected' => false,
+            ],
+        ];
     }
 
     public function testGetParameter()
@@ -71,30 +82,39 @@ class ContainerTest extends TestCase
         $this->fixture->getParameter($name);
     }
 
-    public function testHasIsTrue()
+    /**
+     * @dataProvider sampleHas
+     */
+    public function testHas($services, $name, $expected)
     {
-        $name = uniqid();
-
-        $this->fixture->set($name, new \stdClass());
-        $actual = $this->fixture->has($name);
-
-        $this->assertTrue($actual);
-    }
-
-    public function testHasContainerAlwaysTrue()
-    {
-        $actual = $this->fixture->has('container');
-
-        $this->assertTrue($actual);
-    }
-
-    public function testHasIsFalse()
-    {
-        $name = uniqid();
+        $this->fixture = new Container($services);
 
         $actual = $this->fixture->has($name);
 
-        $this->assertFalse($actual);
+        $this->assertSame($expected, $actual);
+    }
+
+    public function sampleHas()
+    {
+        $name = uniqid();
+
+        return [
+            'has true' => [
+                'services' => [$name => new \stdClass()],
+                'name' => $name,
+                'expected' => true,
+            ],
+            'has false' => [
+                'services' => [],
+                'name' => uniqid(),
+                'expected' => false,
+            ],
+            'container true' => [
+                'services' => [],
+                'name' => 'container',
+                'expected' => true,
+            ],
+        ];
     }
 
     public function testGet()
