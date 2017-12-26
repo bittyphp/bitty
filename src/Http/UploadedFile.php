@@ -111,16 +111,14 @@ class UploadedFile implements UploadedFileInterface
             );
         }
 
-        // target is a stream
         if (is_resource($targetPath)) {
+            // target is a stream
             $stream = $this->getStream();
             if (false === stream_copy_to_stream($stream, $targetPath, -1, 0)) {
                 throw new \RuntimeException('Failed to move file to stream.');
             }
-        }
-
-        // target appears to be a URL
-        elseif (false !== strpos($targetPath, '://')) {
+        } elseif (false !== strpos($targetPath, '://')) {
+            // target appears to be a URL
             if (!copy($this->path, $targetPath)) {
                 throw new \RuntimeException(
                     sprintf('Failed to move file to "%s"', $targetPath)
@@ -130,18 +128,16 @@ class UploadedFile implements UploadedFileInterface
             if (!unlink($this->path)) {
                 throw new \RuntimeException('Failed to remove file after move.');
             }
-        }
-
-        // target is a local path
-        else {
+        } else {
+            // target is a local path
             if (!is_writable(dirname($targetPath))) {
                 throw new \InvalidArgumentException(
                     sprintf('Target path "%s" is not writable!', $targetPath)
                 );
             }
 
-            // SAPI environment
             if ($this->sapi) {
+                // SAPI environment
                 if (!is_uploaded_file($this->path)) {
                     throw new \RuntimeException('File is not a valid uploaded file.');
                 }
@@ -151,10 +147,8 @@ class UploadedFile implements UploadedFileInterface
                         sprintf('Failed to move file to "%s"', $targetPath)
                     );
                 }
-            }
-
-            // Non-SAPI environment
-            else {
+            } else {
+                // Non-SAPI environment
                 if (!rename($this->path, $targetPath)) {
                     throw new \RuntimeException(
                         sprintf('Failed to move file to "%s"', $targetPath)
