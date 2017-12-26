@@ -5,14 +5,17 @@
     "license": "MIT",
     "authors": [
         {
-            "name": "Bizurkur",
-            "email": "bitty@bizurkur.com"
+            "name": "Luke Kingsley",
+            "email": "bizurkur@gmail.com"
         }
     ],
     "require": {
         "php": ">=5.5.0",
         "psr/container": "^1.0",
         "psr/http-message": "^1.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^4.0"
     },
     "provide": {
         "psr/container-implementation": "1.0"
