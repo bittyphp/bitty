@@ -2,7 +2,7 @@
 
 namespace Bizurkur\Bitty\Container;
 
-use Bizurkur\Bitty\ContainerInterface;
+use Psr\Container\ContainerInterface;
 
 interface ContainerAwareInterface
 {
