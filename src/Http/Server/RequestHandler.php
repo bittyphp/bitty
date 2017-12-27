@@ -1,18 +1,18 @@
 <?php
 
-namespace Bizurkur\Bitty\Router;
+namespace Bizurkur\Bitty\Http\Server;
 
 use Bizurkur\Bitty\Container\ContainerAwareInterface;
 use Bizurkur\Bitty\Container\ContainerAwareTrait;
 use Bizurkur\Bitty\Http\Exception\NotFoundException;
 use Bizurkur\Bitty\Http\Request;
 use Bizurkur\Bitty\Http\Response;
-use Bizurkur\Bitty\Router\RouteHandlerInterface;
+use Bizurkur\Bitty\Http\Server\RequestHandlerInterface;
 use Bizurkur\Bitty\RouterInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-class RouteHandler implements RouteHandlerInterface, ContainerAwareInterface
+class RequestHandler implements RequestHandlerInterface, ContainerAwareInterface
 {
     use ContainerAwareTrait;
 
@@ -61,12 +61,6 @@ class RouteHandler implements RouteHandlerInterface, ContainerAwareInterface
             );
         }
 
-        if (is_string($response)) {
-            return new Response($response);
-        } elseif ($response instanceof ResponseInterface) {
-            return $response;
-        }
-
-        return new Response();
+        return $response;
     }
 }
