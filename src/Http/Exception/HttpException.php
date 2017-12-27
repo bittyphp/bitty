@@ -2,10 +2,11 @@
 
 namespace Bizurkur\Bitty\Http\Exception;
 
+use Bizurkur\Bitty\Http\Exception\HttpExceptionInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-class HttpException extends \Exception
+class HttpException extends \Exception implements HttpExceptionInterface
 {
     /**
      * The request object, if available.
@@ -64,9 +65,7 @@ class HttpException extends \Exception
     }
 
     /**
-     * Gets the request object.
-     *
-     * @return ServerRequestInterface
+     * {@inheritDoc}
      */
     public function getRequest()
     {
@@ -74,9 +73,7 @@ class HttpException extends \Exception
     }
 
     /**
-     * Gets the response object.
-     *
-     * @return ResponseInterface
+     * {@inheritDoc}
      */
     public function getResponse()
     {
@@ -84,9 +81,7 @@ class HttpException extends \Exception
     }
 
     /**
-     * Gets the exception title.
-     *
-     * @return string
+     * {@inheritDoc}
      */
     public function getTitle()
     {
@@ -94,9 +89,7 @@ class HttpException extends \Exception
     }
 
     /**
-     * Gets the exception description.
-     *
-     * @return string
+     * {@inheritDoc}
      */
     public function getDescription()
     {

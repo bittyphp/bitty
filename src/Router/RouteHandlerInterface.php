@@ -2,7 +2,7 @@
 
 namespace Bizurkur\Bitty\Router;
 
-use Bizurkur\Bitty\Http\Exception\HttpException;
+use Bizurkur\Bitty\Http\Exception\HttpExceptionInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 interface RouteHandlerInterface
@@ -14,7 +14,7 @@ interface RouteHandlerInterface
      *
      * @return mixed
      *
-     * @throws HttpException
+     * @throws HttpExceptionInterface
      */
     public function handle(ServerRequestInterface $request);
 }
