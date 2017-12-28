@@ -14,7 +14,7 @@ class JsonResponse extends Response
     public function __construct(
         $body = '',
         $statusCode = 200,
-        $headers = []
+        array $headers = []
     ) {
         $headers['Content-type'] = ['application/json'];
         $json = json_encode($body);

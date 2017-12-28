@@ -6,10 +6,11 @@ use Bizurkur\Bitty\Collection;
 use Bizurkur\Bitty\CollectionInterface;
 use Bizurkur\Bitty\Http\AbstractMessage;
 use Bizurkur\Bitty\Http\RequestBody;
-use Bizurkur\Bitty\Http\UploadedFile;
+use Bizurkur\Bitty\Http\ServerCollection;
 use Bizurkur\Bitty\Http\UploadedFileCollection;
 use Bizurkur\Bitty\Http\Uri;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UploadedFileInterface;
 use Psr\Http\Message\UriInterface;
 
@@ -560,7 +561,7 @@ class Request extends AbstractMessage implements ServerRequestInterface
     /**
      * Filters query parameters to make sure they're valid.
      *
-     * @param string $query
+     * @param array $query
      *
      * @return Collection
      */
@@ -572,7 +573,7 @@ class Request extends AbstractMessage implements ServerRequestInterface
     /**
      * Filters request parameters to make sure they're valid.
      *
-     * @param string $request
+     * @param array $request
      *
      * @return Collection
      */
@@ -584,7 +585,7 @@ class Request extends AbstractMessage implements ServerRequestInterface
     /**
      * Filters attributes to make sure they're valid.
      *
-     * @param string $attributes
+     * @param array $attributes
      *
      * @return Collection
      */
@@ -596,7 +597,7 @@ class Request extends AbstractMessage implements ServerRequestInterface
     /**
      * Filters cookie parameters to make sure they're valid.
      *
-     * @param string $cookies
+     * @param array $cookies
      *
      * @return Collection
      */
@@ -608,7 +609,7 @@ class Request extends AbstractMessage implements ServerRequestInterface
     /**
      * Filters file parameters to make sure they're valid.
      *
-     * @param string $files
+     * @param array $files
      *
      * @return Collection
      */
@@ -620,7 +621,7 @@ class Request extends AbstractMessage implements ServerRequestInterface
     /**
      * Filters server parameters to make sure they're valid.
      *
-     * @param string $server
+     * @param array $server
      *
      * @return ServerCollection
      */
@@ -632,7 +633,7 @@ class Request extends AbstractMessage implements ServerRequestInterface
     /**
      * Filters parsed body to make sure it's valid.
      *
-     * @param null|array|object $server
+     * @param null|array|object $parsedBody
      *
      * @return null|array|object
      *

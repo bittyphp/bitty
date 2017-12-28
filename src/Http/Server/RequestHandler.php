@@ -5,11 +5,8 @@ namespace Bizurkur\Bitty\Http\Server;
 use Bizurkur\Bitty\Container\ContainerAwareInterface;
 use Bizurkur\Bitty\Container\ContainerAwareTrait;
 use Bizurkur\Bitty\Http\Exception\NotFoundException;
-use Bizurkur\Bitty\Http\Request;
-use Bizurkur\Bitty\Http\Response;
 use Bizurkur\Bitty\Http\Server\RequestHandlerInterface;
 use Bizurkur\Bitty\RouterInterface;
-use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 class RequestHandler implements RequestHandlerInterface, ContainerAwareInterface

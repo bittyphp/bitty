@@ -4,7 +4,6 @@ namespace Bizurkur\Bitty;
 
 use Bizurkur\Bitty\Container;
 use Bizurkur\Bitty\Container\ContainerAwareInterface;
-use Bizurkur\Bitty\Container\ContainerAwareTrait;
 use Bizurkur\Bitty\ContainerInterface;
 use Bizurkur\Bitty\Http\Request;
 use Bizurkur\Bitty\Http\Response;

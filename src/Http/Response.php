@@ -3,7 +3,6 @@
 namespace Bizurkur\Bitty\Http;
 
 use Bizurkur\Bitty\Http\AbstractMessage;
-use Bizurkur\Bitty\Http\Stream;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
 
@@ -104,7 +103,7 @@ class Response extends AbstractMessage implements ResponseInterface
     public function __construct(
         $body = '',
         $statusCode = 200,
-        $headers = []
+        array $headers = []
     ) {
         $this->body = $this->filterBody($body);
         $this->headers = $this->filterHeaders($headers);

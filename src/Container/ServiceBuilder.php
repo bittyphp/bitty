@@ -4,6 +4,7 @@ namespace Bizurkur\Bitty\Container;
 
 use Bizurkur\Bitty\Container\ContainerAwareInterface;
 use Bizurkur\Bitty\Container\ContainerAwareTrait;
+use Bizurkur\Bitty\Container\Exception\ContainerException;
 use Bizurkur\Bitty\Container\ServiceBuilderInterface;
 
 class ServiceBuilder implements ServiceBuilderInterface, ContainerAwareInterface
@@ -43,7 +44,7 @@ class ServiceBuilder implements ServiceBuilderInterface, ContainerAwareInterface
      *
      * @throws ContainerException
      */
-    protected function buildService($config, $id = null)
+    protected function buildService(array $config, $id = null)
     {
         $class = null;
         $args = [];

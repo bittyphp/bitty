@@ -31,7 +31,7 @@ interface CollectionInterface
     /**
      * Gets a value for a key.
      *
-     * @param string $name The key to get.
+     * @param string $key The key to get.
      * @param mixed $default Value to return when key not set.
      * @param bool $trim Call trim; defaults to true.
      *
