@@ -5,21 +5,24 @@ namespace Bizurkur\Bitty;
 use Bizurkur\Bitty\Container;
 use Bizurkur\Bitty\Container\ContainerAwareInterface;
 use Bizurkur\Bitty\Container\ContainerAwareTrait;
+use Bizurkur\Bitty\ContainerInterface;
 use Bizurkur\Bitty\Http\Request;
 use Bizurkur\Bitty\Http\Response;
 use Bizurkur\Bitty\Http\Server\RequestHandler;
 use Bizurkur\Bitty\Router;
-use Psr\Container\ContainerInterface as PsrContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 
-class Application implements ContainerAwareInterface
+class Application
 {
-    use ContainerAwareTrait;
+    /**
+     * @var ContainerInterface
+     */
+    protected $container = null;
 
     /**
-     * @param PsrContainerInterface|null $container
+     * @param ContainerInterface|null $container
      */
-    public function __construct(PsrContainerInterface $container = null)
+    public function __construct(ContainerInterface $container = null)
     {
         if (null === $container) {
             $this->container = new Container();
@@ -31,37 +34,13 @@ class Application implements ContainerAwareInterface
     }
 
     /**
-     * Sets up the default required services.
+     * Gets the container.
      *
-     * TODO: This should probably be moved to its own class.
+     * @return ContainerInterface
      */
-    public function setDefaultServices()
+    public function getContainer()
     {
-        if (!$this->container->has('router')) {
-            $router = new Router();
-            $this->container->set('router', $router);
-        }
-
-        if (!$this->container->has('request_handler')) {
-            $requestHandler = new RequestHandler($this->container->get('router'));
-            if ($requestHandler instanceof ContainerAwareInterface) {
-                $requestHandler->setContainer($this->container);
-            }
-
-            $this->container->set('request_handler', $requestHandler);
-        }
-
-        if (!$this->container->has('request')) {
-            $request = Request::createFromGlobals();
-
-            $this->container->set('request', $request);
-        }
-
-        if (!$this->container->has('response')) {
-            $response = new Response();
-
-            $this->container->set('response', $response);
-        }
+        return $this->container;
     }
 
     /**
@@ -71,9 +50,42 @@ class Application implements ContainerAwareInterface
     {
         $request = $this->container->get('request');
 
-        $response = $this->container->get('request_handler')->handle($request);
+        $requestHandler = $this->container->get('request_handler');
+        if ($requestHandler instanceof ContainerAwareInterface) {
+            $requestHandler->setContainer($this->container);
+        }
+
+        $response = $requestHandler->handle($request);
 
         $this->sendResponse($response);
+    }
+
+    /**
+     * Sets up the default required services.
+     *
+     * TODO: This should probably be moved to its own class.
+     */
+    protected function setDefaultServices()
+    {
+        if (!$this->container->has('router')) {
+            $router = new Router();
+            $this->container->set('router', $router);
+        }
+
+        if (!$this->container->has('request_handler')) {
+            $requestHandler = new RequestHandler($this->container->get('router'));
+            $this->container->set('request_handler', $requestHandler);
+        }
+
+        if (!$this->container->has('request')) {
+            $request = Request::createFromGlobals();
+            $this->container->set('request', $request);
+        }
+
+        if (!$this->container->has('response')) {
+            $response = new Response();
+            $this->container->set('response', $response);
+        }
     }
 
     /**
@@ -99,31 +111,6 @@ class Application implements ContainerAwareInterface
                     header(sprintf("%s: %s", $header, $value), false);
                 }
             }
-
-            // TODO: Update this? Remove it?
-            // foreach ($this->cookies as $cookie) {
-            //     if ($cookie->isRaw()) {
-            //         setrawcookie(
-            //             $cookie->getName(),
-            //             $cookie->getValue(),
-            //             $cookie->getExpires(),
-            //             $cookie->getPath(),
-            //             $cookie->getDomain(),
-            //             $cookie->getSecure(),
-            //             $cookie->getHttpOnly()
-            //         );
-            //     } else {
-            //         setcookie(
-            //             $cookie->getName(),
-            //             $cookie->getValue(),
-            //             $cookie->getExpires(),
-            //             $cookie->getPath(),
-            //             $cookie->getDomain(),
-            //             $cookie->getSecure(),
-            //             $cookie->getHttpOnly()
-            //         );
-            //     }
-            // }
         }
 
         echo (string) $response->getBody();
