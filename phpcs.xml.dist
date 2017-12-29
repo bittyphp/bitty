@@ -5,11 +5,13 @@
     <file>src/</file>
     <file>tests/</file>
 
+    <config name="ignore_warnings_on_exit" value="1" />
+
     <arg name="basepath" value="." />
     <arg name="colors" />
     <arg name="tab-width" value="4" />
     <arg name="parallel" value="75" />
-    <arg value="np" />
+    <arg value="wp" />
 
     <!-- Don't hide tokenizer exceptions -->
     <rule ref="Internal.Tokenizer.Exception">
@@ -39,6 +41,7 @@
     <rule ref="Generic.PHP.DeprecatedFunctions" />
     <rule ref="Generic.PHP.LowerCaseKeyword" />
     <rule ref="Generic.Arrays.ArrayIndent" />
+    <rule ref="Generic.Classes.DuplicateClassName" />
 
     <!-- Have 12 chars padding maximum and always show as errors -->
     <rule ref="Generic.Formatting.MultipleStatementAlignment">
@@ -50,7 +53,6 @@
 
     <rule ref="Generic.Commenting.Todo.CommentFound">
         <message>Please review this TODO comment: %s</message>
-        <severity>3</severity>
     </rule>
 
     <rule ref="Generic.Files.LineLength">
@@ -60,12 +62,14 @@
         </properties>
     </rule>
 
-    <rule ref="Generic.Files.LineLength.MaxExceeded">
-        <message>Line contains %2$s chars, which is more than the limit of %1$s</message>
-    </rule>
-
     <rule ref="Generic.Files.LineLength.TooLong">
         <message>Line longer than %s characters; contains %s characters</message>
+        <severity>3</severity>
+    </rule>
+
+    <rule ref="Generic.Files.LineLength.MaxExceeded">
+        <message>Line contains %2$s chars, which is more than the limit of %1$s</message>
+        <type>warning</type>
     </rule>
 
     <rule ref="Generic.Files.LineEndings">
