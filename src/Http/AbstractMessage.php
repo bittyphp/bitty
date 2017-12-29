@@ -111,7 +111,9 @@ abstract class AbstractMessage implements MessageInterface
      */
     public function withHeader($name, $value)
     {
+        $message = clone $this;
         $headers = [];
+
         foreach ($this->headers as $header => $values) {
             if (0 === strcasecmp($name, $header)) {
                 $headers[$name] = $value;
@@ -122,9 +124,7 @@ abstract class AbstractMessage implements MessageInterface
             $headers[$header] = $values;
         }
 
-        $headers[$name] = $value;
-
-        $message = clone $this;
+        $headers[$name]   = $value;
         $message->headers = $this->filterHeaders($headers);
 
         return $message;
@@ -135,8 +135,10 @@ abstract class AbstractMessage implements MessageInterface
      */
     public function withAddedHeader($name, $value)
     {
+        $message = clone $this;
         $headers = [];
-        $found = false;
+        $found   = false;
+
         foreach ($this->headers as $header => $values) {
             if (0 === strcasecmp($name, $header)) {
                 $found = true;
@@ -152,7 +154,6 @@ abstract class AbstractMessage implements MessageInterface
             $headers[$name] = $value;
         }
 
-        $message = clone $this;
         $message->headers = $this->filterHeaders($headers);
 
         return $message;
@@ -163,7 +164,9 @@ abstract class AbstractMessage implements MessageInterface
      */
     public function withoutHeader($name)
     {
+        $message = clone $this;
         $headers = [];
+
         foreach ($this->headers as $header => $values) {
             if (0 === strcasecmp($name, $header)) {
                 continue;
@@ -172,7 +175,6 @@ abstract class AbstractMessage implements MessageInterface
             $headers[$header] = $values;
         }
 
-        $message = clone $this;
         $message->headers = $this->filterHeaders($headers);
 
         return $message;
@@ -192,6 +194,7 @@ abstract class AbstractMessage implements MessageInterface
     public function withBody(StreamInterface $body)
     {
         $message = clone $this;
+
         $message->body = $this->filterBody($body);
 
         return $message;

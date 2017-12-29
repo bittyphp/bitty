@@ -29,12 +29,12 @@ class RouterTest extends TestCase
 
     public function testAdd()
     {
-        $methods = ['get', 'pOsT'];
-        $path = uniqid();
-        $callback = function () {
-        };
+        $methods     = ['get', 'pOsT'];
+        $path        = uniqid();
         $constraints = [uniqid()];
-        $name = uniqid();
+        $name        = uniqid();
+        $callback    = function () {
+        }
 
         $this->fixture->add($methods, $path, $callback, $constraints, $name);
 
@@ -51,11 +51,11 @@ class RouterTest extends TestCase
 
     public function testAddWithoutNameUsesIdentifier()
     {
-        $methods = ['get', 'pOsT'];
-        $path = uniqid();
-        $callback = function () {
-        };
+        $methods     = ['get', 'pOsT'];
+        $path        = uniqid();
         $constraints = [uniqid()];
+        $callback    = function () {
+        }
 
         $this->fixture->add($methods, $path, $callback, $constraints);
 
@@ -72,11 +72,13 @@ class RouterTest extends TestCase
 
     public function testMultipleAddsIncrementsIdentifier()
     {
-        $nameA = uniqid();
-        $nameB = uniqid();
+        $nameA    = uniqid();
+        $nameB    = uniqid();
+        $callback = function () {
+        }
 
-        $this->fixture->add(uniqid(), uniqid(), function () {}, [], $nameA);
-        $this->fixture->add(uniqid(), uniqid(), function () {}, [], $nameB);
+        $this->fixture->add(uniqid(), uniqid(), $callback, [], $nameA);
+        $this->fixture->add(uniqid(), uniqid(), $callback, [], $nameB);
 
         $actualA = $this->fixture->get($nameA);
         $actualB = $this->fixture->get($nameB);
@@ -95,9 +97,11 @@ class RouterTest extends TestCase
 
     public function testRemoveRoute()
     {
-        $name = uniqid();
+        $name     = uniqid();
+        $callback = function () {
+        }
 
-        $this->fixture->add(uniqid(), uniqid(), function () {}, [], $name);
+        $this->fixture->add(uniqid(), uniqid(), $callback, [], $name);
         $this->fixture->remove($name);
 
         $this->assertFalse($this->fixture->has($name));
@@ -114,9 +118,11 @@ class RouterTest extends TestCase
 
     public function testHasExistingRoute()
     {
-        $name = uniqid();
+        $name     = uniqid();
+        $callback = function () {
+        }
 
-        $this->fixture->add(uniqid(), uniqid(), function () {}, [], $name);
+        $this->fixture->add(uniqid(), uniqid(), $callback, [], $name);
 
         $actual = $this->fixture->has($name);
 
@@ -132,9 +138,11 @@ class RouterTest extends TestCase
 
     public function testGetExistingRoute()
     {
-        $name = uniqid();
+        $name     = uniqid();
+        $callback = function () {
+        }
 
-        $this->fixture->add(uniqid(), uniqid(), function () {}, [], $name);
+        $this->fixture->add(uniqid(), uniqid(), $callback, [], $name);
 
         $actual = $this->fixture->get($name);
 
@@ -157,7 +165,6 @@ class RouterTest extends TestCase
     public function testFind($routes, $path, $method, $expectedName, $expecedParams)
     {
         foreach ($routes as $route) {
-            $route[2] = function () {};
             call_user_func_array([$this->fixture, 'add'], $route);
         }
 
@@ -169,17 +176,19 @@ class RouterTest extends TestCase
 
     public function sampleFind()
     {
-        $nameA = uniqid('name');
-        $nameB = uniqid('name');
-        $pathA = '/'.uniqid('path');
-        $pathB = '/'.uniqid('path');
-        $paramA = uniqid('param');
-        $paramB = uniqid('param');
+        $nameA    = uniqid('name');
+        $nameB    = uniqid('name');
+        $pathA    = '/'.uniqid('path');
+        $pathB    = '/'.uniqid('path');
+        $paramA   = uniqid('param');
+        $paramB   = uniqid('param');
+        $callback = function () {
+        }
 
         return [
             'simple route' => [
                 'routes' => [
-                    ['GET', $pathA, null, [], $nameA],
+                    ['GET', $pathA, $callback, [], $nameA],
                 ],
                 'path' => $pathA,
                 'method' => 'GET',
@@ -188,7 +197,7 @@ class RouterTest extends TestCase
             ],
             'simple route, multiple methods' => [
                 'routes' => [
-                    [['GET', 'POST'], $pathA, null, [], $nameA],
+                    [['GET', 'POST'], $pathA, $callback, [], $nameA],
                 ],
                 'path' => $pathA,
                 'method' => 'POST',
@@ -197,8 +206,8 @@ class RouterTest extends TestCase
             ],
             'multiple simple routes, same path' => [
                 'routes' => [
-                    ['GET', $pathA, null, [], $nameA],
-                    ['POST', $pathA, null, [], $nameB],
+                    ['GET', $pathA, $callback, [], $nameA],
+                    ['POST', $pathA, $callback, [], $nameB],
                 ],
                 'path' => $pathA,
                 'method' => 'POST',
@@ -207,8 +216,8 @@ class RouterTest extends TestCase
             ],
             'multiple simple routes, unique paths' => [
                 'routes' => [
-                    ['GET', $pathA, null, [], $nameA],
-                    ['POST', $pathB, null, [], $nameB],
+                    ['GET', $pathA, $callback, [], $nameA],
+                    ['POST', $pathB, $callback, [], $nameB],
                 ],
                 'path' => $pathB,
                 'method' => 'POST',
@@ -217,7 +226,7 @@ class RouterTest extends TestCase
             ],
             'constraint route' => [
                 'routes' => [
-                    ['GET', $pathA.'/{paramA}', null, ['paramA' => '.+'], $nameA],
+                    ['GET', $pathA.'/{paramA}', $callback, ['paramA' => '.+'], $nameA],
                 ],
                 'path' => $pathA.'/'.$paramA,
                 'method' => 'GET',
@@ -226,7 +235,7 @@ class RouterTest extends TestCase
             ],
             'constraint route, multiple params' => [
                 'routes' => [
-                    ['GET', $pathA.'/{paramA}/{paramB}', null, ['paramA' => '\w+', 'paramB' => '.+'], $nameA],
+                    ['GET', $pathA.'/{paramA}/{paramB}', $callback, ['paramA' => '\w+', 'paramB' => '.+'], $nameA],
                 ],
                 'path' => $pathA.'/'.$paramA.'/'.$paramB,
                 'method' => 'GET',
@@ -235,8 +244,8 @@ class RouterTest extends TestCase
             ],
             'multiple constraint routes, same path' => [
                 'routes' => [
-                    ['GET', $pathA.'/{paramA}', null, ['paramA' => '\d+'], $nameA],
-                    ['GET', $pathA.'/{paramA}', null, ['paramA' => '\w+'], $nameB],
+                    ['GET', $pathA.'/{paramA}', $callback, ['paramA' => '\d+'], $nameA],
+                    ['GET', $pathA.'/{paramA}', $callback, ['paramA' => '\w+'], $nameB],
                 ],
                 'path' => $pathA.'/'.$paramA,
                 'method' => 'GET',
@@ -269,7 +278,6 @@ class RouterTest extends TestCase
      */
     public function testGenerateUri($route, $name, $params, $expected)
     {
-        $route[2] = function () {};
         call_user_func_array([$this->fixture, 'add'], $route);
 
         $actual = $this->fixture->generateUri($name, $params);
@@ -279,23 +287,25 @@ class RouterTest extends TestCase
 
     public function sampleGenerateUri()
     {
-        $name   = uniqid('name');
-        $path   = '/'.uniqid('path');
-        $paramA = uniqid('param');
-        $paramB = uniqid('param');
+        $name     = uniqid('name');
+        $path     = '/'.uniqid('path');
+        $paramA   = uniqid('param');
+        $paramB   = uniqid('param');
+        $callback = function () {
+        }
 
         return [
-            'route, no params' => [
-                'route' => ['GET', $path, null, [], $name],
+            'no params' => [
+                'route' => ['GET', $path, $callback, [], $name],
                 'name' => $name,
                 'params' => [],
                 'expected' => $path,
             ],
-            'route, one param' => [
+            'one param' => [
                 'route' => [
                     'GET',
                     $path.'/{paramA}',
-                    null,
+                    $callback,
                     ['paramA' => '.+'],
                     $name,
                 ],
@@ -303,11 +313,11 @@ class RouterTest extends TestCase
                 'params' => ['paramA' => $paramA],
                 'expected' => $path.'/'.$paramA,
             ],
-            'route, multiple params' => [
+            'multiple params' => [
                 'route' => [
                     'GET',
                     $path.'/{paramA}/{paramB}',
-                    null,
+                    $callback,
                     ['paramA' => '.+', 'paramB' => '.+'],
                     $name,
                 ],

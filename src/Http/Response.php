@@ -105,9 +105,9 @@ class Response extends AbstractMessage implements ResponseInterface
         $statusCode = 200,
         array $headers = []
     ) {
-        $this->body = $this->filterBody($body);
-        $this->headers = $this->filterHeaders($headers);
-        $this->statusCode = $this->filterStatusCode($statusCode);
+        $this->body         = $this->filterBody($body);
+        $this->headers      = $this->filterHeaders($headers);
+        $this->statusCode   = $this->filterStatusCode($statusCode);
         $this->reasonPhrase = $this->filterReasonPhrase('');
     }
 
@@ -149,8 +149,12 @@ class Response extends AbstractMessage implements ResponseInterface
     public function withStatus($code, $reasonPhrase = '')
     {
         $message = clone $this;
-        $message->statusCode = $this->filterStatusCode($code);
-        $message->reasonPhrase = $this->filterReasonPhrase($reasonPhrase, $message->statusCode);
+
+        $message->statusCode   = $this->filterStatusCode($code);
+        $message->reasonPhrase = $this->filterReasonPhrase(
+            $reasonPhrase,
+            $message->statusCode
+        );
 
         return $message;
     }

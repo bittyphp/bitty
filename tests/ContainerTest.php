@@ -63,7 +63,7 @@ class ContainerTest extends TestCase
 
     public function testGetParameter()
     {
-        $name = uniqid();
+        $name  = uniqid();
         $value = uniqid();
 
         $this->fixture->setParameter($name, $value);
@@ -119,7 +119,7 @@ class ContainerTest extends TestCase
 
     public function testGet()
     {
-        $name = uniqid();
+        $name   = uniqid();
         $object = new \stdClass();
 
         $this->fixture->set($name, $object);
@@ -159,9 +159,9 @@ class ContainerTest extends TestCase
 
     public function testGetCallsBuilder()
     {
-        $name = uniqid();
-
+        $name    = uniqid();
         $builder = $this->createMock(ServiceBuilderInterface::class);
+
         $this->fixture = new Container([], [], $builder);
 
         $builder->expects($this->once())
@@ -173,11 +173,11 @@ class ContainerTest extends TestCase
 
     public function testGetReturnsBuilderResponse()
     {
+        $object  = new \stdClass();
         $builder = $this->createMock(ServiceBuilderInterface::class);
-        $this->fixture = new Container([], [], $builder);
-
-        $object = new \stdClass();
         $builder->method('build')->willReturn($object);
+
+        $this->fixture = new Container([], [], $builder);
 
         $actual = $this->fixture->get(uniqid());
 

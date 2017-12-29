@@ -73,12 +73,12 @@ class UploadedFile implements UploadedFileInterface
         $error = UPLOAD_ERR_OK,
         $sapi = false
     ) {
-        $this->path = $path;
-        $this->name = $name;
+        $this->path      = $path;
+        $this->name      = $name;
         $this->mediaType = $mediaType;
-        $this->size = $size;
-        $this->error = $error;
-        $this->sapi = $sapi;
+        $this->size      = $size;
+        $this->error     = $error;
+        $this->sapi      = $sapi;
     }
 
     /**

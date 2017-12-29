@@ -80,14 +80,14 @@ class Cookie
         $httpOnly = true,
         $raw = false
     ) {
-        $this->name = (string) $name;
-        $this->value = (string) $value;
-        $this->path = (string) $path;
-        $this->domain = (string) $domain;
-        $this->secure = (bool) $secure;
+        $this->name     = (string) $name;
+        $this->value    = (string) $value;
+        $this->path     = (string) $path;
+        $this->domain   = (string) $domain;
+        $this->secure   = (bool) $secure;
         $this->httpOnly = (bool) $httpOnly;
-        $this->expire = (int) $expire;
-        $this->raw = (bool) $raw;
+        $this->expire   = (int) $expire;
+        $this->raw      = (bool) $raw;
     }
 
     /**
@@ -97,7 +97,7 @@ class Cookie
      */
     public function __toString()
     {
-        $name = $this->raw ? $this->name : rawurlencode($this->name);
+        $name  = $this->raw ? $this->name : rawurlencode($this->name);
         $parts = [];
 
         if ($this->value) {

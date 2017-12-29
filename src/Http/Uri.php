@@ -94,14 +94,14 @@ class Uri implements UriInterface
         $user = '',
         $pass = ''
     ) {
-        $this->scheme = $this->filterScheme($scheme);
-        $this->host = $this->filterHost($host);
-        $this->port = $this->filterPort($port);
-        $this->path = $this->filterPath($path);
-        $this->query = $this->filterQuery($query);
+        $this->scheme   = $this->filterScheme($scheme);
+        $this->host     = $this->filterHost($host);
+        $this->port     = $this->filterPort($port);
+        $this->path     = $this->filterPath($path);
+        $this->query    = $this->filterQuery($query);
         $this->fragment = $this->filterFragment($fragment);
-        $this->user = (string) $user;
-        $this->pass = (string) $pass;
+        $this->user     = (string) $user;
+        $this->pass     = (string) $pass;
     }
 
     /**
@@ -155,7 +155,7 @@ class Uri implements UriInterface
      */
     public static function createFromEnvironment(CollectionInterface $env)
     {
-        $scheme = 'http';
+        $scheme  = 'http';
         $isHttps = $env->get('HTTPS');
         if (!empty($isHttps) && 'off' !== strtolower($isHttps)) {
             $scheme = 'https';
@@ -369,9 +369,9 @@ class Uri implements UriInterface
         }
 
         $tmp = static::createFromString($requestTarget);
-
         $uri = clone $this;
-        $uri->path = $this->filterPath($tmp->getPath());
+
+        $uri->path  = $this->filterPath($tmp->getPath());
         $uri->query = $this->filterQuery($tmp->getQuery());
 
         return $uri;
@@ -387,6 +387,7 @@ class Uri implements UriInterface
         }
 
         $uri = clone $this;
+
         $uri->scheme = $this->filterScheme($scheme);
 
         return $uri;
@@ -402,6 +403,7 @@ class Uri implements UriInterface
         }
 
         $uri = clone $this;
+
         $uri->user = $user;
         $uri->pass = $password;
 
@@ -418,6 +420,7 @@ class Uri implements UriInterface
         }
 
         $uri = clone $this;
+
         $uri->host = $this->filterHost($host);
 
         return $uri;
@@ -433,6 +436,7 @@ class Uri implements UriInterface
         }
 
         $uri = clone $this;
+
         $uri->port = $this->filterPort($port);
 
         return $uri;
@@ -448,6 +452,7 @@ class Uri implements UriInterface
         }
 
         $uri = clone $this;
+
         $uri->path = $this->filterPath($path);
 
         return $uri;
@@ -463,6 +468,7 @@ class Uri implements UriInterface
         }
 
         $uri = clone $this;
+
         $uri->query = $this->filterQuery($query);
 
         return $uri;
@@ -478,6 +484,7 @@ class Uri implements UriInterface
         }
 
         $uri = clone $this;
+
         $uri->fragment = $this->filterFragment($fragment);
 
         return $uri;
@@ -549,9 +556,12 @@ class Uri implements UriInterface
      */
     protected function filterPath($path)
     {
-        return implode('/',
-            array_map('rawurlencode',
-                array_map('rawurldecode',
+        return implode(
+            '/',
+            array_map(
+                'rawurlencode',
+                array_map(
+                    'rawurldecode',
                     explode('/', (string) $path)
                 )
             )
@@ -575,9 +585,12 @@ class Uri implements UriInterface
                 continue;
             }
 
-            $params[$i] = implode('=',
-                array_map('rawurlencode',
-                    array_map('rawurldecode',
+            $params[$i] = implode(
+                '=',
+                array_map(
+                    'rawurlencode',
+                    array_map(
+                        'rawurldecode',
                         explode('=', $params[$i], 2)
                     )
                 )

@@ -60,7 +60,7 @@ class HttpException extends \Exception implements HttpExceptionInterface
 
         parent::__construct($message, $code, $previous);
 
-        $this->request = $request;
+        $this->request  = $request;
         $this->response = $response;
     }
 
