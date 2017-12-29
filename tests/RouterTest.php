@@ -34,7 +34,7 @@ class RouterTest extends TestCase
         $constraints = [uniqid()];
         $name        = uniqid();
         $callback    = function () {
-        }
+        };
 
         $this->fixture->add($methods, $path, $callback, $constraints, $name);
 
@@ -55,7 +55,7 @@ class RouterTest extends TestCase
         $path        = uniqid();
         $constraints = [uniqid()];
         $callback    = function () {
-        }
+        };
 
         $this->fixture->add($methods, $path, $callback, $constraints);
 
@@ -75,7 +75,7 @@ class RouterTest extends TestCase
         $nameA    = uniqid();
         $nameB    = uniqid();
         $callback = function () {
-        }
+        };
 
         $this->fixture->add(uniqid(), uniqid(), $callback, [], $nameA);
         $this->fixture->add(uniqid(), uniqid(), $callback, [], $nameB);
@@ -99,7 +99,7 @@ class RouterTest extends TestCase
     {
         $name     = uniqid();
         $callback = function () {
-        }
+        };
 
         $this->fixture->add(uniqid(), uniqid(), $callback, [], $name);
         $this->fixture->remove($name);
@@ -120,7 +120,7 @@ class RouterTest extends TestCase
     {
         $name     = uniqid();
         $callback = function () {
-        }
+        };
 
         $this->fixture->add(uniqid(), uniqid(), $callback, [], $name);
 
@@ -140,7 +140,7 @@ class RouterTest extends TestCase
     {
         $name     = uniqid();
         $callback = function () {
-        }
+        };
 
         $this->fixture->add(uniqid(), uniqid(), $callback, [], $name);
 
@@ -183,7 +183,7 @@ class RouterTest extends TestCase
         $paramA   = uniqid('param');
         $paramB   = uniqid('param');
         $callback = function () {
-        }
+        };
 
         return [
             'simple route' => [
@@ -292,7 +292,7 @@ class RouterTest extends TestCase
         $paramA   = uniqid('param');
         $paramB   = uniqid('param');
         $callback = function () {
-        }
+        };
 
         return [
             'no params' => [
