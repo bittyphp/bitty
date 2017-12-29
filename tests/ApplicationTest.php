@@ -42,7 +42,7 @@ class ApplicationTest extends TestCase
      */
     public function testDefaultServicesSet($id, $className)
     {
-        $fixture = new Application();
+        $fixture   = new Application();
         $container = $fixture->getContainer();
 
         $this->assertInstanceOf($className, $container->get($id));
@@ -54,7 +54,7 @@ class ApplicationTest extends TestCase
     public function testDefaultServicesSetOnCustomContainer($id, $className)
     {
         $container = new Container();
-        $fixture = new Application($container);
+        $fixture   = new Application($container);
 
         $this->assertInstanceOf($className, $container->get($id));
     }
@@ -115,7 +115,7 @@ class ApplicationTest extends TestCase
 
     public function testRunCallsRequestHandlerHandle()
     {
-        $request = $this->createMock(ServerRequestInterface::class);
+        $request        = $this->createMock(ServerRequestInterface::class);
         $requestHandler = $this->createMock(RequestHandlerInterface::class);
         $this->setUpDependencies($request, null, $requestHandler);
 

@@ -138,16 +138,16 @@ class Request extends AbstractMessage implements ServerRequestInterface
         array $server = [],
         $body = ''
     ) {
-        $this->method = $this->filterMethod($method);
-        $this->uri = Uri::createFromString($uri);
-        $this->headers = $this->filterHeaders($headers);
-        $this->query = $this->filterQueryParams($query);
-        $this->request = $this->filterRequestParams($request);
+        $this->method     = $this->filterMethod($method);
+        $this->uri        = Uri::createFromString($uri);
+        $this->headers    = $this->filterHeaders($headers);
+        $this->query      = $this->filterQueryParams($query);
+        $this->request    = $this->filterRequestParams($request);
         $this->attributes = $this->filterAttributes($attributes);
-        $this->cookies = $this->filterCookieParams($cookies);
-        $this->files = $this->filterFileParams($files);
-        $this->server = $this->filterServerParams($server);
-        $this->body = $this->filterBody($body);
+        $this->cookies    = $this->filterCookieParams($cookies);
+        $this->files      = $this->filterFileParams($files);
+        $this->server     = $this->filterServerParams($server);
+        $this->body       = $this->filterBody($body);
 
         $this->protocolVersion = $this->filterProtocolVersion(
             str_replace('HTTP/', '', $this->server->get('SERVER_PROTOCOL', '1.1'))
@@ -172,14 +172,14 @@ class Request extends AbstractMessage implements ServerRequestInterface
     public function __clone()
     {
         // $this->headers = clone $this->headers;
-        $this->uri = clone $this->uri;
-        $this->query = clone $this->query;
-        $this->request = clone $this->request;
+        $this->uri        = clone $this->uri;
+        $this->query      = clone $this->query;
+        $this->request    = clone $this->request;
         $this->attributes = clone $this->attributes;
-        $this->cookies = clone $this->cookies;
-        $this->files = clone $this->files;
-        $this->server = clone $this->server;
-        $this->body = clone $this->body;
+        $this->cookies    = clone $this->cookies;
+        $this->files      = clone $this->files;
+        $this->server     = clone $this->server;
+        $this->body       = clone $this->body;
     }
 
     /**
@@ -212,12 +212,12 @@ class Request extends AbstractMessage implements ServerRequestInterface
      */
     public static function createFromGlobals()
     {
-        $server = new ServerCollection($_SERVER);
-        $method = $server->get('REQUEST_METHOD', 'GET');
-        $uri = Uri::createFromEnvironment($server);
+        $server  = new ServerCollection($_SERVER);
+        $method  = $server->get('REQUEST_METHOD', 'GET');
+        $uri     = Uri::createFromEnvironment($server);
         $headers = $server->getHeaders();
-        $body = new RequestBody();
-        $files = new UploadedFileCollection($_FILES);
+        $body    = new RequestBody();
+        $files   = new UploadedFileCollection($_FILES);
 
         return new static($method, $uri, $headers, $_GET, $_POST, [], $_COOKIE, $files->all(), $_SERVER, $body);
     }
@@ -266,6 +266,7 @@ class Request extends AbstractMessage implements ServerRequestInterface
     public function withRequestTarget($requestTarget)
     {
         $request = clone $this;
+
         $request->requestTarget = $this->filterRequestTarget($requestTarget);
 
         return $request;
@@ -285,6 +286,7 @@ class Request extends AbstractMessage implements ServerRequestInterface
     public function withMethod($method)
     {
         $request = clone $this;
+
         $request->method = $method;
 
         return $request;
@@ -304,6 +306,7 @@ class Request extends AbstractMessage implements ServerRequestInterface
     public function withUri(UriInterface $uri, $preserveHost = false)
     {
         $request = clone $this;
+
         $request->uri = $uri;
 
         if ($preserveHost) {
@@ -331,6 +334,7 @@ class Request extends AbstractMessage implements ServerRequestInterface
     public function withQueryParams(array $query)
     {
         $request = clone $this;
+
         $request->query = $this->filterQueryParams($query);
 
         return $request;
@@ -360,6 +364,7 @@ class Request extends AbstractMessage implements ServerRequestInterface
     public function withRequestParams(array $request)
     {
         $request = clone $this;
+
         $request->request = $this->filterRequestParams($request);
 
         return $request;
@@ -379,6 +384,7 @@ class Request extends AbstractMessage implements ServerRequestInterface
     public function withCookieParams(array $cookies)
     {
         $request = clone $this;
+
         $request->cookies = $this->filterCookieParams($cookies);
 
         return $request;
@@ -398,6 +404,7 @@ class Request extends AbstractMessage implements ServerRequestInterface
     public function withUploadedFiles(array $files)
     {
         $request = clone $this;
+
         $request->files = $this->filterFileParams($files);
 
         return $request;
@@ -435,8 +442,9 @@ class Request extends AbstractMessage implements ServerRequestInterface
                     continue;
                 }
 
-                $parsedBody = $this->contentTypeParsers[$contentType]($body);
-                $this->parsedBody = $this->filterParsedBody($parsedBody);
+                $this->parsedBody = $this->filterParsedBody(
+                    $this->contentTypeParsers[$contentType]($body)
+                );
 
                 return $this->parsedBody;
             }
@@ -451,6 +459,7 @@ class Request extends AbstractMessage implements ServerRequestInterface
     public function withParsedBody($parsedBody)
     {
         $request = clone $this;
+
         $request->parsedBody = $this->filterParsedBody($parsedBody);
 
         return $request;
@@ -498,10 +507,10 @@ class Request extends AbstractMessage implements ServerRequestInterface
      */
     public function withAttribute($name, $value)
     {
+        $request    = clone $this;
         $attributes = $this->attributes->all();
-        $attributes[$name] = $value;
 
-        $request = clone $this;
+        $attributes[$name]   = $value;
         $request->attributes = $this->filterAttributes($attributes);
 
         return $request;
@@ -513,10 +522,10 @@ class Request extends AbstractMessage implements ServerRequestInterface
     public function withoutAttribute($name)
     {
         $attributes = $this->attributes->all();
-
         unset($attributes[$name]);
 
         $request = clone $this;
+
         $request->attributes = $this->filterAttributes($attributes);
 
         return $request;

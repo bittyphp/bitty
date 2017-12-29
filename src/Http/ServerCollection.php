@@ -23,9 +23,11 @@ class ServerCollection extends Collection
         foreach ($this->data as $key => $value) {
             if (0 === strpos($key, 'HTTP_')) {
                 $name = $this->normalizeHeader(substr($key, 5));
+
                 $headers[$name] = [$value];
             } elseif (isset($contentHeaders[$key])) {
                 $name = $contentHeaders[$key];
+
                 $headers[$name] = [$value];
             }
         }
@@ -42,8 +44,10 @@ class ServerCollection extends Collection
      */
     protected function normalizeHeader($header)
     {
-        return implode('-',
-            array_map('ucfirst',
+        return implode(
+            '-',
+            array_map(
+                'ucfirst',
                 explode('_', strtolower($header))
             )
         );

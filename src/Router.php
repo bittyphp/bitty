@@ -106,18 +106,17 @@ class Router implements RouterInterface
                 return $route;
             }
 
-            $constraintPattern = $pattern;
             $constraints = $route->getConstraints();
             foreach ($constraints as $_name => $_pattern) {
-                $constraintPattern = str_replace(
+                $pattern = str_replace(
                     '{'.$_name.'}',
                     '(?<'.$_name.'>'.$_pattern.')',
-                    $constraintPattern
+                    $pattern
                 );
             }
 
             $matches = [];
-            if (preg_match("`^$constraintPattern$`", $path, $matches)) {
+            if (preg_match("`^$pattern$`", $path, $matches)) {
                 $params = [];
                 foreach ($constraints as $_name => $_pattern) {
                     $params[$_name] = isset($matches[$_name]) ? $matches[$_name] : '';

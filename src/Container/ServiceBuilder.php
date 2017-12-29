@@ -47,7 +47,7 @@ class ServiceBuilder implements ServiceBuilderInterface, ContainerAwareInterface
     protected function buildService(array $config, $id = null)
     {
         $class = null;
-        $args = [];
+        $args  = [];
 
         if ($id && !empty($config['abstract'])) {
             throw new ContainerException(
@@ -84,7 +84,7 @@ class ServiceBuilder implements ServiceBuilderInterface, ContainerAwareInterface
         } else {
             ksort($args);
             $reflection = new \ReflectionClass($class);
-            $service = $reflection->newInstanceArgs($args);
+            $service    = $reflection->newInstanceArgs($args);
         }
 
         return $service;
@@ -103,7 +103,7 @@ class ServiceBuilder implements ServiceBuilderInterface, ContainerAwareInterface
     protected function getParentData($id, $parent)
     {
         $class = null;
-        $args = [];
+        $args  = [];
 
         if (!isset($this->services[$parent])) {
             if ($id) {

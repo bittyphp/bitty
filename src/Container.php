@@ -40,9 +40,9 @@ class Container implements ContainerInterface
         array $parameters = [],
         ServiceBuilderInterface $builder = null
     ) {
-        $this->services = $services;
+        $this->services   = $services;
         $this->parameters = $parameters;
-        $this->builder = $builder;
+        $this->builder    = $builder;
 
         if ($this->builder instanceof ContainerAwareInterface) {
             // hooray for circular references

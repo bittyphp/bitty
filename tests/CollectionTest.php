@@ -42,7 +42,7 @@ class CollectionTest extends TestCase
 
     public function testSet()
     {
-        $name = uniqid();
+        $name  = uniqid();
         $value = uniqid();
 
         $this->fixture->set($name, $value);
@@ -142,10 +142,10 @@ class CollectionTest extends TestCase
 
     public function sampleGetData()
     {
-        $name = uniqid('name');
-        $value = uniqid('value');
+        $name    = uniqid('name');
+        $value   = uniqid('value');
         $default = uniqid('default');
-        $object = new \stdClass();
+        $object  = new \stdClass();
 
         return [
             'string trim' => [

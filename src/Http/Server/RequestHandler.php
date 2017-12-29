@@ -31,7 +31,7 @@ class RequestHandler implements RequestHandlerInterface, ContainerAwareInterface
      */
     public function handle(ServerRequestInterface $request)
     {
-        $path = '/'.ltrim($request->getUri()->getPath(), '/');
+        $path   = '/'.ltrim($request->getUri()->getPath(), '/');
         $method = $request->getMethod();
 
         $route = $this->router->find($path, $method);
@@ -40,7 +40,7 @@ class RequestHandler implements RequestHandlerInterface, ContainerAwareInterface
         }
 
         $callback = $route->getCallback();
-        $params = $route->getParams();
+        $params   = $route->getParams();
         if ($callback instanceof \Closure) {
             $response = $callback($request, $params);
         } elseif (is_object($callback) && method_exists($callback, '__invoke')) {
@@ -49,7 +49,7 @@ class RequestHandler implements RequestHandlerInterface, ContainerAwareInterface
             }
             $response = $callback($request, $params);
         } elseif (is_array($callback)) {
-            $class = array_shift($callback);
+            $class  = array_shift($callback);
             $action = array_shift($callback);
 
             $controller = is_object($class) ? $class : new $class();
