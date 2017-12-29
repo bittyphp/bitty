@@ -43,7 +43,12 @@ class RequestHandler implements RequestHandlerInterface, ContainerAwareInterface
         $params = $route->getParams();
         if ($callback instanceof \Closure) {
             $response = $callback($request, $params);
-        } else {
+        } elseif (is_object($callback) && method_exists($callback, '__invoke')) {
+            if ($callback instanceof ContainerAwareInterface) {
+                $callback->setContainer($this->container);
+            }
+            $response = $callback($request, $params);
+        } elseif (is_array($callback)) {
             $class = array_shift($callback);
             $action = array_shift($callback);
 
@@ -56,6 +61,8 @@ class RequestHandler implements RequestHandlerInterface, ContainerAwareInterface
                 [$controller, $action],
                 [$request, $params]
             );
+        } else {
+            $response = $this->container->get('response');
         }
 
         return $response;
