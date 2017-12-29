@@ -120,7 +120,7 @@ class Router implements RouterInterface
             if (preg_match("`^$constraintPattern$`", $path, $matches)) {
                 $params = [];
                 foreach ($constraints as $_name => $_pattern) {
-                    $params[] = isset($matches[$_name]) ? $matches[$_name] : '';
+                    $params[$_name] = isset($matches[$_name]) ? $matches[$_name] : '';
                 }
                 $route->setParams($params);
 
