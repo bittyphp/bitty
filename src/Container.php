@@ -4,7 +4,7 @@ namespace Bizurkur\Bitty;
 
 use Bizurkur\Bitty\Container\ContainerAwareInterface;
 use Bizurkur\Bitty\Container\Exception\NotFoundException;
-use Bizurkur\Bitty\Container\ServiceBuilderInterface;
+use Bizurkur\Bitty\Container\ServiceProviderInterface;
 use Bizurkur\Bitty\ContainerInterface;
 
 class Container implements ContainerInterface
@@ -24,29 +24,29 @@ class Container implements ContainerInterface
     protected $parameters = [];
 
     /**
-     * Service builder.
+     * Service provider.
      *
-     * @var ServiceBuilderInterface
+     * @var ServiceProviderInterface
      */
-    protected $builder = null;
+    protected $provider = null;
 
     /**
      * @param array $services
      * @param array $parameters
-     * @param ServiceBuilderInterface|null $builder
+     * @param ServiceProviderInterface|null $provider
      */
     public function __construct(
         array $services = [],
         array $parameters = [],
-        ServiceBuilderInterface $builder = null
+        ServiceProviderInterface $provider = null
     ) {
         $this->services   = $services;
         $this->parameters = $parameters;
-        $this->builder    = $builder;
+        $this->provider   = $provider;
 
-        if ($this->builder instanceof ContainerAwareInterface) {
+        if ($this->provider instanceof ContainerAwareInterface) {
             // hooray for circular references
-            $this->builder->setContainer($this);
+            $this->provider->setContainer($this);
         }
     }
 
@@ -113,8 +113,8 @@ class Container implements ContainerInterface
             return $this->services[$id];
         }
 
-        if (null !== $this->builder) {
-            $this->services[$id] = $this->builder->build($id);
+        if (null !== $this->provider) {
+            $this->services[$id] = $this->provider->provide($id);
 
             return $this->services[$id];
         }

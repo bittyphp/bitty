@@ -5,10 +5,10 @@ namespace Bizurkur\Bitty\Container;
 use Bizurkur\Bitty\Container\Exception\ContainerException;
 use Bizurkur\Bitty\Container\Exception\NotFoundException;
 
-interface ServiceBuilderInterface
+interface ServiceProviderInterface
 {
     /**
-     * Builds a new instance of a service.
+     * Provides a new instance of a service.
      *
      * @param string $id ID of service.
      *
@@ -17,5 +17,5 @@ interface ServiceBuilderInterface
      * @throws NotFoundException If the service is not found.
      * @throws ContainerException If unable to build the service.
      */
-    public function build($id);
+    public function provide($id);
 }

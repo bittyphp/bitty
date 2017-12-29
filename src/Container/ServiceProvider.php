@@ -4,10 +4,13 @@ namespace Bizurkur\Bitty\Container;
 
 use Bizurkur\Bitty\Container\ContainerAwareInterface;
 use Bizurkur\Bitty\Container\ContainerAwareTrait;
+use Bizurkur\Bitty\Container\InstanceBuilder;
+use Bizurkur\Bitty\Container\InstanceBuilderInterface;
 use Bizurkur\Bitty\Container\Exception\ContainerException;
-use Bizurkur\Bitty\Container\ServiceBuilderInterface;
+use Bizurkur\Bitty\Container\Exception\NotFoundException;
+use Bizurkur\Bitty\Container\ServiceProviderInterface;
 
-class ServiceBuilder implements ServiceBuilderInterface, ContainerAwareInterface
+class ServiceProvider implements ServiceProviderInterface, ContainerAwareInterface
 {
     use ContainerAwareTrait;
 
@@ -19,9 +22,31 @@ class ServiceBuilder implements ServiceBuilderInterface, ContainerAwareInterface
     protected $services = null;
 
     /**
+     * Instance builder.
+     *
+     * @var InstanceBuilderInterface
+     */
+    protected $builder = null;
+
+    /**
+     * @param array $services
+     * @param InstanceBuilderInterface|null $builder
+     */
+    public function __construct(array $services = [], InstanceBuilderInterface $builder = null)
+    {
+        $this->services = $services;
+
+        if (null === $builder) {
+            $this->builder = new InstanceBuilder();
+        } else {
+            $this->builder = $builder;
+        }
+    }
+
+    /**
      * {@inheritDoc}
      */
-    public function build($id)
+    public function provide($id)
     {
         if (!isset($this->services[$id])) {
             throw new NotFoundException(
