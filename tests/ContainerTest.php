@@ -7,7 +7,7 @@ use Bizurkur\Bitty\Container\ContainerAwareInterface;
 use Bizurkur\Bitty\Container\Exception\NotFoundException;
 use Bizurkur\Bitty\Container\ServiceProviderInterface;
 use Bizurkur\Bitty\ContainerInterface;
-use Bizurkur\Bitty\Tests\Container\ServiceProviderStub;
+use Bizurkur\Bitty\Tests\Stubs\ServiceProviderStubInterface;
 use Bizurkur\Bitty\Tests\TestCase;
 use Psr\Container\ContainerInterface as PsrContainerInterface;
 
@@ -146,7 +146,7 @@ class ContainerTest extends TestCase
 
     public function testBuilderSetsContainerOnContainerAwareProvider()
     {
-        $provider = $this->createMock(ServiceProviderStub::class);
+        $provider = $this->createMock(ServiceProviderStubInterface::class);
 
         $spy = $this->once();
         $provider->expects($spy)->method('setContainer');
