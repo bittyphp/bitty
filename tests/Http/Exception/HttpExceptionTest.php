@@ -4,9 +4,9 @@ namespace Bizurkur\Bitty\Tests\Http\Exception;
 
 use Bizurkur\Bitty\Http\Exception\HttpException;
 use Bizurkur\Bitty\Http\Exception\HttpExceptionInterface;
+use Bizurkur\Bitty\Tests\TestCase;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Bizurkur\Bitty\Tests\TestCase;
 
 class HttpExceptionTest extends TestCase
 {

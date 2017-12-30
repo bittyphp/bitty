@@ -5,12 +5,8 @@ namespace Bizurkur\Bitty\Tests;
 use Bizurkur\Bitty\Application;
 use Bizurkur\Bitty\Container;
 use Bizurkur\Bitty\ContainerInterface;
-use Bizurkur\Bitty\Container\ContainerAwareInterface;
-use Bizurkur\Bitty\Http\Request;
-use Bizurkur\Bitty\Http\Response;
 use Bizurkur\Bitty\Http\Server\RequestHandler;
 use Bizurkur\Bitty\Http\Server\RequestHandlerInterface;
-use Bizurkur\Bitty\Router;
 use Bizurkur\Bitty\RouterInterface;
 use Bizurkur\Bitty\Tests\TestCase;
 use Psr\Http\Message\ResponseInterface;
@@ -188,6 +184,11 @@ class ApplicationTest extends TestCase
         ];
     }
 
+    /**
+     * Creates a container.
+     *
+     * @return ContainerInterface
+     */
     protected function createContainer()
     {
         return $this->createConfiguredMock(
@@ -196,6 +197,13 @@ class ApplicationTest extends TestCase
         );
     }
 
+    /**
+     * Creates a response.
+     *
+     * @param array $headers
+     *
+     * @return ResponseInterface
+     */
     protected function createResponse(array $headers = [])
     {
         return $this->createConfiguredMock(
@@ -206,6 +214,13 @@ class ApplicationTest extends TestCase
         );
     }
 
+    /**
+     * Sets up dependencies.
+     *
+     * @param ServerRequestInterface $request
+     * @param ResponseInterface $response
+     * @param RequestHandlerInterface $requestHandler
+     */
     protected function setUpDependencies(
         ServerRequestInterface $request = null,
         ResponseInterface $response = null,

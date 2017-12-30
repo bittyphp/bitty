@@ -3,7 +3,6 @@
 namespace Bizurkur\Bitty\Tests;
 
 use Bizurkur\Bitty\Container;
-use Bizurkur\Bitty\Container\ContainerAwareInterface;
 use Bizurkur\Bitty\Container\Exception\NotFoundException;
 use Bizurkur\Bitty\Container\ServiceProviderInterface;
 use Bizurkur\Bitty\ContainerInterface;
