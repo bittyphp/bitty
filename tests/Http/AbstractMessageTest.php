@@ -3,7 +3,6 @@
 namespace Bizurkur\Bitty\Tests\Http;
 
 use Bizurkur\Bitty\Http\AbstractMessage;
-use Bizurkur\Bitty\Http\Stream;
 use Bizurkur\Bitty\Tests\TestCase;
 use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\StreamInterface;
@@ -20,6 +19,11 @@ class AbstractMessageTest extends TestCase
         parent::setUp();
 
         $this->fixture = $this->getMockForAbstractClass(AbstractMessage::class);
+    }
+
+    public function testInstanceOf()
+    {
+        $this->assertInstanceOf(MessageInterface::class, $this->fixture);
     }
 
     public function testWithProtocolVersion()
