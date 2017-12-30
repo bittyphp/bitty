@@ -47,13 +47,12 @@ class Application
      */
     public function run()
     {
-        $request = $this->container->get('request');
-
         $requestHandler = $this->container->get('request_handler');
         if ($requestHandler instanceof ContainerAwareInterface) {
             $requestHandler->setContainer($this->container);
         }
 
+        $request  = $this->container->get('request');
         $response = $requestHandler->handle($request);
 
         $this->sendResponse($response);
