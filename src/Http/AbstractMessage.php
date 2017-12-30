@@ -57,6 +57,7 @@ abstract class AbstractMessage implements MessageInterface
     public function withProtocolVersion($version)
     {
         $message = clone $this;
+
         $message->protocolVersion = $this->filterProtocolVersion($version);
 
         return $message;
@@ -175,7 +176,7 @@ abstract class AbstractMessage implements MessageInterface
             $headers[$header] = $values;
         }
 
-        $message->headers = $this->filterHeaders($headers);
+        $message->headers = $headers;
 
         return $message;
     }
