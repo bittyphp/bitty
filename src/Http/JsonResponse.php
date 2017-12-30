@@ -20,8 +20,6 @@ class JsonResponse extends Response
         parent::__construct($json, $statusCode, $headers);
 
         // forcibly override content type
-        $clone = $this->withHeader('Content-Type', 'application/json');
-
-        $this->headers = $clone->getHeaders();
+        $this->headers = $this->withHeader('Content-Type', 'application/json')->getHeaders();
     }
 }
