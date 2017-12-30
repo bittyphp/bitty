@@ -18,8 +18,7 @@
         <type>error</type>
     </rule>
 
-    <!-- Include the whole PSR1 and PSR2 standard -->
-    <rule ref="PSR1" />
+    <!-- Include the whole PSR2 standard (includes PSR1) -->
     <rule ref="PSR2" />
 
     <!-- Private methods MUST not be prefixed with an underscore -->
@@ -34,12 +33,9 @@
 
     <rule ref="Generic.Arrays.DisallowLongArraySyntax"/>
     <rule ref="Generic.Commenting.Todo" />
-    <rule ref="Generic.ControlStructures.InlineControlStructure" />
-    <rule ref="Generic.Formatting.DisallowMultipleStatements" />
     <rule ref="Generic.Formatting.SpaceAfterCast" />
     <rule ref="Generic.NamingConventions.ConstructorName" />
     <rule ref="Generic.PHP.DeprecatedFunctions" />
-    <rule ref="Generic.PHP.LowerCaseKeyword" />
     <rule ref="Generic.Arrays.ArrayIndent" />
     <rule ref="Generic.Classes.DuplicateClassName" />
 
@@ -70,12 +66,6 @@
     <rule ref="Generic.Files.LineLength.MaxExceeded">
         <message>Line contains %2$s chars, which is more than the limit of %1$s</message>
         <type>warning</type>
-    </rule>
-
-    <rule ref="Generic.Files.LineEndings">
-        <properties>
-            <property name="eolChar" value="\n" />
-        </properties>
     </rule>
 
     <rule ref="Generic.PHP.ForbiddenFunctions">
