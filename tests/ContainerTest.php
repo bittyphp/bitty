@@ -3,11 +3,10 @@
 namespace Bizurkur\Bitty\Tests;
 
 use Bizurkur\Bitty\Container;
-use Bizurkur\Bitty\Container\ContainerAwareInterface;
 use Bizurkur\Bitty\Container\Exception\NotFoundException;
-use Bizurkur\Bitty\Container\ServiceBuilder;
-use Bizurkur\Bitty\Container\ServiceBuilderInterface;
+use Bizurkur\Bitty\Container\ServiceProviderInterface;
 use Bizurkur\Bitty\ContainerInterface;
+use Bizurkur\Bitty\Tests\Stubs\ServiceProviderStubInterface;
 use Bizurkur\Bitty\Tests\TestCase;
 use Psr\Container\ContainerInterface as PsrContainerInterface;
 
@@ -144,40 +143,40 @@ class ContainerTest extends TestCase
         $this->assertSame($this->fixture, $actual);
     }
 
-    public function testBuilderSetsContainerOnContainerAwareBuilder()
+    public function testBuilderSetsContainerOnContainerAwareProvider()
     {
-        $builder = $this->createMock(ServiceBuilder::class);
+        $provider = $this->createMock(ServiceProviderStubInterface::class);
 
         $spy = $this->once();
-        $builder->expects($spy)->method('setContainer');
+        $provider->expects($spy)->method('setContainer');
 
-        $fixture = new Container([], [], $builder);
+        $fixture = new Container([], [], $provider);
 
         $actual = $spy->getInvocations()[0]->parameters[0];
         $this->assertSame($fixture, $actual);
     }
 
-    public function testGetCallsBuilder()
+    public function testGetCallsProvider()
     {
-        $name    = uniqid();
-        $builder = $this->createMock(ServiceBuilderInterface::class);
+        $name     = uniqid();
+        $provider = $this->createMock(ServiceProviderInterface::class);
 
-        $this->fixture = new Container([], [], $builder);
+        $this->fixture = new Container([], [], $provider);
 
-        $builder->expects($this->once())
-            ->method('build')
+        $provider->expects($this->once())
+            ->method('provide')
             ->with($name);
 
         $this->fixture->get($name);
     }
 
-    public function testGetReturnsBuilderResponse()
+    public function testGetReturnsProviderResponse()
     {
-        $object  = new \stdClass();
-        $builder = $this->createMock(ServiceBuilderInterface::class);
-        $builder->method('build')->willReturn($object);
+        $object   = new \stdClass();
+        $provider = $this->createMock(ServiceProviderInterface::class);
+        $provider->method('provide')->willReturn($object);
 
-        $this->fixture = new Container([], [], $builder);
+        $this->fixture = new Container([], [], $provider);
 
         $actual = $this->fixture->get(uniqid());
 

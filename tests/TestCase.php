@@ -31,7 +31,7 @@ abstract class TestCase extends PHPUnit_Framework_TestCase
      *
      * @return PHPUnit_Framework_MockObject_MockObject
      */
-    protected function createConfiguredMock($className, $methods)
+    protected function createConfiguredMock($className, array $methods)
     {
         $mock = $this->createMock($className);
 

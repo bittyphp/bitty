@@ -15,8 +15,9 @@ class RedirectResponse extends Response
      */
     public function __construct($uri, $statusCode = 302, array $headers = [])
     {
-        $headers['Location'] = [$uri];
-
         parent::__construct('', $statusCode, $headers);
+
+        // forcibly override location
+        $this->headers = $this->withHeader('Location', $uri)->getHeaders();
     }
 }

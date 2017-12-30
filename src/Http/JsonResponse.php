@@ -16,9 +16,10 @@ class JsonResponse extends Response
         $statusCode = 200,
         array $headers = []
     ) {
-        $headers['Content-type'] = ['application/json'];
         $json = json_encode($body);
-
         parent::__construct($json, $statusCode, $headers);
+
+        // forcibly override content type
+        $this->headers = $this->withHeader('Content-Type', 'application/json')->getHeaders();
     }
 }
