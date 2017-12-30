@@ -4,6 +4,7 @@ namespace Bizurkur\Bitty\Http\Server;
 
 use Bizurkur\Bitty\Container\ContainerAwareInterface;
 use Bizurkur\Bitty\Container\ContainerAwareTrait;
+use Bizurkur\Bitty\Http\Exception\InternalServerErrorException;
 use Bizurkur\Bitty\Http\Exception\NotFoundException;
 use Bizurkur\Bitty\Http\Server\RequestHandlerInterface;
 use Bizurkur\Bitty\RouterInterface;
@@ -62,7 +63,9 @@ class RequestHandler implements RequestHandlerInterface, ContainerAwareInterface
                 [$request, $params]
             );
         } else {
-            $response = $this->container->get('response');
+            throw new InternalServerErrorException(
+                sprintf('%s %s could not be resolved.', $method, $path)
+            );
         }
 
         return $response;
