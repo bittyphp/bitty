@@ -61,25 +61,11 @@ class Collection implements CollectionInterface
             $value = $this->data[$key];
         }
 
-        if ($trim) {
-            if (is_string($value)) {
-                return trim($value);
-            }
-
-            if (!is_array($value)) {
-                return $value;
-            }
-
-            array_walk_recursive($value, function (&$data) {
-                if (is_string($data)) {
-                    $data = trim($data);
-                }
-            });
-
+        if (!$trim) {
             return $value;
         }
 
-        return $value;
+        return $this->trimValue($value);
     }
 
     /**
@@ -98,5 +84,31 @@ class Collection implements CollectionInterface
     public function count()
     {
         return count($this->data);
+    }
+
+    /**
+     * Trims a value of padding, if applicable.
+     *
+     * @param mixed $value
+     *
+     * @return mixed
+     */
+    protected function trimValue($value)
+    {
+        if (is_string($value)) {
+            return trim($value);
+        }
+
+        if (!is_array($value)) {
+            return $value;
+        }
+
+        array_walk_recursive($value, function (&$data) {
+            if (is_string($data)) {
+                $data = trim($data);
+            }
+        });
+
+        return $value;
     }
 }
