@@ -281,7 +281,7 @@ class RequestHandlerTest extends TestCase
         $route = $this->createRoute();
         $this->router->method('find')->willReturn($route);
 
-        $message = $method.' /'.$path.' could not be resolved.';
+        $message = 'Internal Server Error';
         $this->setExpectedException(InternalServerErrorException::class, $message);
 
         $this->fixture->handle($request);
