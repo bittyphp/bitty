@@ -97,32 +97,30 @@ class Cookie
      */
     public function __toString()
     {
-        $name  = $this->raw ? $this->name : rawurlencode($this->name);
+        $name   = $this->raw ? $this->name : rawurlencode($this->name);
+        $value  = $this->raw ? $this->value : rawurlencode($this->value);
+        $expire = $this->expire;
+
+        if (!$value) {
+            $value        = 'deleted';
+            $expires      = time() - 1314000; // 1 year ago
+            $this->expire = $expires;
+        }
+
+        $pieces = [
+            'value' => $value,
+            'expire' => 'expires='.gmdate('D, d-M-Y H:i:s T', $expires),
+            'path' => 'path='.$this->path,
+            'domain' => 'domain='.$this->domain,
+            'secure' => 'secure',
+            'httpOnly' => 'httponly',
+        ];
+
         $parts = [];
-
-        if ($this->value) {
-            $parts[] = $this->raw ? $this->value : rawurlencode($this->value);
-            if (0 !== $this->expire) {
-                $parts[] = 'expires='.gmdate('D, d-M-Y H:i:s T', $this->expire);
+        foreach ($pieces as $key => $value) {
+            if (!empty($this->$key)) {
+                $parts[] = $value;
             }
-        } else {
-            $parts[] = 'deleted; expires=Thu, 01-Jan-1970 00:00:00 GMT';
-        }
-
-        if ($this->path) {
-            $parts[] = 'path='.$this->path;
-        }
-
-        if ($this->domain) {
-            $parts[] = 'domain='.$this->domain;
-        }
-
-        if ($this->secure) {
-            $parts[] = 'secure';
-        }
-
-        if ($this->httpOnly) {
-            $parts[] = 'httponly';
         }
 
         return $name.'='.implode('; ', $parts);
