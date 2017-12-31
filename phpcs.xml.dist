@@ -98,6 +98,7 @@
     <rule ref="Generic.PHP.BacktickOperator" />
     <rule ref="Generic.PHP.CharacterBeforePHPOpeningTag" />
     <rule ref="Generic.PHP.CharacterBeforePHPOpeningTag.Found">
+        <!-- This is likely an error, but don't force that assumption -->
         <type>warning</type>
     </rule>
     <rule ref="Generic.PHP.DeprecatedFunctions" />
@@ -105,12 +106,15 @@
     <rule ref="Generic.PHP.DisallowShortOpenTag" />
     <rule ref="Generic.PHP.DiscourageGoto" />
     <rule ref="Generic.PHP.DiscourageGoto.Found">
+        <!-- Why did PHP add GOTO? Terrible. -->
         <message>Use of GOTO is not allowed.</message>
         <type>error</type>
     </rule>
     <rule ref="Generic.PHP.ForbiddenFunctions">
         <properties>
-            <property name="forbiddenFunctions" type="array" value="var_dump=>null,print=>echo,delete=>unset,create_function=>null" />
+            <property name="forbiddenFunctions" type="array"
+                value="var_dump=>null,print=>echo,create_function=>null,eval=>null"
+            />
         </properties>
     </rule>
     <rule ref="Generic.PHP.NoSilencedErrors" />
