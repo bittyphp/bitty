@@ -139,7 +139,7 @@ class Request extends AbstractMessage implements ServerRequestInterface
         $body = ''
     ) {
         $this->method     = $this->filterMethod($method);
-        $this->uri        = Uri::createFromString($uri);
+        $this->uri        = new Uri((string) $uri);
         $this->headers    = $this->filterHeaders($headers);
         $this->query      = $this->filterQueryParams($query);
         $this->request    = $this->filterRequestParams($request);
@@ -193,7 +193,7 @@ class Request extends AbstractMessage implements ServerRequestInterface
     {
         return new static(
             isset($data['method']) ? $data['method'] : 'GET',
-            isset($data['uri']) ? $data['uri'] : new Uri(),
+            isset($data['uri']) ? $data['uri'] : '',
             isset($data['headers']) ? $data['headers'] : [],
             isset($data['query']) ? $data['query'] : [],
             isset($data['request']) ? $data['request'] : [],
