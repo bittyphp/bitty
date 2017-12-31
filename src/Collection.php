@@ -64,15 +64,19 @@ class Collection implements CollectionInterface
         if ($trim) {
             if (is_string($value)) {
                 return trim($value);
-            } elseif (is_array($value)) {
-                array_walk_recursive($value, function (&$data) {
-                    if (is_string($data)) {
-                        $data = trim($data);
-                    }
-                });
+            }
 
+            if (!is_array($value)) {
                 return $value;
             }
+
+            array_walk_recursive($value, function (&$data) {
+                if (is_string($data)) {
+                    $data = trim($data);
+                }
+            });
+
+            return $value;
         }
 
         return $value;
