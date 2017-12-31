@@ -161,8 +161,8 @@ class Uri implements UriInterface
             $scheme = 'https';
         }
 
-        $user = $env->get('PHP_AUTH_USER', '');
-        $pass = $env->get('PHP_AUTH_PW', '');
+        $user = $env->get('PHP_AUTH_USER');
+        $pass = $env->get('PHP_AUTH_PW');
         $port = $env->get('SERVER_PORT');
 
         if ($env->has('HTTP_HOST')) {
@@ -175,14 +175,14 @@ class Uri implements UriInterface
             $host = $env->get('SERVER_NAME');
         }
 
-        $path = parse_url($env->get('REQUEST_URI', ''), PHP_URL_PATH);
+        $path = parse_url($env->get('REQUEST_URI'), PHP_URL_PATH);
         if (empty($path)) {
             $path = $env->get('PATH_INFO');
         }
 
-        $query = $env->get('QUERY_STRING', '');
+        $query = parse_url($env->get('REQUEST_URI'), PHP_URL_QUERY);
         if (empty($query)) {
-            $query = parse_url($env->get('REQUEST_URI', ''), PHP_URL_QUERY);
+            $query = $env->get('QUERY_STRING');
         }
 
         return new static($scheme, $host, $port, $path, $query, '', $user, $pass);
