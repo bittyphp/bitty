@@ -4,6 +4,7 @@ namespace Bizurkur\Bitty\Tests\Http;
 
 use Bizurkur\Bitty\Http\Response;
 use Bizurkur\Bitty\Tests\TestCase;
+use Psr\Http\Message\ResponseInterface;
 
 class ResponseTest extends TestCase
 {
@@ -17,6 +18,11 @@ class ResponseTest extends TestCase
         parent::setUp();
 
         $this->fixture = new Response();
+    }
+
+    public function testInstanceOf()
+    {
+        $this->assertInstanceOf(ResponseInterface::class, $this->fixture);
     }
 
     /**
