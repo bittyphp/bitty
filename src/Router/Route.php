@@ -171,6 +171,24 @@ class Route implements RouteInterface
     }
 
     /**
+     * {@inheritDoc}
+     */
+    public function getPattern()
+    {
+        $pattern = $this->path;
+
+        foreach ($this->constraints as $_name => $_pattern) {
+            $pattern = str_replace(
+                '{'.$_name.'}',
+                '(?<'.$_name.'>'.$_pattern.')',
+                $pattern
+            );
+        }
+
+        return $pattern;
+    }
+
+    /**
      * Sets the route name.
      *
      * @param string $name Route name.

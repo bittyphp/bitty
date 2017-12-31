@@ -92,37 +92,11 @@ class Router implements RouterInterface
     public function find($path, $method)
     {
         foreach ($this->routes as $route) {
-            // ignore routes that aren't for this request method
-            $methods = $route->getMethods();
-            if (!empty($methods)
-                && !in_array($method, $methods)
-            ) {
+            if (!$this->isMethodMatch($route, $method)) {
                 continue;
             }
 
-            $pattern = $route->getPath();
-
-            if ($pattern === $path) {
-                return $route;
-            }
-
-            $constraints = $route->getConstraints();
-            foreach ($constraints as $_name => $_pattern) {
-                $pattern = str_replace(
-                    '{'.$_name.'}',
-                    '(?<'.$_name.'>'.$_pattern.')',
-                    $pattern
-                );
-            }
-
-            $matches = [];
-            if (preg_match("`^$pattern$`", $path, $matches)) {
-                $params = [];
-                foreach ($constraints as $_name => $_pattern) {
-                    $params[$_name] = isset($matches[$_name]) ? $matches[$_name] : '';
-                }
-                $route->setParams($params);
-
+            if ($this->isPathMatch($route, $path)) {
                 return $route;
             }
         }
@@ -143,5 +117,56 @@ class Router implements RouterInterface
         }
 
         return $path;
+    }
+
+    /**
+     * Checks if the route matches the request method.
+     *
+     * @param Route $route
+     * @param string $method
+     *
+     * @return bool
+     */
+    protected function isMethodMatch(Route $route, $method)
+    {
+        $methods = $route->getMethods();
+        if ([] === $methods) {
+            // any method allowed
+            return true;
+        }
+
+        return in_array($method, $methods);
+    }
+
+    /**
+     * Checks if the route matches the request path.
+     *
+     * @param Route $route
+     * @param string $path
+     *
+     * @return bool
+     */
+    protected function isPathMatch(Route $route, $path)
+    {
+        $pattern = $route->getPattern();
+        if ($pattern === $path) {
+            return true;
+        }
+
+        $matches = [];
+        if (!preg_match("`^$pattern$`", $path, $matches)) {
+            return false;
+        }
+
+        $params = [];
+        foreach ($matches as $key => $value) {
+            if (!is_int($key)) {
+                $params[$key] = $value;
+            }
+        }
+
+        $route->setParams($params);
+
+        return true;
     }
 }

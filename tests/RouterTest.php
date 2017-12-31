@@ -186,6 +186,15 @@ class RouterTest extends TestCase
         };
 
         return [
+            'open route' => [
+                'routes' => [
+                    [[], $pathA, $callback, [], $nameA],
+                ],
+                'path' => $pathA,
+                'method' => 'GET',
+                'expectedName' => $nameA,
+                'expectedParams' => [],
+            ],
             'simple route' => [
                 'routes' => [
                     ['GET', $pathA, $callback, [], $nameA],
