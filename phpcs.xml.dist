@@ -35,11 +35,22 @@
     <rule ref="Generic.Classes.DuplicateClassName" />
 
     <rule ref="Generic.Commenting.Todo" />
-    <rule ref="Generic.Commenting.Todo.CommentFound">
-        <message>Please review this TODO comment: %s</message>
+    <rule ref="Generic.Commenting.DocComment" />
+    <rule ref="Generic.Commenting.DocComment.MissingShort">
+        <!-- A description SHOULD be there, not MUST be there -->
+        <type>warning</type>
+        <severity>3</severity>
     </rule>
-    <!-- This would be a great rule, if configurable -->
-    <!-- <rule ref="Generic.Commenting.DocComment" /> -->
+    <rule ref="Generic.Commenting.DocComment.ParamNotFirst">
+        <!-- Sometimes @see or similar makes more sense to be first -->
+        <type>warning</type>
+        <severity>1</severity>
+    </rule>
+    <rule ref="Generic.Commenting.DocComment.TagValueIndent">
+        <!-- This conflicts with tags SHOULD NOT be grouped together -->
+        <type>warning</type>
+        <severity>1</severity>
+    </rule>
 
     <rule ref="Generic.Files.ByteOrderMark" />
     <rule ref="Generic.Files.EndFileNewline" />
