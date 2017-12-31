@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
-<ruleset name="codesniff">
-    <description>Code standard</description>
+<ruleset name="Bizurkur">
+    <description>Bizurkur code standards</description>
 
     <file>src/</file>
     <file>tests/</file>
