@@ -97,21 +97,20 @@ class Cookie
      */
     public function __toString()
     {
-        $cookie = clone $this;
-        $name   = $cookie->raw ? $cookie->name : rawurlencode($cookie->name);
-        $value  = $cookie->raw ? $cookie->value : rawurlencode($cookie->value);
+        $name  = $this->raw ? $this->name : rawurlencode($this->name);
+        $value = $this->raw ? $this->value : rawurlencode($this->value);
 
         $pieces = [
-            'expires' => 'expires='.gmdate('D, d-M-Y H:i:s T', $cookie->expires),
-            'path' => 'path='.$cookie->path,
-            'domain' => 'domain='.$cookie->domain,
+            'expires' => 'expires='.gmdate('D, d-M-Y H:i:s T', $this->expires),
+            'path' => 'path='.$this->path,
+            'domain' => 'domain='.$this->domain,
             'secure' => 'secure',
             'httpOnly' => 'httponly',
         ];
 
         $parts = [];
         foreach ($pieces as $key => $piece) {
-            if (!empty($cookie->$key)) {
+            if (!empty($this->$key)) {
                 $parts[] = $piece;
             }
         }
