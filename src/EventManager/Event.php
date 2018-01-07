@@ -48,11 +48,11 @@ class Event implements EventInterface
      */
     public function setName($name)
     {
-        if (!preg_match("/^[A-Za-z0-9_\.-]+$/", $name)) {
+        if (!preg_match("/^[A-Za-z0-9_\.]+$/", $name)) {
             throw new \InvalidArgumentException(
                 sprintf(
                     'Event name "%s" is invalid. Only alpha-numeric characters, '
-                    .'underscores, hyphens, and periods allowed.',
+                    .'underscores, and periods allowed.',
                     $name
                 )
             );

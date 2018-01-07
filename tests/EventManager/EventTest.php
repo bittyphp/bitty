@@ -27,7 +27,7 @@ class EventTest extends TestCase
 
     public function testGetName()
     {
-        $name = uniqid('AB_cd.12-34');
+        $name = uniqid('AB_cd.1234');
 
         $this->fixture->setName($name);
 
@@ -41,7 +41,7 @@ class EventTest extends TestCase
         $name = uniqid('name').'?';
 
         $message = 'Event name "'.$name.'" is invalid. Only alpha-numeric '
-            .'characters, underscores, hyphens, and periods allowed';
+            .'characters, underscores, and periods allowed';
         $this->setExpectedException(\InvalidArgumentException::class, $message);
 
         $this->fixture->setName($name);
