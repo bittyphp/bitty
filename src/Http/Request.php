@@ -113,10 +113,10 @@ class Request extends AbstractMessage implements ServerRequestInterface
      * @param array $headers
      * @param array $query
      * @param array $request
-     * @param array $attributes
      * @param array $cookies
      * @param UploadedFileInterface[] $files
      * @param array $server
+     * @param array $attributes
      * @param StreamInterface|resource|string $body
      */
     public function __construct(
