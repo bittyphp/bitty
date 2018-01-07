@@ -9,6 +9,16 @@ use Psr\Http\Message\ServerRequestInterface;
 class MiddlewareHandler implements RequestHandlerInterface
 {
     /**
+     * @var MiddlewareInterface
+     */
+    protected $middleware = null;
+
+    /**
+     * @var RequestHandlerInterface
+     */
+    protected $handler = null;
+
+    /**
      * @param MiddlewareInterface $middleware
      * @param RequestHandlerInterface $handler
      */

@@ -6,7 +6,6 @@ use Bizurkur\Bitty\Container\Container;
 use Bizurkur\Bitty\Container\ContainerAwareInterface;
 use Bizurkur\Bitty\Container\ContainerInterface;
 use Bizurkur\Bitty\EventManager\EventManager;
-use Bizurkur\Bitty\EventManager\EventManagerInterface;
 use Bizurkur\Bitty\Http\Request;
 use Bizurkur\Bitty\Http\Response;
 use Bizurkur\Bitty\Http\Server\MiddlewareChain;
@@ -14,7 +13,6 @@ use Bizurkur\Bitty\Http\Server\MiddlewareInterface;
 use Bizurkur\Bitty\Http\Server\RequestHandler;
 use Bizurkur\Bitty\Router\Router;
 use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
 
 class Application
 {

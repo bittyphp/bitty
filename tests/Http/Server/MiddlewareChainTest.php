@@ -7,7 +7,6 @@ use Bizurkur\Bitty\Http\Server\MiddlewareHandler;
 use Bizurkur\Bitty\Http\Server\MiddlewareInterface;
 use Bizurkur\Bitty\Http\Server\RequestHandlerInterface;
 use Bizurkur\Bitty\Tests\TestCase;
-use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 class MiddlewareChainTest extends TestCase

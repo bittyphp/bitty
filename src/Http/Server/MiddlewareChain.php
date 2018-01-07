@@ -14,6 +14,11 @@ class MiddlewareChain implements RequestHandlerInterface
     protected $chain = [];
 
     /**
+     * @var RequestHandlerInterface
+     */
+    protected $defaultHandler = null;
+
+    /**
      * Adds middleware to the chain.
      *
      * @param MiddlewareInterface $middleware
@@ -26,11 +31,11 @@ class MiddlewareChain implements RequestHandlerInterface
     /**
      * Sets the default request handler.
      *
-     * @param RequestHandlerInterface $handler
+     * @param RequestHandlerInterface $defaultHandler
      */
-    public function setDefaultHandler(RequestHandlerInterface $handler)
+    public function setDefaultHandler(RequestHandlerInterface $defaultHandler)
     {
-        $this->handler = $handler;
+        $this->defaultHandler = $defaultHandler;
     }
 
     /**
@@ -40,7 +45,7 @@ class MiddlewareChain implements RequestHandlerInterface
      */
     public function getDefaultHandler()
     {
-        return $this->handler;
+        return $this->defaultHandler;
     }
 
     /**
@@ -60,7 +65,7 @@ class MiddlewareChain implements RequestHandlerInterface
      */
     protected function buildChain()
     {
-        $chain = $this->handler;
+        $chain = $this->defaultHandler;
 
         foreach (array_reverse($this->chain) as $middleware) {
             $chain = new MiddlewareHandler($middleware, $chain);
