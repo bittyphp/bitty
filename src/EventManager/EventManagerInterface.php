@@ -45,10 +45,10 @@ interface EventManagerInterface
      * Can accept an EventInterface or will create one if not passed
      *
      * @param string|EventInterface $event
-     * @param object|string $target
-     * @param array|object $argv
+     * @param null|object|string $target
+     * @param mixed[] $params
      *
      * @return mixed
      */
-    public function trigger($event, $target = null, $argv = []);
+    public function trigger($event, $target = null, array $params = []);
 }

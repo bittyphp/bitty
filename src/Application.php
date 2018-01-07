@@ -2,14 +2,17 @@
 
 namespace Bizurkur\Bitty;
 
-use Bizurkur\Bitty\Container;
+use Bizurkur\Bitty\Container\Container;
 use Bizurkur\Bitty\Container\ContainerAwareInterface;
-use Bizurkur\Bitty\ContainerInterface;
+use Bizurkur\Bitty\Container\ContainerInterface;
+use Bizurkur\Bitty\EventManager\EventManager;
+use Bizurkur\Bitty\EventManager\EventManagerInterface;
 use Bizurkur\Bitty\Http\Request;
 use Bizurkur\Bitty\Http\Response;
 use Bizurkur\Bitty\Http\Server\RequestHandler;
-use Bizurkur\Bitty\Router;
+use Bizurkur\Bitty\Router\Router;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 class Application
 {
@@ -47,15 +50,26 @@ class Application
      */
     public function run()
     {
+        $eventManager   = $this->container->get('event_manager');
         $requestHandler = $this->container->get('request_handler');
         if ($requestHandler instanceof ContainerAwareInterface) {
             $requestHandler->setContainer($this->container);
         }
 
-        $request  = $this->container->get('request');
+        $request    = $this->container->get('request');
+        $newRequest = $eventManager->trigger('request.before.handle', $request);
+        if ($newRequest instanceof ServerRequestInterface) {
+            $request = $newRequest;
+        }
         $response = $requestHandler->handle($request);
+        $eventManager->trigger('request.after.handle', $request);
 
+        $newResponse = $eventManager->trigger('response.before.handle', $response);
+        if ($newResponse instanceof ResponseInterface) {
+            $response = $newResponse;
+        }
         $this->sendResponse($response);
+        $eventManager->trigger('response.after.handle', $response);
     }
 
     /**
@@ -83,6 +97,11 @@ class Application
         if (!$this->container->has('response')) {
             $response = new Response();
             $this->container->set('response', $response);
+        }
+
+        if (!$this->container->has('event_manager')) {
+            $eventManager = new EventManager();
+            $this->container->set('event_manager', $eventManager);
         }
     }
 

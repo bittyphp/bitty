@@ -1,10 +1,11 @@
 <?php
 
-namespace Bizurkur\Bitty;
+namespace Bizurkur\Bitty\Router;
 
 use Bizurkur\Bitty\Router\Exception\NotFoundException;
 use Bizurkur\Bitty\Router\Route;
-use Bizurkur\Bitty\RouterInterface;
+use Bizurkur\Bitty\Router\RouteInterface;
+use Bizurkur\Bitty\Router\RouterInterface;
 
 class Router implements RouterInterface
 {
@@ -122,12 +123,12 @@ class Router implements RouterInterface
     /**
      * Checks if the route matches the request method.
      *
-     * @param Route $route
+     * @param RouteInterface $route
      * @param string $method
      *
      * @return bool
      */
-    protected function isMethodMatch(Route $route, $method)
+    protected function isMethodMatch(RouteInterface $route, $method)
     {
         $methods = $route->getMethods();
         if ([] === $methods) {
@@ -141,12 +142,12 @@ class Router implements RouterInterface
     /**
      * Checks if the route matches the request path.
      *
-     * @param Route $route
+     * @param RouteInterface $route
      * @param string $path
      *
      * @return bool
      */
-    protected function isPathMatch(Route $route, $path)
+    protected function isPathMatch(RouteInterface $route, $path)
     {
         $pattern = $route->getPattern();
         if ($pattern === $path) {

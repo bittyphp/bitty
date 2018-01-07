@@ -112,22 +112,6 @@ class Response extends AbstractMessage implements ResponseInterface
     }
 
     /**
-     * Creates a new response from an array.
-     *
-     * @param array $data
-     *
-     * @return static
-     */
-    public static function createFromArray(array $data)
-    {
-        return new static(
-            isset($data['body']) ? $data['body'] : '',
-            isset($data['statusCode']) ? $data['statusCode'] : 200,
-            isset($data['headers']) ? $data['headers'] : []
-        );
-    }
-
-    /**
      * {@inheritDoc}
      */
     public function getStatusCode()

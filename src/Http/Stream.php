@@ -41,12 +41,13 @@ class Stream implements StreamInterface
      */
     public function __toString()
     {
-        $string = stream_get_contents($this->stream, -1, 0);
-        if (false === $string) {
+        if (!$this->isAttached()) {
             return '';
         }
 
-        return $string;
+        $string = stream_get_contents($this->stream, -1, 0);
+
+        return (string) $string;
     }
 
     /**
@@ -54,7 +55,12 @@ class Stream implements StreamInterface
      */
     public function close()
     {
+        if (!$this->isAttached()) {
+            return;
+        }
+
         fclose($this->stream);
+        $this->stream = null;
     }
 
     /**
@@ -74,13 +80,13 @@ class Stream implements StreamInterface
      */
     public function getSize()
     {
-        $stats = fstat($this->stream);
-
-        if (!isset($stats['size'])) {
+        if (!$this->isAttached()) {
             return null;
         }
 
-        return $stats['size'];
+        $stats = fstat($this->stream);
+
+        return isset($stats['size']) ? $stats['size'] : null;
     }
 
     /**
@@ -88,8 +94,9 @@ class Stream implements StreamInterface
      */
     public function tell()
     {
-        $position = ftell($this->stream);
-        if (false === $position) {
+        if (!$this->isAttached()
+            || false === ($position = ftell($this->stream))
+        ) {
             throw new \RuntimeException(
                 sprintf('Unable to get position of stream.')
             );
@@ -103,7 +110,7 @@ class Stream implements StreamInterface
      */
     public function eof()
     {
-        return feof($this->stream);
+        return $this->isAttached() ? feof($this->stream) : true;
     }
 
     /**
@@ -111,8 +118,9 @@ class Stream implements StreamInterface
      */
     public function isSeekable()
     {
-        $seekable = $this->getMetadata('seekable');
-        if (null === $seekable) {
+        if (!$this->isAttached()
+            || null === ($seekable = $this->getMetadata('seekable'))
+        ) {
             return false;
         }
 
@@ -124,6 +132,10 @@ class Stream implements StreamInterface
      */
     public function seek($offset, $whence = SEEK_SET)
     {
+        if (!$this->isSeekable()) {
+            throw new \RuntimeException('Stream is not seekable.');
+        }
+
         if (0 > fseek($this->stream, $offset, $whence)) {
             throw new \RuntimeException(
                 sprintf('Failed to seek to offset %s.', $offset)
@@ -136,7 +148,7 @@ class Stream implements StreamInterface
      */
     public function rewind()
     {
-        if (!rewind($this->stream)) {
+        if (!$this->isAttached() || !rewind($this->stream)) {
             throw new \RuntimeException('Failed to rewind stream.');
         }
     }
@@ -146,8 +158,9 @@ class Stream implements StreamInterface
      */
     public function isWritable()
     {
-        $mode = $this->getMetadata('mode');
-        if (null === $mode) {
+        if (!$this->isAttached()
+            || null === ($mode = $this->getMetadata('mode'))
+        ) {
             return false;
         }
 
@@ -161,12 +174,9 @@ class Stream implements StreamInterface
      */
     public function write($string)
     {
-        if (!$this->isWritable()) {
-            throw new \RuntimeException('Stream is not writable.');
-        }
-
-        $bytes = fwrite($this->stream, $string);
-        if (false === $bytes) {
+        if (!$this->isWritable()
+            || false === ($bytes = fwrite($this->stream, $string))
+        ) {
             throw new \RuntimeException('Failed to write to stream.');
         }
 
@@ -178,8 +188,9 @@ class Stream implements StreamInterface
      */
     public function isReadable()
     {
-        $mode = $this->getMetadata('mode');
-        if (null === $mode) {
+        if (!$this->isAttached()
+            || null === ($mode = $this->getMetadata('mode'))
+        ) {
             return false;
         }
 
@@ -193,12 +204,9 @@ class Stream implements StreamInterface
      */
     public function read($length)
     {
-        if (!$this->isReadable()) {
-            throw new \RuntimeException('Stream is not readable.');
-        }
-
-        $string = fread($this->stream, $length);
-        if (false === $string) {
+        if (!$this->isReadable()
+            || false === ($string = fread($this->stream, $length))
+        ) {
             throw new \RuntimeException('Failed to read from stream.');
         }
 
@@ -210,8 +218,9 @@ class Stream implements StreamInterface
      */
     public function getContents()
     {
-        $string = stream_get_contents($this->stream);
-        if (false === $string) {
+        if (!$this->isAttached()
+            || false === ($string = stream_get_contents($this->stream))
+        ) {
             throw new \RuntimeException('Failed to get contents of stream.');
         }
 
@@ -223,6 +232,10 @@ class Stream implements StreamInterface
      */
     public function getMetadata($key = null)
     {
+        if (!$this->isAttached()) {
+            return null;
+        }
+
         $metadata = stream_get_meta_data($this->stream);
         if (null === $key) {
             return $metadata;
@@ -233,5 +246,15 @@ class Stream implements StreamInterface
         }
 
         return null;
+    }
+
+    /**
+     * Checks if the stream is attached.
+     *
+     * @return bool
+     */
+    protected function isAttached()
+    {
+        return null !== $this->stream;
     }
 }

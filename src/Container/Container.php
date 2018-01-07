@@ -1,11 +1,11 @@
 <?php
 
-namespace Bizurkur\Bitty;
+namespace Bizurkur\Bitty\Container;
 
 use Bizurkur\Bitty\Container\ContainerAwareInterface;
+use Bizurkur\Bitty\Container\ContainerInterface;
 use Bizurkur\Bitty\Container\Exception\NotFoundException;
 use Bizurkur\Bitty\Container\ServiceProviderInterface;
-use Bizurkur\Bitty\ContainerInterface;
 
 class Container implements ContainerInterface
 {

@@ -52,25 +52,18 @@ class Request extends AbstractMessage implements ServerRequestInterface
     protected $uri = null;
 
     /**
+     * HTTP request target.
+     *
+     * @var string
+     */
+    protected $requestTarget = null;
+
+    /**
      * Query parameters.
      *
      * @var CollectionInterface
      */
     protected $query = null;
-
-    /**
-     * Request parameters.
-     *
-     * @var CollectionInterface
-     */
-    protected $request = null;
-
-    /**
-     * Request attributes.
-     *
-     * @var CollectionInterface
-     */
-    protected $attributes = null;
 
     /**
      * Cookie parameters.
@@ -94,11 +87,11 @@ class Request extends AbstractMessage implements ServerRequestInterface
     protected $server = null;
 
     /**
-     * HTTP request target.
+     * Request attributes.
      *
-     * @var string
+     * @var CollectionInterface
      */
-    protected $requestTarget = null;
+    protected $attributes = null;
 
     /**
      * Parsed request body.
@@ -120,10 +113,10 @@ class Request extends AbstractMessage implements ServerRequestInterface
      * @param array $headers
      * @param array $query
      * @param array $request
-     * @param array $attributes
      * @param array $cookies
      * @param UploadedFileInterface[] $files
      * @param array $server
+     * @param array $attributes
      * @param StreamInterface|resource|string $body
      */
     public function __construct(
@@ -132,26 +125,36 @@ class Request extends AbstractMessage implements ServerRequestInterface
         array $headers = [],
         array $query = [],
         array $request = [],
-        array $attributes = [],
         array $cookies = [],
         array $files = [],
         array $server = [],
+        array $attributes = [],
         $body = ''
     ) {
         $this->method     = $this->filterMethod($method);
-        $this->uri        = Uri::createFromString($uri);
+        $this->uri        = new Uri((string) $uri);
         $this->headers    = $this->filterHeaders($headers);
         $this->query      = $this->filterQueryParams($query);
-        $this->request    = $this->filterRequestParams($request);
-        $this->attributes = $this->filterAttributes($attributes);
         $this->cookies    = $this->filterCookieParams($cookies);
         $this->files      = $this->filterFileParams($files);
         $this->server     = $this->filterServerParams($server);
+        $this->attributes = $this->filterAttributes($attributes);
         $this->body       = $this->filterBody($body);
 
         $this->protocolVersion = $this->filterProtocolVersion(
             str_replace('HTTP/', '', $this->server->get('SERVER_PROTOCOL', '1.1'))
         );
+
+        $contentTypes = $this->getHeader('Content-Type');
+
+        if ('POST' === $this->method
+            && (
+                in_array('application/x-www-form-urlencoded', $contentTypes)
+                || in_array('multipart/form-data', $contentTypes)
+            )
+        ) {
+            $this->parsedBody = $request;
+        }
 
         $this->registerContentTypeParser('application/json', function ($body) {
             $json = json_decode($body, true);
@@ -171,38 +174,13 @@ class Request extends AbstractMessage implements ServerRequestInterface
 
     public function __clone()
     {
-        // $this->headers = clone $this->headers;
         $this->uri        = clone $this->uri;
         $this->query      = clone $this->query;
-        $this->request    = clone $this->request;
-        $this->attributes = clone $this->attributes;
         $this->cookies    = clone $this->cookies;
         $this->files      = clone $this->files;
         $this->server     = clone $this->server;
+        $this->attributes = clone $this->attributes;
         $this->body       = clone $this->body;
-    }
-
-    /**
-     * Creates a new request from an array.
-     *
-     * @param array $data
-     *
-     * @return static
-     */
-    public static function createFromArray(array $data)
-    {
-        return new static(
-            isset($data['method']) ? $data['method'] : 'GET',
-            isset($data['uri']) ? $data['uri'] : new Uri(),
-            isset($data['headers']) ? $data['headers'] : [],
-            isset($data['query']) ? $data['query'] : [],
-            isset($data['request']) ? $data['request'] : [],
-            isset($data['attributes']) ? $data['attributes'] : [],
-            isset($data['cookies']) ? $data['cookies'] : [],
-            isset($data['files']) ? $data['files'] : [],
-            isset($data['server']) ? $data['server'] : [],
-            isset($data['body']) ? $data['body'] : ''
-        );
     }
 
     /**
@@ -219,33 +197,7 @@ class Request extends AbstractMessage implements ServerRequestInterface
         $body    = new RequestBody();
         $files   = new UploadedFileCollection($_FILES);
 
-        return new static($method, $uri, $headers, $_GET, $_POST, [], $_COOKIE, $files->all(), $_SERVER, $body);
-    }
-
-    /**
-     * Gets a query parameter.
-     *
-     * @param string $name
-     * @param mixed $default
-     *
-     * @return mixed
-     */
-    public function query($name, $default = null)
-    {
-        return $this->query->get($name, $default);
-    }
-
-    /**
-     * Gets a request parameter.
-     *
-     * @param string $name
-     * @param mixed $default
-     *
-     * @return mixed
-     */
-    public function request($name, $default = null)
-    {
-        return $this->request->get($name, $default);
+        return new static($method, $uri, $headers, $_GET, $_POST, $_COOKIE, $files->all(), $_SERVER, [], $body);
     }
 
     /**
@@ -254,7 +206,14 @@ class Request extends AbstractMessage implements ServerRequestInterface
     public function getRequestTarget()
     {
         if (null === $this->requestTarget) {
-            return $this->uri->getRequestTarget();
+            $string = '/'.ltrim($this->uri->getPath(), '/');
+
+            $query = $this->uri->getQuery();
+            if ('' !== $query) {
+                $string .= '?'.$query;
+            }
+
+            return $string;
         }
 
         return $this->requestTarget;
@@ -287,7 +246,7 @@ class Request extends AbstractMessage implements ServerRequestInterface
     {
         $request = clone $this;
 
-        $request->method = $method;
+        $request->method = $this->filterMethod($method);
 
         return $request;
     }
@@ -311,10 +270,10 @@ class Request extends AbstractMessage implements ServerRequestInterface
 
         if ($preserveHost) {
             if ('' === $this->getHeaderLine('Host') && '' !== $uri->getHost()) {
-                $request->headers['Host'] = [$uri->getHost()];
+                return $request->withHeader('Host', $uri->getHost());
             }
         } elseif ('' !== $uri->getHost()) {
-            $request->headers['Host'] = [$uri->getHost()];
+            return $request->withHeader('Host', $uri->getHost());
         }
 
         return $request;
@@ -336,36 +295,6 @@ class Request extends AbstractMessage implements ServerRequestInterface
         $request = clone $this;
 
         $request->query = $this->filterQueryParams($query);
-
-        return $request;
-    }
-
-    /**
-     * Gets the request parameters.
-     *
-     * This should be formatted similar to $_POST.
-     *
-     * @return array
-     */
-    public function getRequestParams()
-    {
-        return $this->request->all();
-    }
-
-    /**
-     * Sets request parameters.
-     *
-     * This should be formatted similar to $_POST.
-     *
-     * @param array $request
-     *
-     * @return static
-     */
-    public function withRequestParams(array $request)
-    {
-        $request = clone $this;
-
-        $request->request = $this->filterRequestParams($request);
 
         return $request;
     }
@@ -423,20 +352,10 @@ class Request extends AbstractMessage implements ServerRequestInterface
      */
     public function getParsedBody()
     {
-        $contentTypes = $this->getHeader('Content-Type');
-
-        if ('POST' === $this->method
-            && (
-                in_array('application/x-www-form-urlencoded', $contentTypes)
-                || in_array('multipart/form-data', $contentTypes)
-            )
-        ) {
-            return $this->request->all();
-        }
-
         if (null === $this->parsedBody) {
             $body = (string) $this->body;
 
+            $contentTypes = $this->getHeader('Content-Type');
             foreach ($contentTypes as $contentType) {
                 if (!isset($this->contentTypeParsers[$contentType])) {
                     continue;
@@ -580,18 +499,6 @@ class Request extends AbstractMessage implements ServerRequestInterface
     }
 
     /**
-     * Filters request parameters to make sure they're valid.
-     *
-     * @param array $request
-     *
-     * @return Collection
-     */
-    protected function filterRequestParams(array $request)
-    {
-        return new Collection($request);
-    }
-
-    /**
      * Filters attributes to make sure they're valid.
      *
      * @param array $attributes
@@ -618,12 +525,13 @@ class Request extends AbstractMessage implements ServerRequestInterface
     /**
      * Filters file parameters to make sure they're valid.
      *
-     * @param array $files
+     * @param UploadedFileInterface[] $files
      *
      * @return Collection
      */
     protected function filterFileParams(array $files)
     {
+        // TODO: Validate $files only contains UploadedFileInterface
         return new Collection($files);
     }
 

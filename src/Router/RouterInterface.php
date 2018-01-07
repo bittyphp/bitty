@@ -1,6 +1,6 @@
 <?php
 
-namespace Bizurkur\Bitty;
+namespace Bizurkur\Bitty\Router;
 
 use Bizurkur\Bitty\Router\Exception\NotFoundException;
 use Bizurkur\Bitty\Router\RouteInterface;

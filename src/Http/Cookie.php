@@ -23,7 +23,7 @@ class Cookie
      *
      * @var int
      */
-    protected $expire = null;
+    protected $expires = null;
 
     /**
      * The cookie URI path.
@@ -63,7 +63,7 @@ class Cookie
     /**
      * @param string $name The cookie name.
      * @param string $value The cookie value.
-     * @param int $expire The cookie expiration time.
+     * @param int $expires The cookie expiration time.
      * @param string $path The cookie URI path.
      * @param string $domain The cookie domain.
      * @param bool $secure Whether the cookie is for HTTPS or not.
@@ -73,7 +73,7 @@ class Cookie
     public function __construct(
         $name,
         $value = '',
-        $expire = 0,
+        $expires = 0,
         $path = '',
         $domain = '',
         $secure = false,
@@ -86,7 +86,7 @@ class Cookie
         $this->domain   = (string) $domain;
         $this->secure   = (bool) $secure;
         $this->httpOnly = (bool) $httpOnly;
-        $this->expire   = (int) $expire;
+        $this->expires  = (int) $expires;
         $this->raw      = (bool) $raw;
     }
 
@@ -97,19 +97,11 @@ class Cookie
      */
     public function __toString()
     {
-        $name   = $this->raw ? $this->name : rawurlencode($this->name);
-        $value  = $this->raw ? $this->value : rawurlencode($this->value);
-        $expire = $this->expire;
-
-        if (!$value) {
-            $value        = 'deleted';
-            $expires      = time() - 1314000; // 1 year ago
-            $this->expire = $expires;
-        }
+        $name  = $this->raw ? $this->name : rawurlencode($this->name);
+        $value = $this->raw ? $this->value : rawurlencode($this->value);
 
         $pieces = [
-            'value' => $value,
-            'expire' => 'expires='.gmdate('D, d-M-Y H:i:s T', $expires),
+            'expires' => 'expires='.gmdate('D, d-M-Y H:i:s T', $this->expires),
             'path' => 'path='.$this->path,
             'domain' => 'domain='.$this->domain,
             'secure' => 'secure',
@@ -117,13 +109,13 @@ class Cookie
         ];
 
         $parts = [];
-        foreach ($pieces as $key => $value) {
+        foreach ($pieces as $key => $piece) {
             if (!empty($this->$key)) {
-                $parts[] = $value;
+                $parts[] = $piece;
             }
         }
 
-        return $name.'='.implode('; ', $parts);
+        return $name.'='.$value.'; '.implode('; ', $parts);
     }
 
     /**
@@ -167,23 +159,23 @@ class Cookie
     }
 
     /**
-     * Sets the cookie expire time.
+     * Sets the cookie expiration time.
      *
-     * @param int $expire
+     * @param int $expires
      */
-    public function setExpire($expire)
+    public function setExpires($expires)
     {
-        $this->expire = (int) $expire;
+        $this->expires = (int) $expires;
     }
 
     /**
-     * Gets the cookie expire time.
+     * Gets the cookie expiration time.
      *
      * @return int
      */
-    public function getExpire()
+    public function getExpires()
     {
-        return $this->expire;
+        return $this->expires;
     }
 
     /**

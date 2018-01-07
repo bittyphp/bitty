@@ -3,11 +3,13 @@
 namespace Bizurkur\Bitty\Tests;
 
 use Bizurkur\Bitty\Application;
-use Bizurkur\Bitty\Container;
-use Bizurkur\Bitty\ContainerInterface;
+use Bizurkur\Bitty\Container\Container;
+use Bizurkur\Bitty\Container\ContainerInterface;
+use Bizurkur\Bitty\EventManager\EventManagerInterface;
 use Bizurkur\Bitty\Http\Server\RequestHandler;
 use Bizurkur\Bitty\Http\Server\RequestHandlerInterface;
-use Bizurkur\Bitty\RouterInterface;
+use Bizurkur\Bitty\Http\Stream;
+use Bizurkur\Bitty\Router\RouterInterface;
 use Bizurkur\Bitty\Tests\TestCase;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -122,6 +124,65 @@ class ApplicationTest extends TestCase
         $this->fixture->run();
     }
 
+    public function testRunCallsEventManager()
+    {
+        $request      = $this->createMock(ServerRequestInterface::class);
+        $response     = $this->createResponse();
+        $eventManager = $this->createMock(EventManagerInterface::class);
+        $this->setUpDependencies($request, $response, null, $eventManager);
+
+        $eventManager->expects($this->exactly(4))
+            ->method('trigger')
+            ->withConsecutive(
+                ['request.before.handle', $request],
+                ['request.after.handle', $request],
+                ['response.before.handle', $response],
+                ['response.after.handle', $response]
+            );
+
+        $this->fixture->run();
+    }
+
+    public function testRequestHandlerGetsModifiedRequest()
+    {
+        $requestA       = $this->createMock(ServerRequestInterface::class);
+        $requestB       = $this->createMock(ServerRequestInterface::class);
+        $requestHandler = $this->createMock(RequestHandlerInterface::class);
+        $eventManager   = $this->createMock(EventManagerInterface::class);
+        $this->setUpDependencies($requestA, null, $requestHandler, $eventManager);
+
+        $eventManager->method('trigger')
+            ->willReturnMap(
+                [['request.before.handle', $requestA, [], $requestB]]
+            );
+
+        $requestHandler->expects($this->once())
+            ->method('handle')
+            ->with($this->identicalTo($requestB));
+
+        $this->fixture->run();
+    }
+
+    public function testModifiedResponseSent()
+    {
+        $responseA    = $this->createResponse([], 'original');
+        $responseB    = $this->createResponse([], 'modified');
+        $eventManager = $this->createMock(EventManagerInterface::class);
+        $this->setUpDependencies(null, $responseA, null, $eventManager);
+
+        $eventManager->method('trigger')
+            ->willReturnMap(
+                [['response.before.handle', $responseA, [], $responseB]]
+            );
+
+        ob_start();
+        $this->fixture->run();
+        $actual = ob_get_contents();
+        ob_end_clean();
+
+        $this->assertEquals('modified', $actual);
+    }
+
     /**
      * @runInSeparateProcess
      * @dataProvider sampleHeaders
@@ -184,6 +245,20 @@ class ApplicationTest extends TestCase
         ];
     }
 
+    public function testRunOutputsResponseBody()
+    {
+        $body     = uniqid('body');
+        $response = $this->createResponse([], $body);
+        $this->setUpDependencies(null, $response);
+
+        ob_start();
+        $this->fixture->run();
+        $actual = ob_get_contents();
+        ob_end_clean();
+
+        $this->assertEquals($body, $actual);
+    }
+
     /**
      * Creates a container.
      *
@@ -201,15 +276,17 @@ class ApplicationTest extends TestCase
      * Creates a response.
      *
      * @param array $headers
+     * @param string $body
      *
      * @return ResponseInterface
      */
-    protected function createResponse(array $headers = [])
+    protected function createResponse(array $headers = [], string $body = '')
     {
         return $this->createConfiguredMock(
             ResponseInterface::class,
             [
                 'getHeaders' => $headers,
+                'getBody' => new Stream($body),
             ]
         );
     }
@@ -220,11 +297,13 @@ class ApplicationTest extends TestCase
      * @param ServerRequestInterface $request
      * @param ResponseInterface $response
      * @param RequestHandlerInterface $requestHandler
+     * @param EventManagerInterface $eventManager
      */
     protected function setUpDependencies(
         ServerRequestInterface $request = null,
         ResponseInterface $response = null,
-        RequestHandlerInterface $requestHandler = null
+        RequestHandlerInterface $requestHandler = null,
+        EventManagerInterface $eventManager = null
     ) {
         if (null === $request) {
             $request = $this->createMock(ServerRequestInterface::class);
@@ -235,6 +314,9 @@ class ApplicationTest extends TestCase
         if (null === $requestHandler) {
             $requestHandler = $this->createMock(RequestHandlerInterface::class);
         }
+        if (null === $eventManager) {
+            $eventManager = $this->createMock(EventManagerInterface::class);
+        }
 
         $requestHandler->method('handle')->willReturn($response);
 
@@ -243,6 +325,7 @@ class ApplicationTest extends TestCase
                 [
                     ['request', $request],
                     ['request_handler', $requestHandler],
+                    ['event_manager', $eventManager],
                 ]
             );
     }

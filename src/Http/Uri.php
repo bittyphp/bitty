@@ -75,73 +75,34 @@ class Uri implements UriInterface
     protected $fragment = null;
 
     /**
-     * @param string $scheme
-     * @param string $host
-     * @param int $port
-     * @param string $path
-     * @param string $query
-     * @param string $fragment
-     * @param string $user
-     * @param string $pass
+     * @param string $uri
      */
-    public function __construct(
-        $scheme = '',
-        $host = '',
-        $port = 0,
-        $path = '',
-        $query = '',
-        $fragment = '',
-        $user = '',
-        $pass = ''
-    ) {
-        $this->scheme   = $this->filterScheme($scheme);
-        $this->host     = $this->filterHost($host);
-        $this->port     = $this->filterPort($port);
-        $this->path     = $this->filterPath($path);
-        $this->query    = $this->filterQuery($query);
-        $this->fragment = $this->filterFragment($fragment);
-        $this->user     = (string) $user;
-        $this->pass     = (string) $pass;
-    }
-
-    /**
-     * Creates a new URI from a string or object that can be cast as a string.
-     *
-     * @param string|object $uri
-     *
-     * @return static
-     */
-    public static function createFromString($uri)
+    public function __construct($uri = '')
     {
-        $data = parse_url((string) $uri);
+        $data = parse_url($uri);
         if (false === $data) {
-            return new Uri();
+            return;
         }
 
-        return static::createFromArray($data);
-    }
+        $data += [
+            'scheme' => '',
+            'host' => '',
+            'port' => '',
+            'path' => '',
+            'query' => '',
+            'fragment' => '',
+            'user' => '',
+            'pass' => '',
+        ];
 
-    /**
-     * Creates a new URI from an array.
-     *
-     * Array keys should be identical to that of PHP's parse_url().
-     *
-     * @param mixed[] $data
-     *
-     * @return static
-     */
-    public static function createFromArray(array $data)
-    {
-        return new static(
-            isset($data['scheme']) ? $data['scheme'] : '',
-            isset($data['host']) ? $data['host'] : '',
-            isset($data['port']) ? $data['port'] : '',
-            isset($data['path']) ? $data['path'] : '',
-            isset($data['query']) ? $data['query'] : '',
-            isset($data['fragment']) ? $data['fragment'] : '',
-            isset($data['user']) ? $data['user'] : '',
-            isset($data['pass']) ? $data['pass'] : ''
-        );
+        $this->scheme   = $this->filterScheme($data['scheme']);
+        $this->host     = $this->filterHost($data['host']);
+        $this->port     = $this->filterPort($data['port']);
+        $this->path     = $this->filterPath($data['path']);
+        $this->query    = $this->filterQuery($data['query']);
+        $this->fragment = $this->filterFragment($data['fragment']);
+        $this->user     = (string) $data['user'];
+        $this->pass     = (string) $data['pass'];
     }
 
     /**
@@ -185,7 +146,14 @@ class Uri implements UriInterface
             $query = $env->get('QUERY_STRING');
         }
 
-        return new static($scheme, $host, $port, $path, $query, '', $user, $pass);
+        $uri = new static();
+
+        return $uri->withScheme($scheme)
+            ->withUserInfo($user, $pass)
+            ->withHost($host)
+            ->withPort($port)
+            ->withPath($path)
+            ->withQuery($query);
     }
 
     /**
@@ -195,8 +163,9 @@ class Uri implements UriInterface
     {
         $string = '';
 
-        if (!empty($this->scheme)) {
-            $string .= $this->scheme.':';
+        $scheme = $this->getScheme();
+        if ('' !== $scheme) {
+            $string .= $scheme.':';
         }
 
         $authority = $this->getAuthority();
@@ -205,10 +174,16 @@ class Uri implements UriInterface
             $string .= '//'.$authority;
         }
 
-        $string .= $this->getRequestTarget();
+        $string .= '/'.ltrim($this->getPath(), '/');
 
-        if (!empty($this->fragment)) {
-            $string .= '#'.$this->fragment;
+        $query = $this->getQuery();
+        if ('' !== $query) {
+            $string .= '?'.$query;
+        }
+
+        $fragment = $this->getFragment();
+        if ('' !== $fragment) {
+            $string .= '#'.$fragment;
         }
 
         return $string;
@@ -336,56 +311,10 @@ class Uri implements UriInterface
     }
 
     /**
-     * Gets the request target.
-     *
-     * This is the path and query string combined.
-     *
-     * @return string
-     */
-    public function getRequestTarget()
-    {
-        $string = '/'.ltrim($this->getPath(), '/');
-
-        if (!empty($this->query)) {
-            $string .= '?'.$this->query;
-        }
-
-        return $string;
-    }
-
-    /**
-     * Sets the request target.
-     *
-     * This is the path and query string combined.
-     *
-     * @param string $requestTarget
-     *
-     * @return static
-     */
-    public function withRequestTarget($requestTarget)
-    {
-        if ($this->getRequestTarget() === $requestTarget) {
-            return $this;
-        }
-
-        $tmp = static::createFromString($requestTarget);
-        $uri = clone $this;
-
-        $uri->path  = $this->filterPath($tmp->getPath());
-        $uri->query = $this->filterQuery($tmp->getQuery());
-
-        return $uri;
-    }
-
-    /**
      * {@inheritDoc}
      */
     public function withScheme($scheme)
     {
-        if ($this->scheme === $scheme) {
-            return $this;
-        }
-
         $uri = clone $this;
 
         $uri->scheme = $this->filterScheme($scheme);
@@ -398,10 +327,6 @@ class Uri implements UriInterface
      */
     public function withUserInfo($user, $password = null)
     {
-        if ($this->user === $user && $this->pass === $password) {
-            return $this;
-        }
-
         $uri = clone $this;
 
         $uri->user = $user;
@@ -415,10 +340,6 @@ class Uri implements UriInterface
      */
     public function withHost($host)
     {
-        if ($this->host === $host) {
-            return $this;
-        }
-
         $uri = clone $this;
 
         $uri->host = $this->filterHost($host);
@@ -431,10 +352,6 @@ class Uri implements UriInterface
      */
     public function withPort($port)
     {
-        if ($this->port === (int) $port) {
-            return $this;
-        }
-
         $uri = clone $this;
 
         $uri->port = $this->filterPort($port);
@@ -447,10 +364,6 @@ class Uri implements UriInterface
      */
     public function withPath($path)
     {
-        if ($this->path === $path) {
-            return $this;
-        }
-
         $uri = clone $this;
 
         $uri->path = $this->filterPath($path);
@@ -463,10 +376,6 @@ class Uri implements UriInterface
      */
     public function withQuery($query)
     {
-        if ($this->query === $query) {
-            return $this;
-        }
-
         $uri = clone $this;
 
         $uri->query = $this->filterQuery($query);
@@ -479,10 +388,6 @@ class Uri implements UriInterface
      */
     public function withFragment($fragment)
     {
-        if ($this->fragment === $fragment) {
-            return $this;
-        }
-
         $uri = clone $this;
 
         $uri->fragment = $this->filterFragment($fragment);
@@ -539,8 +444,10 @@ class Uri implements UriInterface
         // allow zero as an empty check
         if (0 > $port || 65535 < $port) {
             throw new \InvalidArgumentException(
-                'Invalid port %d. Must be between 1 and 65,535.',
-                $port
+                sprintf(
+                    'Invalid port %d. Must be between 1 and 65,535.',
+                    $port
+                )
             );
         }
 
