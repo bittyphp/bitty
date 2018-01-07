@@ -1,6 +1,6 @@
 <?php
 
-namespace Bizurkur\Bitty;
+namespace Bizurkur\Bitty\Container;
 
 use Psr\Container\ContainerInterface as PsrContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;

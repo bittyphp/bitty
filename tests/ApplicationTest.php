@@ -3,8 +3,8 @@
 namespace Bizurkur\Bitty\Tests;
 
 use Bizurkur\Bitty\Application;
-use Bizurkur\Bitty\Container;
-use Bizurkur\Bitty\ContainerInterface;
+use Bizurkur\Bitty\Container\Container;
+use Bizurkur\Bitty\Container\ContainerInterface;
 use Bizurkur\Bitty\Http\Server\RequestHandler;
 use Bizurkur\Bitty\Http\Server\RequestHandlerInterface;
 use Bizurkur\Bitty\RouterInterface;

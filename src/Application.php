@@ -2,9 +2,9 @@
 
 namespace Bizurkur\Bitty;
 
-use Bizurkur\Bitty\Container;
+use Bizurkur\Bitty\Container\Container;
 use Bizurkur\Bitty\Container\ContainerAwareInterface;
-use Bizurkur\Bitty\ContainerInterface;
+use Bizurkur\Bitty\Container\ContainerInterface;
 use Bizurkur\Bitty\Http\Request;
 use Bizurkur\Bitty\Http\Response;
 use Bizurkur\Bitty\Http\Server\RequestHandler;
