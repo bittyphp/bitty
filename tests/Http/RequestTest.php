@@ -386,6 +386,11 @@ class RequestTest extends TestCase
         $this->fixture->registerContentTypeParser($contentType, uniqid());
     }
 
+    /**
+     * Gets a valid HTTP method.
+     *
+     * @return string
+     */
     protected function getValidMethod()
     {
         $validMethods = [
