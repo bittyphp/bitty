@@ -12,6 +12,10 @@ Bitty adheres the following framework standards:
 - [PSR-7: HTTP Message Interface](http://www.php-fig.org/psr/psr-7/)
 - [PSR-11: Container Interface](http://www.php-fig.org/psr/psr-11/)
 
+It also closely follows some proposed standards:
+
+- [PSR-14: Event Manager](https://github.com/php-fig/fig-standards/blob/master/proposed/event-manager.md)
+
 ## Lacking
 
 Bitty does not have built-in support for the following. At least not yet.
