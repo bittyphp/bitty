@@ -7,7 +7,7 @@ use Bizurkur\Bitty\Container\Container;
 use Bizurkur\Bitty\Container\ContainerInterface;
 use Bizurkur\Bitty\Http\Server\RequestHandler;
 use Bizurkur\Bitty\Http\Server\RequestHandlerInterface;
-use Bizurkur\Bitty\RouterInterface;
+use Bizurkur\Bitty\Router\RouterInterface;
 use Bizurkur\Bitty\Tests\TestCase;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;

@@ -8,7 +8,7 @@ use Bizurkur\Bitty\Container\ContainerInterface;
 use Bizurkur\Bitty\Http\Request;
 use Bizurkur\Bitty\Http\Response;
 use Bizurkur\Bitty\Http\Server\RequestHandler;
-use Bizurkur\Bitty\Router;
+use Bizurkur\Bitty\Router\Router;
 use Psr\Http\Message\ResponseInterface;
 
 class Application

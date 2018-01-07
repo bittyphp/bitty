@@ -8,7 +8,7 @@ use Bizurkur\Bitty\Http\Exception\NotFoundException;
 use Bizurkur\Bitty\Http\Server\RequestHandler;
 use Bizurkur\Bitty\Http\Server\RequestHandlerInterface;
 use Bizurkur\Bitty\Router\RouteInterface;
-use Bizurkur\Bitty\RouterInterface;
+use Bizurkur\Bitty\Router\RouterInterface;
 use Bizurkur\Bitty\Tests\Stubs\InvokableContainerAwareStubInterface;
 use Bizurkur\Bitty\Tests\Stubs\InvokableResponseStub;
 use Bizurkur\Bitty\Tests\Stubs\InvokableStubInterface;

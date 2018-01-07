@@ -7,7 +7,7 @@ use Bizurkur\Bitty\Container\ContainerAwareTrait;
 use Bizurkur\Bitty\Http\Exception\InternalServerErrorException;
 use Bizurkur\Bitty\Http\Exception\NotFoundException;
 use Bizurkur\Bitty\Http\Server\RequestHandlerInterface;
-use Bizurkur\Bitty\RouterInterface;
+use Bizurkur\Bitty\Router\RouterInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
