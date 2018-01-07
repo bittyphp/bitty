@@ -206,7 +206,14 @@ class Request extends AbstractMessage implements ServerRequestInterface
     public function getRequestTarget()
     {
         if (null === $this->requestTarget) {
-            return $this->uri->getRequestTarget();
+            $string = '/'.ltrim($this->uri->getPath(), '/');
+
+            $query = $this->uri->getQuery();
+            if ('' !== $query) {
+                $string .= '?'.$query;
+            }
+
+            return $string;
         }
 
         return $this->requestTarget;

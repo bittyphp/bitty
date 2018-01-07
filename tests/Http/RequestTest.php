@@ -34,6 +34,18 @@ class RequestTest extends TestCase
         $this->assertEquals('/', $actual);
     }
 
+    public function testGetRequestTargetWithQueryString()
+    {
+        $path  = uniqid('path');
+        $query = uniqid('query');
+
+        $this->fixture = new Request('GET', $path.'?'.$query);
+
+        $actual = $this->fixture->getRequestTarget();
+
+        $this->assertEquals('/'.$path.'?'.$query, $actual);
+    }
+
     public function testWithRequestTarget()
     {
         $uri = uniqid('path').'?'.uniqid('query');

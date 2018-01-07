@@ -163,8 +163,9 @@ class Uri implements UriInterface
     {
         $string = '';
 
-        if (!empty($this->scheme)) {
-            $string .= $this->scheme.':';
+        $scheme = $this->getScheme();
+        if ('' !== $scheme) {
+            $string .= $scheme.':';
         }
 
         $authority = $this->getAuthority();
@@ -173,10 +174,16 @@ class Uri implements UriInterface
             $string .= '//'.$authority;
         }
 
-        $string .= $this->getRequestTarget();
+        $string .= '/'.ltrim($this->getPath(), '/');
 
-        if (!empty($this->fragment)) {
-            $string .= '#'.$this->fragment;
+        $query = $this->getQuery();
+        if ('' !== $query) {
+            $string .= '?'.$query;
+        }
+
+        $fragment = $this->getFragment();
+        if ('' !== $fragment) {
+            $string .= '#'.$fragment;
         }
 
         return $string;
@@ -304,24 +311,6 @@ class Uri implements UriInterface
     }
 
     /**
-     * Gets the request target.
-     *
-     * This is the path and query string combined.
-     *
-     * @return string
-     */
-    public function getRequestTarget()
-    {
-        $string = '/'.ltrim($this->getPath(), '/');
-
-        if (!empty($this->query)) {
-            $string .= '?'.$this->query;
-        }
-
-        return $string;
-    }
-
-    /**
      * {@inheritDoc}
      */
     public function withScheme($scheme)
@@ -402,26 +391,6 @@ class Uri implements UriInterface
         $uri = clone $this;
 
         $uri->fragment = $this->filterFragment($fragment);
-
-        return $uri;
-    }
-
-    /**
-     * Sets the request target.
-     *
-     * This is the path and query string combined.
-     *
-     * @param string $requestTarget
-     *
-     * @return static
-     */
-    public function withRequestTarget($requestTarget)
-    {
-        $tmp = new static($requestTarget);
-        $uri = clone $this;
-
-        $uri->path  = $this->filterPath($tmp->getPath());
-        $uri->query = $this->filterQuery($tmp->getQuery());
 
         return $uri;
     }

@@ -413,57 +413,6 @@ class UriTest extends TestCase
     }
 
     /**
-     * @dataProvider sampleRequestTargets
-     */
-    public function testWithRequestTarget($target, $expected)
-    {
-        $clone = $this->fixture->withRequestTarget($target);
-
-        $old = $this->fixture->getRequestTarget();
-        $new = $clone->getRequestTarget();
-
-        $this->assertNotSame($this->fixture, $clone);
-        $this->assertEquals('/', $old);
-        $this->assertEquals($expected, $new);
-    }
-
-    public function sampleRequestTargets()
-    {
-        $path   = uniqid('path');
-        $keyA   = uniqid('key');
-        $keyB   = uniqid('key');
-        $valueA = uniqid('value');
-        $valueB = uniqid('value');
-
-        return [
-            'empty path' => [
-                'path' => '',
-                'expected' => '/',
-            ],
-            'empty query' => [
-                'query' => '?',
-                'expected' => '/',
-            ],
-            'normal path' => [
-                'path' => $path.'?',
-                'expected' => '/'.$path,
-            ],
-            'normal query' => [
-                'query' => '/'.$path.'?'.$keyA.'='.$valueA.'&'.$keyB.'='.$valueB,
-                'expected' => '/'.$path.'?'.$keyA.'='.$valueA.'&'.$keyB.'='.$valueB,
-            ],
-            'invalid characters encoded' => [
-                'query' => '/'.$path.'^?'.$keyA.'^'.'='.$valueA.'&'.$keyB.'=^'.$valueB,
-                'expected' => '/'.$path.'%5E?'.$keyA.'%5E'.'='.$valueA.'&'.$keyB.'=%5E'.$valueB,
-            ],
-            'encoded characters not double encoded' => [
-                'query' => '/'.$path.'%5E?'.$keyA.'%5E'.'='.$valueA.'&'.$keyB.'=%5E'.$valueB,
-                'expected' => '/'.$path.'%5E?'.$keyA.'%5E'.'='.$valueA.'&'.$keyB.'=%5E'.$valueB,
-            ],
-        ];
-    }
-
-    /**
      * @dataProvider sampleEnvironmentData
      */
     public function testCreateFromEnvironment($data, $expected)
