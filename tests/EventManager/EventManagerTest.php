@@ -179,6 +179,23 @@ class EventManagerTest extends TestCase
         $this->assertFalse($actual);
     }
 
+    public function testTriggerReturnsCallbackResponse()
+    {
+        $name      = uniqid('name');
+        $response  = uniqid('response');
+        $callbackA = $this->createMock(InvokableStubInterface::class);
+        $callbackA->method('__invoke')->willReturn(uniqid());
+        $callbackB = $this->createMock(InvokableStubInterface::class);
+        $callbackB->method('__invoke')->willReturn($response);
+
+        $this->fixture->attach($name, $callbackA);
+        $this->fixture->attach($name, $callbackB);
+
+        $actual = $this->fixture->trigger($name);
+
+        $this->assertEquals($response, $actual);
+    }
+
     public function testEventPropagationStopped()
     {
         $name      = uniqid('name');

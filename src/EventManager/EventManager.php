@@ -92,12 +92,15 @@ class EventManager implements EventManagerInterface
             return false;
         }
 
+        $response = null;
         foreach ($this->events[$name] as $data) {
-            $data['callback']($event);
+            $response = $data['callback']($event, $response);
 
             if ($event->isPropagationStopped()) {
                 break;
             }
         }
+
+        return $response;
     }
 }
