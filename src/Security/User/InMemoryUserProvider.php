@@ -2,7 +2,6 @@
 
 namespace Bizurkur\Bitty\Security\User;
 
-use Bizurkur\Bitty\Security\Authentication\AbstractProvider;
 use Bizurkur\Bitty\Security\User\User;
 use Bizurkur\Bitty\Security\User\UserProviderInterface;
 
