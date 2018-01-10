@@ -12,17 +12,31 @@ class User implements UserInterface
     protected $username = null;
 
     /**
+     * @var string
+     */
+    protected $password = null;
+
+    /**
+     * @var string
+     */
+    protected $salt = null;
+
+    /**
      * @var string[]
      */
     protected $roles = null;
 
     /**
      * @param string $username
+     * @param string $password
+     * @param string|null $salt
      * @param string[] $roles
      */
-    public function __construct($username, array $roles = [])
+    public function __construct($username, $password, $salt = null, array $roles = [])
     {
         $this->username = $username;
+        $this->password = $password;
+        $this->salt     = $salt;
         $this->roles    = $roles;
     }
 
@@ -32,6 +46,22 @@ class User implements UserInterface
     public function getUsername()
     {
         return $this->username;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getPassword()
+    {
+        return $this->password;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getSalt()
+    {
+        return $this->salt;
     }
 
     /**

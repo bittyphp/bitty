@@ -12,6 +12,20 @@ interface UserInterface
     public function getUsername();
 
     /**
+     * Gets the encoded password.
+     *
+     * @return string
+     */
+    public function getPassword();
+
+    /**
+     * Gets the password salt.
+     *
+     * @return string|null
+     */
+    public function getSalt();
+
+    /**
      * Gets the roles the user has.
      *
      * @return string[]

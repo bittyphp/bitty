@@ -1,10 +1,11 @@
 <?php
 
-namespace Bizurkur\Bitty\Security\Authentication;
+namespace Bizurkur\Bitty\Security;
 
+use Bizurkur\Bitty\Security\Exception\AuthenticationException;
 use Bizurkur\Bitty\Security\User\UserInterface;
 
-interface ProviderInterface
+interface AuthenticationInterface
 {
     /**
      * Authenticates a user.
@@ -14,18 +15,10 @@ interface ProviderInterface
      * @param bool $remember
      *
      * @return bool
+     *
+     * @throws AuthenticationException
      */
     public function authenticate($username, $password, $remember = false);
-
-    /**
-     * Encodes a raw password for authentication.
-     *
-     * @param string $password The raw, unencoded password.
-     * @param string|null $salt The salt to encode the password with.
-     *
-     * @return string
-     */
-    public function encodePassword($password, $salt = null);
 
     /**
      * Deauthenticates a user.
