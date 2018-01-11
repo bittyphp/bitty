@@ -16,9 +16,9 @@ class Authentication implements AuthenticationInterface
     protected $userProvider = null;
 
     /**
-     * @var EncoderInterface
+     * @var EncoderInterface[]
      */
-    protected $encoder = null;
+    protected $encoders = null;
 
     /**
      * @var string
@@ -27,12 +27,12 @@ class Authentication implements AuthenticationInterface
 
     /**
      * @param UserProviderInterface $userProvider
-     * @param EncoderInterface $encoder
+     * @param EncoderInterface[] $encoders
      * @param string $sessionKey
      */
     public function __construct(
         UserProviderInterface $userProvider,
-        EncoderInterface $encoder,
+        array $encoders,
         $sessionKey = 'auth.user'
     ) {
         if ('' === session_id()) {
@@ -40,7 +40,7 @@ class Authentication implements AuthenticationInterface
         }
 
         $this->userProvider = $userProvider;
-        $this->encoder      = $encoder;
+        $this->encoders     = $encoders;
         $this->sessionKey   = $sessionKey;
     }
 
@@ -54,10 +54,11 @@ class Authentication implements AuthenticationInterface
             throw new AuthenticationException('Invalid username.');
         }
 
-        $encoded = $user->getPassword();
+        $encoder = $this->getEncoder($user);
+        $hash    = $user->getPassword();
         $salt    = $user->getSalt();
 
-        if (!$this->encoder->validate($encoded, $password, $salt)) {
+        if (!$encoder->validate($hash, $password, $salt)) {
             throw new AuthenticationException('Invalid password.');
         }
 
@@ -101,5 +102,27 @@ class Authentication implements AuthenticationInterface
         }
 
         return null;
+    }
+
+    /**
+     * Gets the password encoder for the given user.
+     *
+     * @param UserInterface $user
+     *
+     * @return EncoderInterface
+     *
+     * @throws AuthenticationException
+     */
+    protected function getEncoder(UserInterface $user)
+    {
+        foreach ($this->encoders as $class => $encoder) {
+            if ($user instanceof $class) {
+                return $encoder;
+            }
+        }
+
+        throw new AuthenticationException(
+            sprintf('Unable to determine encoder for %s.', get_class($user))
+        );
     }
 }
