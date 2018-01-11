@@ -26,12 +26,12 @@ class InMemoryUserProvider implements UserProviderInterface
     public function getUser($username)
     {
         if (!isset($this->users[$username])) {
-            return null;
+            return;
         }
 
         $user = $this->users[$username];
         if (empty($user['password'])) {
-            return null;
+            return;
         }
 
         $password = $user['password'];
