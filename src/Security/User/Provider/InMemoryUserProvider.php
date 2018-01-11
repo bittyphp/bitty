@@ -1,9 +1,9 @@
 <?php
 
-namespace Bizurkur\Bitty\Security\User;
+namespace Bizurkur\Bitty\Security\User\Provider;
 
+use Bizurkur\Bitty\Security\User\Provider\UserProviderInterface;
 use Bizurkur\Bitty\Security\User\User;
-use Bizurkur\Bitty\Security\User\UserProviderInterface;
 
 class InMemoryUserProvider implements UserProviderInterface
 {

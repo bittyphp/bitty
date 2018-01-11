@@ -1,6 +1,6 @@
 <?php
 
-namespace Bizurkur\Bitty\Security\User;
+namespace Bizurkur\Bitty\Security\User\Provider;
 
 use Bizurkur\Bitty\Security\User\UserInterface;
 

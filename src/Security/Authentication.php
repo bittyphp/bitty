@@ -5,8 +5,8 @@ namespace Bizurkur\Bitty\Security;
 use Bizurkur\Bitty\Security\AuthenticationInterface;
 use Bizurkur\Bitty\Security\Encoder\EncoderInterface;
 use Bizurkur\Bitty\Security\Exception\AuthenticationException;
+use Bizurkur\Bitty\Security\User\Provider\UserProviderInterface;
 use Bizurkur\Bitty\Security\User\UserInterface;
-use Bizurkur\Bitty\Security\User\UserProviderInterface;
 
 class Authentication implements AuthenticationInterface
 {
