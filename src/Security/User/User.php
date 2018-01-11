@@ -41,6 +41,16 @@ class User implements UserInterface
     }
 
     /**
+     * Only serialize non-sensitive data.
+     *
+     * @return string[]
+     */
+    public function __sleep()
+    {
+        return ['username', 'roles'];
+    }
+
+    /**
      * {@inheritDoc}
      */
     public function getUsername()

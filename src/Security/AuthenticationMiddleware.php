@@ -7,10 +7,15 @@ use Bizurkur\Bitty\Http\RedirectResponse;
 use Bizurkur\Bitty\Http\Response;
 use Bizurkur\Bitty\Http\Server\MiddlewareInterface;
 use Bizurkur\Bitty\Http\Server\RequestHandlerInterface;
+use Bizurkur\Bitty\Http\Uri;
 use Bizurkur\Bitty\Security\AuthenticationInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\UriInterface;
 
+/**
+ * Middleware to handle both HTTP Basic and username/password form authentication.
+ */
 class AuthenticationMiddleware implements MiddlewareInterface
 {
     /**
@@ -35,10 +40,12 @@ class AuthenticationMiddleware implements MiddlewareInterface
             'realm' => 'Secured Area',
             'login.path' => '/login',
             'login.target' => '/',
+            'login.use_referrer' => true,
             'logout.path' => '/logout',
             'logout.target' => '/',
             'login.username' => 'username',
             'login.password' => 'password',
+            'login.remember' => 'remember',
         ];
 
         $this->authentication = $authentication;
@@ -91,6 +98,8 @@ class AuthenticationMiddleware implements MiddlewareInterface
             return $this->handleHttpBasic($request);
         }
 
+        $_SESSION['last_referrer'] = $path;
+
         return new RedirectResponse($this->config->get('login.path'));
     }
 
@@ -129,15 +138,16 @@ class AuthenticationMiddleware implements MiddlewareInterface
             return;
         }
 
-        $userField = $this->config->get('login.username');
-        $passField = $this->config->get('login.password');
+        $usernameField = $this->config->get('login.username');
+        $passwordField = $this->config->get('login.password');
+        $rememberField = $this->config->get('login.remember');
 
-        $user = empty($params[$userField]) ? null : $params[$userField];
-        $pass = empty($params[$passField]) ? null : $params[$passField];
+        $username = empty($params[$usernameField]) ? null : $params[$usernameField];
+        $password = empty($params[$passwordField]) ? null : $params[$passwordField];
+        $remember = empty($params[$rememberField]) ? false : true;
 
-        if ($this->authentication->authenticate($user, $pass)) {
-            // TODO: Redirect to referrer
-            $target = $this->config->get('login.target');
+        if ($this->authentication->authenticate($username, $password, $remember)) {
+            $target = $this->getLoginTarget($request);
 
             return new RedirectResponse($target);
         }
@@ -191,5 +201,87 @@ class AuthenticationMiddleware implements MiddlewareInterface
         ];
 
         return new Response('', 401, $headers);
+    }
+
+    /**
+     * Gets the target URI to go to after login success.
+     *
+     * @param ServerRequestInterface $request
+     *
+     * @return string
+     */
+    protected function getLoginTarget(ServerRequestInterface $request)
+    {
+        $target = $this->config->get('login.target');
+        if (!$this->config->get('login.use_referrer')) {
+            return $target;
+        }
+
+        $referrer = $this->getReferrer($request);
+        if (!$referrer) {
+            return $target;
+        }
+
+        $referrerUri = new Uri($referrer);
+        if (!$this->isValidReferrer($referrerUri, $request)) {
+            return $target;
+        }
+
+        $target = $referrerUri->getPath();
+
+        $query = $referrerUri->getQuery();
+        if ($query) {
+            $target .= '?'.$query;
+        }
+
+        return $target;
+    }
+
+    /**
+     * Gets the referrer, if one is set.
+     *
+     * @param ServerRequestInterface $request
+     *
+     * @return string|null
+     */
+    protected function getReferrer(ServerRequestInterface $request)
+    {
+        if (!empty($_SESSION['last_referrer'])) {
+            $referrer = $_SESSION['last_referrer'];
+            unset($_SESSION['last_referrer']);
+
+            return $referrer;
+        }
+
+        $server = $request->getServerParams();
+        if (isset($server['HTTP_REFERER'])) {
+            return $server['HTTP_REFERER'];
+        }
+    }
+
+    /**
+     * Checks if the referrer URI is valid.
+     *
+     * @param UriInterface $referrerUri
+     * @param ServerRequestInterface $request
+     *
+     * @return bool
+     */
+    protected function isValidReferrer(UriInterface $referrerUri, ServerRequestInterface $request)
+    {
+        $requestUri = $request->getUri();
+        if ($referrerUri->getPath() === $requestUri->getPath()) {
+            return false;
+        }
+
+        if ('' === $referrerUri->getHost()) {
+            return true;
+        }
+
+        if ($referrerUri->getHost() === $requestUri->getHost()) {
+            return true;
+        }
+
+        return false;
     }
 }
