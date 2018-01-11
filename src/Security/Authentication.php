@@ -58,7 +58,7 @@ class Authentication implements AuthenticationInterface
         $hash    = $user->getPassword();
         $salt    = $user->getSalt();
 
-        if (!$encoder->validate($hash, $password, $salt)) {
+        if (!$encoder->verify($hash, $password, $salt)) {
             throw new AuthenticationException('Invalid password.');
         }
 

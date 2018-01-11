@@ -27,23 +27,17 @@ class BcryptEncoder extends AbstractEncoder
      */
     public function encode($password, $salt = null)
     {
+        $this->blockLongPasswords();
+
         return password_hash($password, PASSWORD_BCRYPT, ['cost' => $this->cost]);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function validate($encoded, $password, $salt = null)
+    public function verify($encoded, $password, $salt = null)
     {
-        if ($this->isPasswordTooLong($password)) {
-            throw new AuthenticationException(
-                sprintf(
-                    'Password is too long. Max of %d characters allowed, %d given.',
-                    $this->maxPasswordLength,
-                    strlen($password)
-                )
-            );
-        }
+        $this->blockLongPasswords();
 
         return password_verify($password, $encoded);
     }

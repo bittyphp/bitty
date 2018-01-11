@@ -13,11 +13,13 @@ interface EncoderInterface
      * @param string|null $salt Salt used to encode the password.
      *
      * @return string
+     *
+     * @throws AuthenticationException If password is too long.
      */
     public function encode($password, $salt = null);
 
     /**
-     * Validates an encoded password against the given password.
+     * Verifies the given password against the encoded password.
      *
      * @param string $encoded Encoded password.
      * @param string $password Unencoded password.
@@ -27,5 +29,5 @@ interface EncoderInterface
      *
      * @throws AuthenticationException If password is too long.
      */
-    public function validate($encoded, $password, $salt = null);
+    public function verify($encoded, $password, $salt = null);
 }

@@ -28,17 +28,9 @@ abstract class AbstractEncoder implements EncoderInterface
     /**
      * {@inheritDoc}
      */
-    public function validate($encoded, $password, $salt = null)
+    public function verify($encoded, $password, $salt = null)
     {
-        if ($this->isPasswordTooLong($password)) {
-            throw new AuthenticationException(
-                sprintf(
-                    'Password is too long. Max of %d characters allowed, %d given.',
-                    $this->maxPasswordLength,
-                    strlen($password)
-                )
-            );
-        }
+        $this->blockLongPasswords();
 
         return $this->encode($password, $salt) === $encoded;
     }
@@ -55,5 +47,20 @@ abstract class AbstractEncoder implements EncoderInterface
     public function isPasswordTooLong($password)
     {
         return strlen($password) > $this->maxPasswordLength;
+    }
+
+    protected function blockLongPasswords($password)
+    {
+        if (!$this->isPasswordTooLong($password)) {
+            return;
+        }
+
+        throw new AuthenticationException(
+            sprintf(
+                'Password is too long. Max of %d characters allowed, %d given.',
+                $this->maxPasswordLength,
+                strlen($password)
+            )
+        );
     }
 }
