@@ -1,14 +1,14 @@
 <?php
 
-namespace Bizurkur\Bitty\Security;
+namespace Bizurkur\Bitty\Security\Authentication;
 
-use Bizurkur\Bitty\Security\AuthenticationInterface;
+use Bizurkur\Bitty\Security\Authentication\AuthenticatorInterface;
 use Bizurkur\Bitty\Security\Encoder\EncoderInterface;
 use Bizurkur\Bitty\Security\Exception\AuthenticationException;
 use Bizurkur\Bitty\Security\User\Provider\UserProviderInterface;
 use Bizurkur\Bitty\Security\User\UserInterface;
 
-class Authentication implements AuthenticationInterface
+class Authenticator implements AuthenticatorInterface
 {
     /**
      * @var UserProviderInterface
@@ -27,21 +27,34 @@ class Authentication implements AuthenticationInterface
 
     /**
      * @param UserProviderInterface $userProvider
-     * @param EncoderInterface[] $encoders
+     * @param EncoderInterface[]|EncoderInterface $encoders
      * @param string $sessionKey
+     *
+     * @throws \InvalidArgumentException
      */
     public function __construct(
         UserProviderInterface $userProvider,
-        array $encoders,
+        $encoders,
         $sessionKey = 'auth.user'
     ) {
-        if ('' === session_id()) {
-            session_start();
-        }
-
         $this->userProvider = $userProvider;
-        $this->encoders     = $encoders;
         $this->sessionKey   = $sessionKey;
+
+        if (is_object($encoders)) {
+            $this->addEncoder($encoders, UserInterface::class);
+        } elseif (is_array($encoders)) {
+            foreach ($encoders as $class => $encoder) {
+                $this->addEncoder($encoder, $class);
+            }
+        } else {
+            throw new \InvalidArgumentException(
+                sprintf(
+                    'Encoder must be an instance of %s or an array; %s given.',
+                    EncoderInterface::class,
+                    gettype($encoders)
+                )
+            );
+        }
     }
 
     /**
@@ -63,7 +76,13 @@ class Authentication implements AuthenticationInterface
         }
 
         // TODO: Remember me.
+
+        // http://php.net/manual/en/features.session.security.management.php#features.session.security.management.session-id-regeneration
+        // http://php.net/manual/en/function.session-regenerate-id.php
+        $_SESSION['auth.destroyed'] = time();
+        session_regenerate_id();
         $_SESSION[$this->sessionKey] = serialize($user);
+        unset($_SESSION['auth.destroyed']);
 
         return true;
     }
@@ -102,6 +121,25 @@ class Authentication implements AuthenticationInterface
         }
 
         return null;
+    }
+
+    /**
+     * Adds an encoder for the given user class.
+     *
+     * @param EncoderInterface $encoder
+     * @param string $userClass
+     *
+     * @throws AuthenticationException
+     */
+    protected function addEncoder(EncoderInterface $encoder, $userClass)
+    {
+        if (!class_exists($userClass) && !interface_exists($userClass)) {
+            throw new AuthenticationException(
+                sprintf('User class %s does not exist.', $userClass)
+            );
+        }
+
+        $this->encoders[$userClass] = $encoder;
     }
 
     /**

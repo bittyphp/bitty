@@ -1,11 +1,11 @@
 <?php
 
-namespace Bizurkur\Bitty\Security;
+namespace Bizurkur\Bitty\Security\Authentication;
 
 use Bizurkur\Bitty\Security\Exception\AuthenticationException;
 use Bizurkur\Bitty\Security\User\UserInterface;
 
-interface AuthenticationInterface
+interface AuthenticatorInterface
 {
     /**
      * Authenticates a user.
