@@ -3,7 +3,6 @@
 namespace Bizurkur\Bitty;
 
 use Bizurkur\Bitty\Container\Container;
-use Bizurkur\Bitty\Container\ContainerAwareInterface;
 use Bizurkur\Bitty\Container\ContainerInterface;
 use Bizurkur\Bitty\EventManager\EventManager;
 use Bizurkur\Bitty\Http\Request;
@@ -37,7 +36,7 @@ class Application
             $this->container = $container;
         }
 
-        $this->middleware = new MiddlewareChain();
+        $this->middleware = new MiddlewareChain($this->container);
 
         $this->setDefaultServices();
     }
@@ -68,10 +67,6 @@ class Application
     public function run()
     {
         $requestHandler = $this->container->get('request_handler');
-        if ($requestHandler instanceof ContainerAwareInterface) {
-            $requestHandler->setContainer($this->container);
-        }
-
         $this->middleware->setDefaultHandler($requestHandler);
 
         $request  = $this->container->get('request');
