@@ -1,10 +1,10 @@
 <?php
 
-namespace Bitty\Security;
+namespace Bitty\Security\Context;
 
 use Bitty\Collection;
 use Bitty\Http\Uri;
-use Bitty\Security\ContextInterface;
+use Bitty\Security\Context\ContextInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UriInterface;
 

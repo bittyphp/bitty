@@ -1,6 +1,6 @@
 <?php
 
-namespace Bitty\Security;
+namespace Bitty\Security\Context;
 
 interface ContextInterface
 {
