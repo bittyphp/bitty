@@ -2,18 +2,14 @@
 
 namespace Bitty\Security;
 
-use Bitty\Container\ContainerAwareInterface;
-use Bitty\Container\ContainerAwareTrait;
 use Bitty\Http\Server\MiddlewareInterface;
 use Bitty\Http\Server\RequestHandlerInterface;
 use Bitty\Security\Handler\AbstractHandler;
 use Bitty\Security\Handler\HandlerInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-class SecurityMiddleware implements MiddlewareInterface, ContainerAwareInterface
+class SecurityMiddleware implements MiddlewareInterface
 {
-    use ContainerAwareTrait;
-
     /**
      * @var HandlerInterface
      */
@@ -32,11 +28,6 @@ class SecurityMiddleware implements MiddlewareInterface, ContainerAwareInterface
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler)
     {
-        if ($this->authHandler instanceof AbstractHandler) {
-            $authenticator = $this->authHandler->getAuthenticator();
-            $this->container->get('authenticator')->setAuthenticator($authenticator);
-        }
-
         $authResponse = $this->authHandler->handle($request);
         if ($authResponse) {
             return $authResponse;

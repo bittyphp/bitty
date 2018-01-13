@@ -107,11 +107,6 @@ class Application
             $eventManager = new EventManager();
             $this->container->set('event_manager', $eventManager);
         }
-
-        if (!$this->container->has('authenticator')) {
-            $authenticator = new AuthenticatorProxy();
-            $this->container->set('authenticator', $authenticator);
-        }
     }
 
     /**
