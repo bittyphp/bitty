@@ -10,7 +10,7 @@ use Bitty\Security\Authentication\Handler\AbstractHandler;
 use Bitty\Security\Authentication\Handler\HandlerInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-class AuthenticationMiddleware implements MiddlewareInterface, ContainerAwareInterface
+class SecurityMiddleware implements MiddlewareInterface, ContainerAwareInterface
 {
     use ContainerAwareTrait;
 
