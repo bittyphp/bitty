@@ -1,6 +1,6 @@
 <?php
 
-namespace Bitty\Security\Authentication;
+namespace Bitty\Security;
 
 interface ContextInterface
 {

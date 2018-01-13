@@ -3,7 +3,7 @@
 namespace Bitty\Security\Handler;
 
 use Bitty\Security\Authentication\AuthenticatorInterface;
-use Bitty\Security\Authentication\ContextInterface;
+use Bitty\Security\ContextInterface;
 use Bitty\Security\Handler\HandlerInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
