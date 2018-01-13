@@ -11,6 +11,7 @@ use Bizurkur\Bitty\Http\Server\MiddlewareChain;
 use Bizurkur\Bitty\Http\Server\MiddlewareInterface;
 use Bizurkur\Bitty\Http\Server\RequestHandler;
 use Bizurkur\Bitty\Router\Router;
+use Bizurkur\Bitty\Security\Authentication\AuthenticatorProxy;
 use Psr\Http\Message\ResponseInterface;
 
 class Application
@@ -105,6 +106,11 @@ class Application
         if (!$this->container->has('event_manager')) {
             $eventManager = new EventManager();
             $this->container->set('event_manager', $eventManager);
+        }
+
+        if (!$this->container->has('authenticator')) {
+            $authenticator = new AuthenticatorProxy();
+            $this->container->set('authenticator', $authenticator);
         }
     }
 
