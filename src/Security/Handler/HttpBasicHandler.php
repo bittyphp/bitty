@@ -17,7 +17,7 @@ class HttpBasicHandler extends AbstractHandler
             return;
         }
 
-        if ($this->authenticator->isAuthenticated()) {
+        if ($this->authentication->isAuthenticated()) {
             return;
         }
 
@@ -25,7 +25,7 @@ class HttpBasicHandler extends AbstractHandler
         $username = empty($params['PHP_AUTH_USER']) ? null : $params['PHP_AUTH_USER'];
         $password = empty($params['PHP_AUTH_PW']) ? null : $params['PHP_AUTH_PW'];
 
-        if ($this->authenticator->authenticate($username, $password)) {
+        if ($this->authentication->authenticate($username, $password)) {
             return;
         }
 

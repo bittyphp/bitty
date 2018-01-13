@@ -5,7 +5,7 @@ namespace Bitty\Security\Authentication;
 use Bitty\Security\Exception\AuthenticationException;
 use Bitty\Security\User\UserInterface;
 
-interface AuthenticatorInterface
+interface AuthenticationInterface
 {
     /**
      * Authenticates a user.

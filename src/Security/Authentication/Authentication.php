@@ -2,13 +2,13 @@
 
 namespace Bitty\Security\Authentication;
 
-use Bitty\Security\Authentication\AuthenticatorInterface;
+use Bitty\Security\Authentication\AuthenticationInterface;
 use Bitty\Security\Encoder\EncoderInterface;
 use Bitty\Security\Exception\AuthenticationException;
 use Bitty\Security\User\Provider\UserProviderInterface;
 use Bitty\Security\User\UserInterface;
 
-class Authenticator implements AuthenticatorInterface
+class Authentication implements AuthenticationInterface
 {
     /**
      * @var UserProviderInterface
@@ -35,7 +35,7 @@ class Authenticator implements AuthenticatorInterface
     public function __construct(
         UserProviderInterface $userProvider,
         $encoders,
-        $sessionKey = 'auth.user'
+        $sessionKey = 'auth'
     ) {
         $this->userProvider = $userProvider;
         $this->sessionKey   = $sessionKey;
@@ -81,7 +81,7 @@ class Authenticator implements AuthenticatorInterface
         // http://php.net/manual/en/function.session-regenerate-id.php
         $_SESSION['auth.destroyed'] = time();
         session_regenerate_id();
-        $_SESSION[$this->sessionKey] = serialize($user);
+        $_SESSION[$this->sessionKey]['user'] = $user;
         unset($_SESSION['auth.destroyed']);
 
         return true;
@@ -92,8 +92,8 @@ class Authenticator implements AuthenticatorInterface
      */
     public function deauthenticate()
     {
-        if (isset($_SESSION[$this->sessionKey])) {
-            unset($_SESSION[$this->sessionKey]);
+        if (isset($_SESSION[$this->sessionKey]['user'])) {
+            unset($_SESSION[$this->sessionKey]['user']);
         }
 
         return !$this->isAuthenticated();
@@ -116,8 +116,8 @@ class Authenticator implements AuthenticatorInterface
      */
     public function getUser()
     {
-        if (!empty($_SESSION[$this->sessionKey])) {
-            return unserialize($_SESSION[$this->sessionKey]);
+        if (!empty($_SESSION[$this->sessionKey]['user'])) {
+            return $_SESSION[$this->sessionKey]['user'];
         }
 
         return null;

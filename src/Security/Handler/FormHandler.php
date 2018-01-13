@@ -19,7 +19,7 @@ class FormHandler extends AbstractHandler
         }
 
         if ($this->context->isLogoutPath($request)) {
-            $this->authenticator->deauthenticate();
+            $this->authentication->deauthenticate();
 
             return new RedirectResponse($this->context->getLogoutTarget());
         }
@@ -28,7 +28,7 @@ class FormHandler extends AbstractHandler
             return;
         }
 
-        if ($this->authenticator->isAuthenticated()) {
+        if ($this->authentication->isAuthenticated()) {
             return;
         }
 
@@ -54,7 +54,7 @@ class FormHandler extends AbstractHandler
         $password = $this->context->getLoginPassword($request);
         $remember = $this->context->getLoginRemember($request);
 
-        if ($this->authenticator->authenticate($username, $password, $remember)) {
+        if ($this->authentication->authenticate($username, $password, $remember)) {
             $target = $this->context->getLoginTarget($request);
 
             return new RedirectResponse($target);

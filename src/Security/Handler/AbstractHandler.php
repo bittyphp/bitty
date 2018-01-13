@@ -2,7 +2,7 @@
 
 namespace Bitty\Security\Handler;
 
-use Bitty\Security\Authentication\AuthenticatorInterface;
+use Bitty\Security\Authentication\AuthenticationInterface;
 use Bitty\Security\Context\ContextInterface;
 use Bitty\Security\Handler\HandlerInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -10,9 +10,9 @@ use Psr\Http\Message\ServerRequestInterface;
 abstract class AbstractHandler implements HandlerInterface
 {
     /**
-     * @var AuthenticatorInterface
+     * @var AuthenticationInterface
      */
-    protected $authenticator = null;
+    protected $authentication = null;
 
     /**
      * @var ContextInterface
@@ -20,13 +20,13 @@ abstract class AbstractHandler implements HandlerInterface
     protected $context = null;
 
     /**
-     * @param AuthenticatorInterface $authenticator
+     * @param AuthenticationInterface $authentication
      * @param ContextInterface $context
      */
-    public function __construct(AuthenticatorInterface $authenticator, ContextInterface $context)
+    public function __construct(AuthenticationInterface $authentication, ContextInterface $context)
     {
-        $this->authenticator = $authenticator;
-        $this->context       = $context;
+        $this->authentication = $authentication;
+        $this->context        = $context;
     }
 
     /**
