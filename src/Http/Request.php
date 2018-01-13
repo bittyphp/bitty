@@ -1,14 +1,14 @@
 <?php
 
-namespace Bizurkur\Bitty\Http;
+namespace Bitty\Http;
 
-use Bizurkur\Bitty\Collection;
-use Bizurkur\Bitty\CollectionInterface;
-use Bizurkur\Bitty\Http\AbstractMessage;
-use Bizurkur\Bitty\Http\RequestBody;
-use Bizurkur\Bitty\Http\ServerCollection;
-use Bizurkur\Bitty\Http\UploadedFileCollection;
-use Bizurkur\Bitty\Http\Uri;
+use Bitty\Collection;
+use Bitty\CollectionInterface;
+use Bitty\Http\AbstractMessage;
+use Bitty\Http\RequestBody;
+use Bitty\Http\ServerCollection;
+use Bitty\Http\UploadedFileCollection;
+use Bitty\Http\Uri;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UploadedFileInterface;

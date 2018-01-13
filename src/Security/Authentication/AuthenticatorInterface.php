@@ -1,9 +1,9 @@
 <?php
 
-namespace Bizurkur\Bitty\Security\Authentication;
+namespace Bitty\Security\Authentication;
 
-use Bizurkur\Bitty\Security\Exception\AuthenticationException;
-use Bizurkur\Bitty\Security\User\UserInterface;
+use Bitty\Security\Exception\AuthenticationException;
+use Bitty\Security\User\UserInterface;
 
 interface AuthenticatorInterface
 {

@@ -1,13 +1,13 @@
 <?php
 
-namespace Bizurkur\Bitty\Tests\EventManager;
+namespace Bitty\Tests\EventManager;
 
-use Bizurkur\Bitty\EventManager\Event;
-use Bizurkur\Bitty\EventManager\EventInterface;
-use Bizurkur\Bitty\EventManager\EventManager;
-use Bizurkur\Bitty\EventManager\EventManagerInterface;
-use Bizurkur\Bitty\Tests\Stubs\InvokableStubInterface;
-use Bizurkur\Bitty\Tests\TestCase;
+use Bitty\EventManager\Event;
+use Bitty\EventManager\EventInterface;
+use Bitty\EventManager\EventManager;
+use Bitty\EventManager\EventManagerInterface;
+use Bitty\Tests\Stubs\InvokableStubInterface;
+use Bitty\Tests\TestCase;
 
 class EventManagerTest extends TestCase
 {

@@ -1,12 +1,12 @@
 <?php
 
-namespace Bizurkur\Bitty\Security\Authentication;
+namespace Bitty\Security\Authentication;
 
-use Bizurkur\Bitty\Security\Authentication\AuthenticatorInterface;
-use Bizurkur\Bitty\Security\Encoder\EncoderInterface;
-use Bizurkur\Bitty\Security\Exception\AuthenticationException;
-use Bizurkur\Bitty\Security\User\Provider\UserProviderInterface;
-use Bizurkur\Bitty\Security\User\UserInterface;
+use Bitty\Security\Authentication\AuthenticatorInterface;
+use Bitty\Security\Encoder\EncoderInterface;
+use Bitty\Security\Exception\AuthenticationException;
+use Bitty\Security\User\Provider\UserProviderInterface;
+use Bitty\Security\User\UserInterface;
 
 class Authenticator implements AuthenticatorInterface
 {

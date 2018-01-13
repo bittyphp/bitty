@@ -1,6 +1,6 @@
 <?php
 
-namespace Bizurkur\Bitty\Http;
+namespace Bitty\Http;
 
 class Cookie
 {

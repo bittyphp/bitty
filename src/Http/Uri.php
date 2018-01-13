@@ -1,8 +1,8 @@
 <?php
 
-namespace Bizurkur\Bitty\Http;
+namespace Bitty\Http;
 
-use Bizurkur\Bitty\CollectionInterface;
+use Bitty\CollectionInterface;
 use Psr\Http\Message\UriInterface;
 
 class Uri implements UriInterface

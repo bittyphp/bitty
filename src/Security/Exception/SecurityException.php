@@ -1,6 +1,6 @@
 <?php
 
-namespace Bizurkur\Bitty\Security\Exception;
+namespace Bitty\Security\Exception;
 
 class SecurityException extends \Exception
 {

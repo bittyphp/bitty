@@ -1,6 +1,6 @@
 <?php
 
-namespace Bizurkur\Bitty\Router;
+namespace Bitty\Router;
 
 interface RouteInterface
 {

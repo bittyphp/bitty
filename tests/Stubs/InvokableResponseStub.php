@@ -1,8 +1,8 @@
 <?php
 
-namespace Bizurkur\Bitty\Tests\Stubs;
+namespace Bitty\Tests\Stubs;
 
-use Bizurkur\Bitty\Http\Response;
+use Bitty\Http\Response;
 use Psr\Http\Message\ResponseInterface;
 
 class InvokableResponseStub

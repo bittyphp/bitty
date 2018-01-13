@@ -25,7 +25,7 @@
     {
         "psr-4":
         {
-            "Bizurkur\\Bitty\\" : "src/"
+            "Bitty\\" : "src/"
         }
     },
     "minimum-stability": "dev"

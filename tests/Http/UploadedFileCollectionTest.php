@@ -1,11 +1,11 @@
 <?php
 
-namespace Bizurkur\Bitty\Tests\Http;
+namespace Bitty\Tests\Http;
 
-use Bizurkur\Bitty\CollectionInterface;
-use Bizurkur\Bitty\Http\UploadedFile;
-use Bizurkur\Bitty\Http\UploadedFileCollection;
-use Bizurkur\Bitty\Tests\TestCase;
+use Bitty\CollectionInterface;
+use Bitty\Http\UploadedFile;
+use Bitty\Http\UploadedFileCollection;
+use Bitty\Tests\TestCase;
 
 class UploadedFileCollectionTest extends TestCase
 {

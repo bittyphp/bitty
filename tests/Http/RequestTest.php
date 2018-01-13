@@ -1,10 +1,10 @@
 <?php
 
-namespace Bizurkur\Bitty\Tests\Http;
+namespace Bitty\Tests\Http;
 
-use Bizurkur\Bitty\Http\Request;
-use Bizurkur\Bitty\Http\Uri;
-use Bizurkur\Bitty\Tests\TestCase;
+use Bitty\Http\Request;
+use Bitty\Http\Uri;
+use Bitty\Tests\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UploadedFileInterface;
 

@@ -1,10 +1,10 @@
 <?php
 
-namespace Bizurkur\Bitty\Tests\Http;
+namespace Bitty\Tests\Http;
 
-use Bizurkur\Bitty\CollectionInterface;
-use Bizurkur\Bitty\Http\ServerCollection;
-use Bizurkur\Bitty\Tests\TestCase;
+use Bitty\CollectionInterface;
+use Bitty\Http\ServerCollection;
+use Bitty\Tests\TestCase;
 
 class ServerCollectionTest extends TestCase
 {

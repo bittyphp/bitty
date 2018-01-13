@@ -1,8 +1,8 @@
 <?php
 
-namespace Bizurkur\Bitty\Security\User\Provider;
+namespace Bitty\Security\User\Provider;
 
-use Bizurkur\Bitty\Security\User\UserInterface;
+use Bitty\Security\User\UserInterface;
 
 interface UserProviderInterface
 {

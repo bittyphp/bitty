@@ -1,8 +1,8 @@
 <?php
 
-namespace Bizurkur\Bitty\Http;
+namespace Bitty\Http;
 
-use Bizurkur\Bitty\Http\Response;
+use Bitty\Http\Response;
 
 class RedirectResponse extends Response
 {

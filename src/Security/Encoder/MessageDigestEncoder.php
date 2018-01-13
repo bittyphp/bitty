@@ -1,8 +1,8 @@
 <?php
 
-namespace Bizurkur\Bitty\Security\Encoder;
+namespace Bitty\Security\Encoder;
 
-use Bizurkur\Bitty\Security\Encoder\AbstractEncoder;
+use Bitty\Security\Encoder\AbstractEncoder;
 
 class MessageDigestEncoder extends AbstractEncoder
 {

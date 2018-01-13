@@ -1,9 +1,9 @@
 <?php
 
-namespace Bizurkur\Bitty\Tests\Http;
+namespace Bitty\Tests\Http;
 
-use Bizurkur\Bitty\Http\Stream;
-use Bizurkur\Bitty\Tests\TestCase;
+use Bitty\Http\Stream;
+use Bitty\Tests\TestCase;
 use Psr\Http\Message\StreamInterface;
 
 class StreamTest extends TestCase

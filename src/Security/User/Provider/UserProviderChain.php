@@ -1,8 +1,8 @@
 <?php
 
-namespace Bizurkur\Bitty\Security\User\Provider;
+namespace Bitty\Security\User\Provider;
 
-use Bizurkur\Bitty\Security\User\Provider\UserProviderInterface;
+use Bitty\Security\User\Provider\UserProviderInterface;
 
 class UserProviderChain implements UserProviderInterface
 {

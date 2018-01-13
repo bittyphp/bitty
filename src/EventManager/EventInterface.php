@@ -1,6 +1,6 @@
 <?php
 
-namespace Bizurkur\Bitty\EventManager;
+namespace Bitty\EventManager;
 
 /**
  * Representation of an event

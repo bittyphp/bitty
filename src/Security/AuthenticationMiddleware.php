@@ -1,13 +1,13 @@
 <?php
 
-namespace Bizurkur\Bitty\Security;
+namespace Bitty\Security;
 
-use Bizurkur\Bitty\Container\ContainerAwareInterface;
-use Bizurkur\Bitty\Container\ContainerAwareTrait;
-use Bizurkur\Bitty\Http\Server\MiddlewareInterface;
-use Bizurkur\Bitty\Http\Server\RequestHandlerInterface;
-use Bizurkur\Bitty\Security\Authentication\Handler\AbstractHandler;
-use Bizurkur\Bitty\Security\Authentication\Handler\HandlerInterface;
+use Bitty\Container\ContainerAwareInterface;
+use Bitty\Container\ContainerAwareTrait;
+use Bitty\Http\Server\MiddlewareInterface;
+use Bitty\Http\Server\RequestHandlerInterface;
+use Bitty\Security\Authentication\Handler\AbstractHandler;
+use Bitty\Security\Authentication\Handler\HandlerInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 class AuthenticationMiddleware implements MiddlewareInterface, ContainerAwareInterface

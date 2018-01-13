@@ -1,18 +1,18 @@
 <?php
 
-namespace Bizurkur\Bitty\Tests\Http\Server;
+namespace Bitty\Tests\Http\Server;
 
-use Bizurkur\Bitty\Container\ContainerAwareInterface;
-use Bizurkur\Bitty\Http\Exception\InternalServerErrorException;
-use Bizurkur\Bitty\Http\Exception\NotFoundException;
-use Bizurkur\Bitty\Http\Server\RequestHandler;
-use Bizurkur\Bitty\Http\Server\RequestHandlerInterface;
-use Bizurkur\Bitty\Router\RouteInterface;
-use Bizurkur\Bitty\Router\RouterInterface;
-use Bizurkur\Bitty\Tests\Stubs\InvokableContainerAwareStubInterface;
-use Bizurkur\Bitty\Tests\Stubs\InvokableResponseStub;
-use Bizurkur\Bitty\Tests\Stubs\InvokableStubInterface;
-use Bizurkur\Bitty\Tests\TestCase;
+use Bitty\Container\ContainerAwareInterface;
+use Bitty\Http\Exception\InternalServerErrorException;
+use Bitty\Http\Exception\NotFoundException;
+use Bitty\Http\Server\RequestHandler;
+use Bitty\Http\Server\RequestHandlerInterface;
+use Bitty\Router\RouteInterface;
+use Bitty\Router\RouterInterface;
+use Bitty\Tests\Stubs\InvokableContainerAwareStubInterface;
+use Bitty\Tests\Stubs\InvokableResponseStub;
+use Bitty\Tests\Stubs\InvokableStubInterface;
+use Bitty\Tests\TestCase;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;

@@ -1,12 +1,12 @@
 <?php
 
-namespace Bizurkur\Bitty\Tests\Router;
+namespace Bitty\Tests\Router;
 
-use Bizurkur\Bitty\Router\Exception\NotFoundException;
-use Bizurkur\Bitty\Router\RouteInterface;
-use Bizurkur\Bitty\Router\Router;
-use Bizurkur\Bitty\Router\RouterInterface;
-use Bizurkur\Bitty\Tests\TestCase;
+use Bitty\Router\Exception\NotFoundException;
+use Bitty\Router\RouteInterface;
+use Bitty\Router\Router;
+use Bitty\Router\RouterInterface;
+use Bitty\Tests\TestCase;
 
 class RouterTest extends TestCase
 {

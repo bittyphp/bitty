@@ -1,9 +1,9 @@
 <?php
 
-namespace Bizurkur\Bitty\Http;
+namespace Bitty\Http;
 
-use Bizurkur\Bitty\Collection;
-use Bizurkur\Bitty\Http\UploadedFile;
+use Bitty\Collection;
+use Bitty\Http\UploadedFile;
 
 class UploadedFileCollection extends Collection
 {

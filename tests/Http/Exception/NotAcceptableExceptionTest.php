@@ -1,10 +1,10 @@
 <?php
 
-namespace Bizurkur\Bitty\Tests\Http\Exception;
+namespace Bitty\Tests\Http\Exception;
 
-use Bizurkur\Bitty\Http\Exception\HttpExceptionInterface;
-use Bizurkur\Bitty\Http\Exception\NotAcceptableException;
-use Bizurkur\Bitty\Tests\TestCase;
+use Bitty\Http\Exception\HttpExceptionInterface;
+use Bitty\Http\Exception\NotAcceptableException;
+use Bitty\Tests\TestCase;
 
 class NotAcceptableExceptionTest extends TestCase
 {

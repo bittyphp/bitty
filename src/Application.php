@@ -1,17 +1,17 @@
 <?php
 
-namespace Bizurkur\Bitty;
+namespace Bitty;
 
-use Bizurkur\Bitty\Container\Container;
-use Bizurkur\Bitty\Container\ContainerInterface;
-use Bizurkur\Bitty\EventManager\EventManager;
-use Bizurkur\Bitty\Http\Request;
-use Bizurkur\Bitty\Http\Response;
-use Bizurkur\Bitty\Http\Server\MiddlewareChain;
-use Bizurkur\Bitty\Http\Server\MiddlewareInterface;
-use Bizurkur\Bitty\Http\Server\RequestHandler;
-use Bizurkur\Bitty\Router\Router;
-use Bizurkur\Bitty\Security\Authentication\AuthenticatorProxy;
+use Bitty\Container\Container;
+use Bitty\Container\ContainerInterface;
+use Bitty\EventManager\EventManager;
+use Bitty\Http\Request;
+use Bitty\Http\Response;
+use Bitty\Http\Server\MiddlewareChain;
+use Bitty\Http\Server\MiddlewareInterface;
+use Bitty\Http\Server\RequestHandler;
+use Bitty\Router\Router;
+use Bitty\Security\Authentication\AuthenticatorProxy;
 use Psr\Http\Message\ResponseInterface;
 
 class Application

@@ -1,8 +1,8 @@
 <?php
 
-namespace Bizurkur\Bitty\Security\User;
+namespace Bitty\Security\User;
 
-use Bizurkur\Bitty\Security\User\UserInterface;
+use Bitty\Security\User\UserInterface;
 
 class User implements UserInterface
 {

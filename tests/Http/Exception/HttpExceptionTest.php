@@ -1,10 +1,10 @@
 <?php
 
-namespace Bizurkur\Bitty\Tests\Http\Exception;
+namespace Bitty\Tests\Http\Exception;
 
-use Bizurkur\Bitty\Http\Exception\HttpException;
-use Bizurkur\Bitty\Http\Exception\HttpExceptionInterface;
-use Bizurkur\Bitty\Tests\TestCase;
+use Bitty\Http\Exception\HttpException;
+use Bitty\Http\Exception\HttpExceptionInterface;
+use Bitty\Tests\TestCase;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 

@@ -1,10 +1,10 @@
 <?php
 
-namespace Bizurkur\Bitty\Tests\Http;
+namespace Bitty\Tests\Http;
 
-use Bizurkur\Bitty\Collection;
-use Bizurkur\Bitty\Http\Uri;
-use Bizurkur\Bitty\Tests\TestCase;
+use Bitty\Collection;
+use Bitty\Http\Uri;
+use Bitty\Tests\TestCase;
 use Psr\Http\Message\UriInterface;
 
 class UriTest extends TestCase

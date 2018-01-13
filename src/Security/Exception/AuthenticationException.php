@@ -1,8 +1,8 @@
 <?php
 
-namespace Bizurkur\Bitty\Security\Exception;
+namespace Bitty\Security\Exception;
 
-use Bizurkur\Bitty\Security\Exception\SecurityException;
+use Bitty\Security\Exception\SecurityException;
 
 class AuthenticationException extends SecurityException
 {

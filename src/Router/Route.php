@@ -1,8 +1,8 @@
 <?php
 
-namespace Bizurkur\Bitty\Router;
+namespace Bitty\Router;
 
-use Bizurkur\Bitty\Router\RouteInterface;
+use Bitty\Router\RouteInterface;
 
 class Route implements RouteInterface
 {

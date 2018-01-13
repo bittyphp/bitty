@@ -1,8 +1,8 @@
 <?php
 
-namespace Bizurkur\Bitty\Security\Authentication;
+namespace Bitty\Security\Authentication;
 
-use Bizurkur\Bitty\Security\Authentication\AuthenticatorInterface;
+use Bitty\Security\Authentication\AuthenticatorInterface;
 
 class AuthenticatorProxy implements AuthenticatorInterface
 {

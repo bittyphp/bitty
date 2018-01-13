@@ -1,6 +1,6 @@
 <?php
 
-namespace Bizurkur\Bitty\Tests;
+namespace Bitty\Tests;
 
 use PHPUnit_Framework_MockObject_MockObject;
 use PHPUnit_Framework_TestCase;

@@ -1,6 +1,6 @@
 <?php
 
-namespace Bizurkur\Bitty\Security\User;
+namespace Bitty\Security\User;
 
 interface UserInterface
 {

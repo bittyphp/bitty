@@ -1,10 +1,10 @@
 <?php
 
-namespace Bizurkur\Bitty\Security\Authentication\Handler;
+namespace Bitty\Security\Authentication\Handler;
 
-use Bizurkur\Bitty\Http\RedirectResponse;
-use Bizurkur\Bitty\Http\Response;
-use Bizurkur\Bitty\Security\Authentication\Handler\AbstractHandler;
+use Bitty\Http\RedirectResponse;
+use Bitty\Http\Response;
+use Bitty\Security\Authentication\Handler\AbstractHandler;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 

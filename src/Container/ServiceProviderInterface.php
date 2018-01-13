@@ -1,9 +1,9 @@
 <?php
 
-namespace Bizurkur\Bitty\Container;
+namespace Bitty\Container;
 
-use Bizurkur\Bitty\Container\Exception\ContainerException;
-use Bizurkur\Bitty\Container\Exception\NotFoundException;
+use Bitty\Container\Exception\ContainerException;
+use Bitty\Container\Exception\NotFoundException;
 
 interface ServiceProviderInterface
 {

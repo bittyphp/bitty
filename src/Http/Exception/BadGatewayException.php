@@ -1,8 +1,8 @@
 <?php
 
-namespace Bizurkur\Bitty\Http\Exception;
+namespace Bitty\Http\Exception;
 
-use Bizurkur\Bitty\Http\Exception\HttpException;
+use Bitty\Http\Exception\HttpException;
 
 class BadGatewayException extends HttpException
 {

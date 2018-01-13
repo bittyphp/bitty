@@ -1,9 +1,9 @@
 <?php
 
-namespace Bizurkur\Bitty\Security\Encoder;
+namespace Bitty\Security\Encoder;
 
-use Bizurkur\Bitty\Security\Encoder\AbstractEncoder;
-use Bizurkur\Bitty\Security\Exception\AuthenticationException;
+use Bitty\Security\Encoder\AbstractEncoder;
+use Bitty\Security\Exception\AuthenticationException;
 
 class BcryptEncoder extends AbstractEncoder
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Bizurkur\Bitty\Security\Authentication\Handler;
+namespace Bitty\Security\Authentication\Handler;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;

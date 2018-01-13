@@ -1,9 +1,9 @@
 <?php
 
-namespace Bizurkur\Bitty\Security\Encoder;
+namespace Bitty\Security\Encoder;
 
-use Bizurkur\Bitty\Security\Encoder\EncoderInterface;
-use Bizurkur\Bitty\Security\Exception\AuthenticationException;
+use Bitty\Security\Encoder\EncoderInterface;
+use Bitty\Security\Exception\AuthenticationException;
 
 abstract class AbstractEncoder implements EncoderInterface
 {

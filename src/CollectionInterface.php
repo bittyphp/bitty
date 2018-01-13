@@ -1,6 +1,6 @@
 <?php
 
-namespace Bizurkur\Bitty;
+namespace Bitty;
 
 interface CollectionInterface
 {
