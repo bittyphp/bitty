@@ -6,8 +6,8 @@ use Bitty\Container\ContainerAwareInterface;
 use Bitty\Container\ContainerAwareTrait;
 use Bitty\Http\Server\MiddlewareInterface;
 use Bitty\Http\Server\RequestHandlerInterface;
-use Bitty\Security\Authentication\Handler\AbstractHandler;
-use Bitty\Security\Authentication\Handler\HandlerInterface;
+use Bitty\Security\Handler\AbstractHandler;
+use Bitty\Security\Handler\HandlerInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 class SecurityMiddleware implements MiddlewareInterface, ContainerAwareInterface

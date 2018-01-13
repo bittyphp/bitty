@@ -1,9 +1,9 @@
 <?php
 
-namespace Bitty\Security\Authentication\Handler;
+namespace Bitty\Security\Handler;
 
 use Bitty\Http\Response;
-use Bitty\Security\Authentication\Handler\AbstractHandler;
+use Bitty\Security\Handler\AbstractHandler;
 use Psr\Http\Message\ServerRequestInterface;
 
 class HttpBasicHandler extends AbstractHandler

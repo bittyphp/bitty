@@ -1,10 +1,10 @@
 <?php
 
-namespace Bitty\Security\Authentication\Handler;
+namespace Bitty\Security\Handler;
 
 use Bitty\Security\Authentication\AuthenticatorInterface;
 use Bitty\Security\Authentication\ContextInterface;
-use Bitty\Security\Authentication\Handler\HandlerInterface;
+use Bitty\Security\Handler\HandlerInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 abstract class AbstractHandler implements HandlerInterface
