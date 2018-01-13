@@ -9,6 +9,8 @@ interface UserProviderInterface
     /**
      * Gets the user.
      *
+     * @param string $username
+     *
      * @return UserInterface|null
      */
     public function getUser($username);

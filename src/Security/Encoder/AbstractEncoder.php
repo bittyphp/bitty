@@ -49,6 +49,13 @@ abstract class AbstractEncoder implements EncoderInterface
         return strlen($password) > $this->maxPasswordLength;
     }
 
+    /**
+     * Blocks passwords that are too long from being used.
+     *
+     * @param string $password
+     *
+     * @throws AuthenticationException
+     */
     protected function blockLongPasswords($password)
     {
         if (!$this->isPasswordTooLong($password)) {

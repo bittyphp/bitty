@@ -29,7 +29,7 @@ class EventManager implements EventManagerInterface
         ];
 
         usort($events, function ($a, $b) {
-            if ($a['priority'] == $b['priority']) {
+            if ($a['priority'] === $b['priority']) {
                 return 0;
             }
 

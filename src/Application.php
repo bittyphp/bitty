@@ -11,7 +11,6 @@ use Bitty\Http\Server\MiddlewareChain;
 use Bitty\Http\Server\MiddlewareInterface;
 use Bitty\Http\Server\RequestHandler;
 use Bitty\Router\Router;
-use Bitty\Security\Authentication\AuthenticatorProxy;
 use Psr\Http\Message\ResponseInterface;
 
 class Application

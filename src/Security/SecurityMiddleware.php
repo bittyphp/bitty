@@ -4,7 +4,6 @@ namespace Bitty\Security;
 
 use Bitty\Http\Server\MiddlewareInterface;
 use Bitty\Http\Server\RequestHandlerInterface;
-use Bitty\Security\Handler\AbstractHandler;
 use Bitty\Security\Handler\HandlerInterface;
 use Psr\Http\Message\ServerRequestInterface;
 

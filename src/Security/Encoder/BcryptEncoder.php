@@ -3,7 +3,6 @@
 namespace Bitty\Security\Encoder;
 
 use Bitty\Security\Encoder\AbstractEncoder;
-use Bitty\Security\Exception\AuthenticationException;
 
 class BcryptEncoder extends AbstractEncoder
 {
@@ -14,6 +13,7 @@ class BcryptEncoder extends AbstractEncoder
 
     /**
      * @param int $cost
+     * @param int $maxPasswordLength
      */
     public function __construct($cost = 10, $maxPasswordLength = 4096)
     {
