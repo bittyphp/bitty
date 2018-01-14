@@ -18,6 +18,9 @@ interface ContextMapInterface
     /**
      * Gets the authenticated user for the request, if any.
      *
+     * If the request is not secured, it should return the user from the default
+     * context or from the first available context if no default is set.
+     *
      * @param ServerRequestInterface $request
      *
      * @return UserInterface|null

@@ -18,6 +18,11 @@ class Context implements ContextInterface
     protected $paths = null;
 
     /**
+     * @var bool
+     */
+    protected $default = null;
+
+    /**
      * @var int
      */
     protected $delay = null;
@@ -25,13 +30,23 @@ class Context implements ContextInterface
     /**
      * @param string $name
      * @param string[] $paths
+     * @param bool $default
      * @param int $delay
      */
-    public function __construct($name, array $paths, $delay = 300)
+    public function __construct($name, array $paths, $default = true, $delay = 300)
     {
-        $this->name  = $name;
-        $this->paths = $paths;
-        $this->delay = $delay;
+        $this->name    = $name;
+        $this->paths   = $paths;
+        $this->default = (bool) $default;
+        $this->delay   = (int) $delay;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function isDefault()
+    {
+        return $this->default;
     }
 
     /**

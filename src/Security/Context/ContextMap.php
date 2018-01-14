@@ -26,10 +26,26 @@ class ContextMap implements ContextMapInterface
      */
     public function getUser(ServerRequestInterface $request)
     {
+        // Find user based on request.
         foreach ($this->contexts as $context) {
             if ($context->isShielded($request)) {
                 return $context->get('user');
             }
+        }
+
+        // Request is not secured.
+        // Find user from default context.
+        foreach ($this->contexts as $context) {
+            if ($context->isDefault()) {
+                return $context->get('user');
+            }
+        }
+
+        // No default context set.
+        // Find user from first available context.
+        $default = reset($this->contexts);
+        if ($default) {
+            return $default->get('user');
         }
     }
 }
