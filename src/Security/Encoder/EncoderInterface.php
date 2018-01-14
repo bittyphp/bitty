@@ -7,6 +7,11 @@ use Bitty\Security\Exception\AuthenticationException;
 interface EncoderInterface
 {
     /**
+     * @var int
+     */
+    const MAX_PASSWORD_LEN = 4096;
+
+    /**
      * Encodes a password.
      *
      * @param string $password Unencoded password.

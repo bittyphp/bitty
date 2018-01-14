@@ -10,14 +10,16 @@ abstract class AbstractEncoder implements EncoderInterface
     /**
      * @var int
      */
-    protected $maxPasswordLength = null;
+    protected $maxPasswordLength = EncoderInterface::MAX_PASSWORD_LEN;
 
     /**
-     * @param int $maxPasswordLength
+     * @param int $maxPasswordLength Use zero to keep the default.
      */
-    public function __construct($maxPasswordLength = 4096)
+    public function __construct($maxPasswordLength = 0)
     {
-        $this->maxPasswordLength = $maxPasswordLength;
+        if ($maxPasswordLength > 0) {
+            $this->maxPasswordLength = $maxPasswordLength;
+        }
     }
 
     /**
