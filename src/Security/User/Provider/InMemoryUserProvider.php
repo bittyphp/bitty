@@ -2,10 +2,10 @@
 
 namespace Bitty\Security\User\Provider;
 
-use Bitty\Security\User\Provider\UserProviderInterface;
+use Bitty\Security\User\Provider\AbstractUserProvider;
 use Bitty\Security\User\User;
 
-class InMemoryUserProvider implements UserProviderInterface
+class InMemoryUserProvider extends AbstractUserProvider
 {
     /**
      * @var string[]
@@ -14,9 +14,12 @@ class InMemoryUserProvider implements UserProviderInterface
 
     /**
      * @param string[] $users
+     * @param int $maxUsernameLength Use zero to keep the default.
      */
-    public function __construct(array $users)
+    public function __construct(array $users, $maxUsernameLength = 0)
     {
+        parent::__construct($maxUsernameLength);
+
         $this->users = $users;
     }
 
@@ -25,6 +28,8 @@ class InMemoryUserProvider implements UserProviderInterface
      */
     public function getUser($username)
     {
+        $this->checkUsername($username);
+
         if (!isset($this->users[$username])) {
             return;
         }
