@@ -1,9 +1,9 @@
 <?php
 
-namespace Bizurkur\Bitty\Http\Server;
+namespace Bitty\Http\Server;
 
-use Bizurkur\Bitty\Http\Server\MiddlewareInterface;
-use Bizurkur\Bitty\Http\Server\RequestHandlerInterface;
+use Bitty\Http\Server\MiddlewareInterface;
+use Bitty\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 class MiddlewareHandler implements RequestHandlerInterface

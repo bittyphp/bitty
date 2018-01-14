@@ -1,16 +1,16 @@
 <?php
 
-namespace Bizurkur\Bitty\Tests;
+namespace Bitty\Tests;
 
-use Bizurkur\Bitty\Application;
-use Bizurkur\Bitty\Container\Container;
-use Bizurkur\Bitty\Container\ContainerInterface;
-use Bizurkur\Bitty\Http\Server\MiddlewareInterface;
-use Bizurkur\Bitty\Http\Server\RequestHandler;
-use Bizurkur\Bitty\Http\Server\RequestHandlerInterface;
-use Bizurkur\Bitty\Http\Stream;
-use Bizurkur\Bitty\Router\RouterInterface;
-use Bizurkur\Bitty\Tests\TestCase;
+use Bitty\Application;
+use Bitty\Container\Container;
+use Bitty\Container\ContainerInterface;
+use Bitty\Http\Server\MiddlewareInterface;
+use Bitty\Http\Server\RequestHandler;
+use Bitty\Http\Server\RequestHandlerInterface;
+use Bitty\Http\Stream;
+use Bitty\Router\RouterInterface;
+use Bitty\Tests\TestCase;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 

@@ -1,9 +1,9 @@
 <?php
 
-namespace Bizurkur\Bitty\Tests\Stubs;
+namespace Bitty\Tests\Stubs;
 
-use Bizurkur\Bitty\Container\ContainerAwareInterface;
-use Bizurkur\Bitty\Tests\Stubs\InvokableStubInterface;
+use Bitty\Container\ContainerAwareInterface;
+use Bitty\Tests\Stubs\InvokableStubInterface;
 
 interface InvokableContainerAwareStubInterface extends InvokableStubInterface, ContainerAwareInterface
 {

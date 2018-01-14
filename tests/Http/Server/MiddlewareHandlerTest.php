@@ -1,11 +1,11 @@
 <?php
 
-namespace Bizurkur\Bitty\Tests\Http\Server;
+namespace Bitty\Tests\Http\Server;
 
-use Bizurkur\Bitty\Http\Server\MiddlewareHandler;
-use Bizurkur\Bitty\Http\Server\MiddlewareInterface;
-use Bizurkur\Bitty\Http\Server\RequestHandlerInterface;
-use Bizurkur\Bitty\Tests\TestCase;
+use Bitty\Http\Server\MiddlewareHandler;
+use Bitty\Http\Server\MiddlewareInterface;
+use Bitty\Http\Server\RequestHandlerInterface;
+use Bitty\Tests\TestCase;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 

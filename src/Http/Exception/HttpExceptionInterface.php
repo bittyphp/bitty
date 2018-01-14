@@ -1,6 +1,6 @@
 <?php
 
-namespace Bizurkur\Bitty\Http\Exception;
+namespace Bitty\Http\Exception;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;

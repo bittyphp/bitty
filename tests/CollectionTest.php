@@ -1,9 +1,9 @@
 <?php
 
-namespace Bizurkur\Bitty\Tests;
+namespace Bitty\Tests;
 
-use Bizurkur\Bitty\Collection;
-use Bizurkur\Bitty\CollectionInterface;
+use Bitty\Collection;
+use Bitty\CollectionInterface;
 
 class CollectionTest extends TestCase
 {

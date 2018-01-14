@@ -1,10 +1,10 @@
 <?php
 
-namespace Bizurkur\Bitty\Tests\EventManager;
+namespace Bitty\Tests\EventManager;
 
-use Bizurkur\Bitty\EventManager\Event;
-use Bizurkur\Bitty\EventManager\EventInterface;
-use Bizurkur\Bitty\Tests\TestCase;
+use Bitty\EventManager\Event;
+use Bitty\EventManager\EventInterface;
+use Bitty\Tests\TestCase;
 
 class EventTest extends TestCase
 {

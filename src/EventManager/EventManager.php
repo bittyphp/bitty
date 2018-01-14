@@ -1,10 +1,10 @@
 <?php
 
-namespace Bizurkur\Bitty\EventManager;
+namespace Bitty\EventManager;
 
-use Bizurkur\Bitty\EventManager\Event;
-use Bizurkur\Bitty\EventManager\EventInterface;
-use Bizurkur\Bitty\EventManager\EventManagerInterface;
+use Bitty\EventManager\Event;
+use Bitty\EventManager\EventInterface;
+use Bitty\EventManager\EventManagerInterface;
 
 class EventManager implements EventManagerInterface
 {
@@ -29,7 +29,7 @@ class EventManager implements EventManagerInterface
         ];
 
         usort($events, function ($a, $b) {
-            if ($a['priority'] == $b['priority']) {
+            if ($a['priority'] === $b['priority']) {
                 return 0;
             }
 

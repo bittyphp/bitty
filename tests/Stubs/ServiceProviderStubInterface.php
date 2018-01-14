@@ -1,9 +1,9 @@
 <?php
 
-namespace Bizurkur\Bitty\Tests\Stubs;
+namespace Bitty\Tests\Stubs;
 
-use Bizurkur\Bitty\Container\ContainerAwareInterface;
-use Bizurkur\Bitty\Container\ServiceProviderInterface;
+use Bitty\Container\ContainerAwareInterface;
+use Bitty\Container\ServiceProviderInterface;
 
 interface ServiceProviderStubInterface extends ContainerAwareInterface, ServiceProviderInterface
 {

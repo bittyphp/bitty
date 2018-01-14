@@ -1,13 +1,13 @@
 <?php
 
-namespace Bizurkur\Bitty\Http\Server;
+namespace Bitty\Http\Server;
 
-use Bizurkur\Bitty\Container\ContainerAwareInterface;
-use Bizurkur\Bitty\Container\ContainerAwareTrait;
-use Bizurkur\Bitty\Http\Exception\InternalServerErrorException;
-use Bizurkur\Bitty\Http\Exception\NotFoundException;
-use Bizurkur\Bitty\Http\Server\RequestHandlerInterface;
-use Bizurkur\Bitty\Router\RouterInterface;
+use Bitty\Container\ContainerAwareInterface;
+use Bitty\Container\ContainerAwareTrait;
+use Bitty\Http\Exception\InternalServerErrorException;
+use Bitty\Http\Exception\NotFoundException;
+use Bitty\Http\Server\RequestHandlerInterface;
+use Bitty\Router\RouterInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 

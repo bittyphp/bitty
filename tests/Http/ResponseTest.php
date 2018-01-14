@@ -1,9 +1,9 @@
 <?php
 
-namespace Bizurkur\Bitty\Tests\Http;
+namespace Bitty\Tests\Http;
 
-use Bizurkur\Bitty\Http\Response;
-use Bizurkur\Bitty\Tests\TestCase;
+use Bitty\Http\Response;
+use Bitty\Tests\TestCase;
 use Psr\Http\Message\ResponseInterface;
 
 class ResponseTest extends TestCase

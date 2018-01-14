@@ -1,11 +1,11 @@
 <?php
 
-namespace Bizurkur\Bitty\Router;
+namespace Bitty\Router;
 
-use Bizurkur\Bitty\Router\Exception\NotFoundException;
-use Bizurkur\Bitty\Router\Route;
-use Bizurkur\Bitty\Router\RouteInterface;
-use Bizurkur\Bitty\Router\RouterInterface;
+use Bitty\Router\Exception\NotFoundException;
+use Bitty\Router\Route;
+use Bitty\Router\RouteInterface;
+use Bitty\Router\RouterInterface;
 
 class Router implements RouterInterface
 {

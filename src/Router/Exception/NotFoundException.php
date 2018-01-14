@@ -1,8 +1,8 @@
 <?php
 
-namespace Bizurkur\Bitty\Router\Exception;
+namespace Bitty\Router\Exception;
 
-use Bizurkur\Bitty\Router\Exception\RouterException;
+use Bitty\Router\Exception\RouterException;
 
 class NotFoundException extends RouterException
 {

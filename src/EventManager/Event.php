@@ -1,10 +1,10 @@
 <?php
 
-namespace Bizurkur\Bitty\EventManager;
+namespace Bitty\EventManager;
 
-use Bizurkur\Bitty\Collection;
-use Bizurkur\Bitty\CollectionInterface;
-use Bizurkur\Bitty\EventManager\EventInterface;
+use Bitty\Collection;
+use Bitty\CollectionInterface;
+use Bitty\EventManager\EventInterface;
 
 class Event implements EventInterface
 {

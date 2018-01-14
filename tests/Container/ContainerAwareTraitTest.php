@@ -1,9 +1,9 @@
 <?php
 
-namespace Bizurkur\Bitty\Tests\Container;
+namespace Bitty\Tests\Container;
 
-use Bizurkur\Bitty\Container\ContainerAwareTrait;
-use Bizurkur\Bitty\Tests\TestCase;
+use Bitty\Container\ContainerAwareTrait;
+use Bitty\Tests\TestCase;
 use Psr\Container\ContainerInterface;
 
 class ContainerAwareTraitTest extends TestCase

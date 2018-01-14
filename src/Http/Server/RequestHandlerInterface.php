@@ -1,8 +1,8 @@
 <?php
 
-namespace Bizurkur\Bitty\Http\Server;
+namespace Bitty\Http\Server;
 
-use Bizurkur\Bitty\Http\Exception\HttpExceptionInterface;
+use Bitty\Http\Exception\HttpExceptionInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 

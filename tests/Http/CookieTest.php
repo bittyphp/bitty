@@ -1,9 +1,9 @@
 <?php
 
-namespace Bizurkur\Bitty\Tests\Http;
+namespace Bitty\Tests\Http;
 
-use Bizurkur\Bitty\Http\Cookie;
-use Bizurkur\Bitty\Tests\TestCase;
+use Bitty\Http\Cookie;
+use Bitty\Tests\TestCase;
 
 class CookieTest extends TestCase
 {

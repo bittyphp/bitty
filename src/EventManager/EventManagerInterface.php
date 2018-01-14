@@ -1,8 +1,8 @@
 <?php
 
-namespace Bizurkur\Bitty\EventManager;
+namespace Bitty\EventManager;
 
-use Bizurkur\Bitty\EventManager\EventInterface;
+use Bitty\EventManager\EventInterface;
 
 /**
  * Interface for EventManager

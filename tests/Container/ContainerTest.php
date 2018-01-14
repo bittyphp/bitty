@@ -1,13 +1,13 @@
 <?php
 
-namespace Bizurkur\Bitty\Tests\Container;
+namespace Bitty\Tests\Container;
 
-use Bizurkur\Bitty\Container\Container;
-use Bizurkur\Bitty\Container\ContainerInterface;
-use Bizurkur\Bitty\Container\Exception\NotFoundException;
-use Bizurkur\Bitty\Container\ServiceProviderInterface;
-use Bizurkur\Bitty\Tests\Stubs\ServiceProviderStubInterface;
-use Bizurkur\Bitty\Tests\TestCase;
+use Bitty\Container\Container;
+use Bitty\Container\ContainerInterface;
+use Bitty\Container\Exception\NotFoundException;
+use Bitty\Container\ServiceProviderInterface;
+use Bitty\Tests\Stubs\ServiceProviderStubInterface;
+use Bitty\Tests\TestCase;
 use Psr\Container\ContainerInterface as PsrContainerInterface;
 
 class ContainerTest extends TestCase

@@ -1,9 +1,9 @@
 <?php
 
-namespace Bizurkur\Bitty\Tests\Http;
+namespace Bitty\Tests\Http;
 
-use Bizurkur\Bitty\Http\JsonResponse;
-use Bizurkur\Bitty\Tests\TestCase;
+use Bitty\Http\JsonResponse;
+use Bitty\Tests\TestCase;
 use Psr\Http\Message\ResponseInterface;
 
 class JsonResponseTest extends TestCase

@@ -1,17 +1,16 @@
 <?php
 
-namespace Bizurkur\Bitty;
+namespace Bitty;
 
-use Bizurkur\Bitty\Container\Container;
-use Bizurkur\Bitty\Container\ContainerAwareInterface;
-use Bizurkur\Bitty\Container\ContainerInterface;
-use Bizurkur\Bitty\EventManager\EventManager;
-use Bizurkur\Bitty\Http\Request;
-use Bizurkur\Bitty\Http\Response;
-use Bizurkur\Bitty\Http\Server\MiddlewareChain;
-use Bizurkur\Bitty\Http\Server\MiddlewareInterface;
-use Bizurkur\Bitty\Http\Server\RequestHandler;
-use Bizurkur\Bitty\Router\Router;
+use Bitty\Container\Container;
+use Bitty\Container\ContainerInterface;
+use Bitty\EventManager\EventManager;
+use Bitty\Http\Request;
+use Bitty\Http\Response;
+use Bitty\Http\Server\MiddlewareChain;
+use Bitty\Http\Server\MiddlewareInterface;
+use Bitty\Http\Server\RequestHandler;
+use Bitty\Router\Router;
 use Psr\Http\Message\ResponseInterface;
 
 class Application
@@ -37,7 +36,7 @@ class Application
             $this->container = $container;
         }
 
-        $this->middleware = new MiddlewareChain();
+        $this->middleware = new MiddlewareChain($this->container);
 
         $this->setDefaultServices();
     }
@@ -68,10 +67,6 @@ class Application
     public function run()
     {
         $requestHandler = $this->container->get('request_handler');
-        if ($requestHandler instanceof ContainerAwareInterface) {
-            $requestHandler->setContainer($this->container);
-        }
-
         $this->middleware->setDefaultHandler($requestHandler);
 
         $request  = $this->container->get('request');

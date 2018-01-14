@@ -1,8 +1,8 @@
 <?php
 
-namespace Bizurkur\Bitty\Http;
+namespace Bitty\Http;
 
-use Bizurkur\Bitty\Http\Stream;
+use Bitty\Http\Stream;
 use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\StreamInterface;
 

@@ -1,8 +1,8 @@
 <?php
 
-namespace Bizurkur\Bitty;
+namespace Bitty;
 
-use Bizurkur\Bitty\CollectionInterface;
+use Bitty\CollectionInterface;
 
 class Collection implements CollectionInterface
 {

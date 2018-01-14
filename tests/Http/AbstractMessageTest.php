@@ -1,9 +1,9 @@
 <?php
 
-namespace Bizurkur\Bitty\Tests\Http;
+namespace Bitty\Tests\Http;
 
-use Bizurkur\Bitty\Http\AbstractMessage;
-use Bizurkur\Bitty\Tests\TestCase;
+use Bitty\Http\AbstractMessage;
+use Bitty\Tests\TestCase;
 use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\StreamInterface;
 

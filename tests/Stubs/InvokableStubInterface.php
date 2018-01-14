@@ -1,6 +1,6 @@
 <?php
 
-namespace Bizurkur\Bitty\Tests\Stubs;
+namespace Bitty\Tests\Stubs;
 
 interface InvokableStubInterface
 {

@@ -1,8 +1,8 @@
 <?php
 
-namespace Bizurkur\Bitty\Http;
+namespace Bitty\Http;
 
-use Bizurkur\Bitty\Collection;
+use Bitty\Collection;
 
 class ServerCollection extends Collection
 {
