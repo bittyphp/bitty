@@ -52,7 +52,7 @@ class Context implements ContextInterface
             // TODO: Secure this more?
             // http://php.net/manual/en/features.session.security.management.php#features.session.security.management.session-id-regeneration
             // http://php.net/manual/en/function.session-regenerate-id.php
-            $this->set('destroy', $now + $this->config['delay']);
+            $this->set('destroy', $now + $this->config['destroy.delay']);
             session_regenerate_id();
             $this->remove('destroy');
             $this->set('login', $now);
