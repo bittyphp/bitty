@@ -53,7 +53,7 @@ class FormShield extends AbstractShield
      */
     protected function handleFormLogin(ServerRequestInterface $request)
     {
-        if ('GET' === $request->getMethod()) {
+        if ('POST' !== $request->getMethod()) {
             return;
         }
 
@@ -61,7 +61,11 @@ class FormShield extends AbstractShield
         $passwordField = $this->config['login.password'];
         $rememberField = $this->config['login.remember'];
 
-        $params   = $request->getParsedBody();
+        $params = $request->getParsedBody();
+        if (!is_array($params)) {
+            return;
+        }
+
         $username = empty($params[$usernameField]) ? '' : $params[$usernameField];
         $password = empty($params[$passwordField]) ? '' : $params[$passwordField];
         $remember = empty($params[$rememberField]) ? false : true;
