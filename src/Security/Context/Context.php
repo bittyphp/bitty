@@ -147,9 +147,20 @@ class Context implements ContextInterface
     protected function getDefaultConfig()
     {
         return [
+            // Whether or not this is the default context.
             'default' => true,
+
+            // How long (in seconds) sessions are good for.
+            // Defaults to 24 hours.
             'ttl' => 86400,
+
+            // Timeout (in seconds) to invalidate a session after no activity.
+            // Defaults to zero (disabled).
             'timeout' => 0,
+
+            // Delay (in seconds) to wait before destroying an old session.
+            // Sessions are flagged as "destroyed" during re-authentication.
+            // Allows for a network lag in asynchronous applications.
             'destroy.delay' => 300,
         ];
     }
