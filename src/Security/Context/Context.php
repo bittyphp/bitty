@@ -25,19 +25,26 @@ class Context implements ContextInterface
     /**
      * @var int
      */
+    protected $ttl = null;
+
+    /**
+     * @var int
+     */
     protected $delay = null;
 
     /**
      * @param string $name
      * @param string[] $paths
-     * @param bool $default
-     * @param int $delay
+     * @param bool $default Whether or not this is the default security context.
+     * @param int $ttl Time-to-Live; how long (in seconds) authentication lasts.
+     * @param int $delay Delay (in seconds) before destroy on re-authentication.
      */
-    public function __construct($name, array $paths, $default = true, $delay = 300)
+    public function __construct($name, array $paths, $default = true, $ttl = 86400, $delay = 300)
     {
         $this->name    = $name;
         $this->paths   = $paths;
         $this->default = (bool) $default;
+        $this->ttl     = (int) $ttl;
         $this->delay   = (int) $delay;
     }
 
@@ -61,6 +68,7 @@ class Context implements ContextInterface
             $this->set('destroyed', time());
             session_regenerate_id();
             $this->remove('destroyed');
+            $this->set('expires', time() + $this->ttl);
         }
 
         $_SESSION['shield.'.$this->name][$name] = $value;
@@ -72,6 +80,13 @@ class Context implements ContextInterface
     public function get($name, $default = null)
     {
         if ('user' === $name) {
+            $expires = $this->get('expires');
+            if ($expires && time() > $expires) {
+                // This session has timed out.
+                // Clear out all data to prevent unauthorized use.
+                $this->clear();
+            }
+
             $destroyed = $this->get('destroyed', null);
             if ($destroyed && time() > $destroyed + $this->delay) {
                 // This session has been destroyed.
