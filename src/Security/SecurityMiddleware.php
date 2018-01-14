@@ -2,14 +2,22 @@
 
 namespace Bitty\Security;
 
+use Bitty\Container\ContainerAwareInterface;
+use Bitty\Container\ContainerInterface;
 use Bitty\Http\Server\MiddlewareInterface;
 use Bitty\Http\Server\RequestHandlerInterface;
 use Bitty\Security\Context\ContextMapInterface;
 use Bitty\Security\Shield\ShieldInterface;
+use Psr\Container\ContainerInterface as PsrContainerInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-class SecurityMiddleware implements MiddlewareInterface
+class SecurityMiddleware implements MiddlewareInterface, ContainerAwareInterface
 {
+    /**
+     * @var PsrContainerInterface
+     */
+    protected $container = null;
+
     /**
      * @var ContextMapInterface
      */
@@ -30,6 +38,28 @@ class SecurityMiddleware implements MiddlewareInterface
 
         $this->contextMap = $contextMap;
         $this->shield     = $shield;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setContainer(PsrContainerInterface $container)
+    {
+        if ($container instanceof ContainerInterface
+            && !$container->has('security_context')
+        ) {
+            $container->set('security_context', $this->contextMap);
+        }
+
+        $this->container = $container;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getContainer()
+    {
+        return $this->container;
     }
 
     /**
