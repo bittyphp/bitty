@@ -27,7 +27,7 @@ class BcryptEncoder extends AbstractEncoder
      */
     public function encode($password, $salt = null)
     {
-        $this->blockLongPasswords();
+        $this->checkPassword($password);
 
         return password_hash($password, PASSWORD_BCRYPT, ['cost' => $this->cost]);
     }
@@ -37,7 +37,7 @@ class BcryptEncoder extends AbstractEncoder
      */
     public function verify($encoded, $password, $salt = null)
     {
-        $this->blockLongPasswords();
+        $this->checkPassword($password);
 
         return password_verify($password, $encoded);
     }

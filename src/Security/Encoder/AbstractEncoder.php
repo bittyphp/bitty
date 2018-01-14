@@ -30,7 +30,7 @@ abstract class AbstractEncoder implements EncoderInterface
      */
     public function verify($encoded, $password, $salt = null)
     {
-        $this->blockLongPasswords();
+        $this->checkPassword($password);
 
         return $this->encode($password, $salt) === $encoded;
     }
@@ -50,13 +50,13 @@ abstract class AbstractEncoder implements EncoderInterface
     }
 
     /**
-     * Blocks passwords that are too long from being used.
+     * Checks for passwords that are too long.
      *
      * @param string $password
      *
      * @throws AuthenticationException
      */
-    protected function blockLongPasswords($password)
+    protected function checkPassword($password)
     {
         if (!$this->isPasswordTooLong($password)) {
             return;

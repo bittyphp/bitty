@@ -4,22 +4,32 @@ namespace Bitty\Security;
 
 use Bitty\Http\Server\MiddlewareInterface;
 use Bitty\Http\Server\RequestHandlerInterface;
-use Bitty\Security\Handler\HandlerInterface;
+use Bitty\Security\Context\ContextMapInterface;
+use Bitty\Security\Shield\ShieldInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 class SecurityMiddleware implements MiddlewareInterface
 {
     /**
-     * @var HandlerInterface
+     * @var ContextMapInterface
      */
-    protected $authHandler = null;
+    protected $contextMap = null;
 
     /**
-     * @param HandlerInterface $authHandler
+     * @var ShieldInterface
      */
-    public function __construct(HandlerInterface $authHandler)
+    protected $shield = null;
+
+    /**
+     * @param ContextMapInterface $contextMap
+     * @param ShieldInterface $shield
+     */
+    public function __construct(ContextMapInterface $contextMap, ShieldInterface $shield)
     {
-        $this->authHandler = $authHandler;
+        $contextMap->add($shield->getContext());
+
+        $this->contextMap = $contextMap;
+        $this->shield     = $shield;
     }
 
     /**
@@ -27,9 +37,9 @@ class SecurityMiddleware implements MiddlewareInterface
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler)
     {
-        $authResponse = $this->authHandler->handle($request);
-        if ($authResponse) {
-            return $authResponse;
+        $response = $this->shield->handle($request);
+        if ($response) {
+            return $response;
         }
 
         return $handler->handle($request);

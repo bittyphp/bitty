@@ -30,6 +30,8 @@ class MessageDigestEncoder extends AbstractEncoder
      */
     public function encode($password, $salt = null)
     {
+        $this->checkPassword($password);
+
         if ($salt) {
             $password = $salt.':'.$password;
         }

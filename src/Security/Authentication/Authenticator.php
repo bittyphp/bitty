@@ -2,13 +2,13 @@
 
 namespace Bitty\Security\Authentication;
 
-use Bitty\Security\Authentication\AuthenticationInterface;
+use Bitty\Security\Authentication\AuthenticatorInterface;
 use Bitty\Security\Encoder\EncoderInterface;
 use Bitty\Security\Exception\AuthenticationException;
 use Bitty\Security\User\Provider\UserProviderInterface;
 use Bitty\Security\User\UserInterface;
 
-class Authentication implements AuthenticationInterface
+class Authenticator implements AuthenticatorInterface
 {
     /**
      * @var UserProviderInterface
@@ -21,24 +21,16 @@ class Authentication implements AuthenticationInterface
     protected $encoders = null;
 
     /**
-     * @var string
-     */
-    protected $sessionKey = null;
-
-    /**
      * @param UserProviderInterface $userProvider
      * @param EncoderInterface[]|EncoderInterface $encoders
-     * @param string $sessionKey
      *
      * @throws \InvalidArgumentException
      */
     public function __construct(
         UserProviderInterface $userProvider,
-        $encoders,
-        $sessionKey = 'auth'
+        $encoders
     ) {
         $this->userProvider = $userProvider;
-        $this->sessionKey   = $sessionKey;
 
         if (is_object($encoders)) {
             $this->addEncoder($encoders, UserInterface::class);
@@ -60,7 +52,7 @@ class Authentication implements AuthenticationInterface
     /**
      * {@inheritDoc}
      */
-    public function authenticate($username, $password, $remember = false)
+    public function authenticate($username, $password)
     {
         $user = $this->userProvider->getUser($username);
         if (!$user) {
@@ -75,52 +67,7 @@ class Authentication implements AuthenticationInterface
             throw new AuthenticationException('Invalid password.');
         }
 
-        // TODO: Remember me.
-
-        // http://php.net/manual/en/features.session.security.management.php#features.session.security.management.session-id-regeneration
-        // http://php.net/manual/en/function.session-regenerate-id.php
-        $_SESSION['auth.destroyed'] = time();
-        session_regenerate_id();
-        $_SESSION[$this->sessionKey]['user'] = $user;
-        unset($_SESSION['auth.destroyed']);
-
-        return true;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function deauthenticate()
-    {
-        if (isset($_SESSION[$this->sessionKey]['user'])) {
-            unset($_SESSION[$this->sessionKey]['user']);
-        }
-
-        return !$this->isAuthenticated();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function isAuthenticated()
-    {
-        // TODO: Base this on TTL or expire time.
-
-        $user = $this->getUser();
-
-        return !empty($user);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getUser()
-    {
-        if (!empty($_SESSION[$this->sessionKey]['user'])) {
-            return $_SESSION[$this->sessionKey]['user'];
-        }
-
-        return null;
+        return $user;
     }
 
     /**

@@ -11,6 +11,8 @@ class PlainTextEncoder extends AbstractEncoder
      */
     public function encode($password, $salt = null)
     {
+        $this->checkPassword($password);
+
         return $password;
     }
 }
