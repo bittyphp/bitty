@@ -3,7 +3,6 @@
 namespace Bitty\Security\Shield;
 
 use Bitty\Security\Context\ContextCollection;
-use Bitty\Security\Context\ContextInterface;
 use Bitty\Security\Shield\ShieldInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -15,7 +14,7 @@ class ShieldCollection implements ShieldInterface
     protected $shields = null;
 
     /**
-     * @var ContextInterface
+     * @var ContextCollection
      */
     protected $context = null;
 
@@ -60,12 +59,6 @@ class ShieldCollection implements ShieldInterface
      */
     public function getContext()
     {
-        $collection = new ContextCollection();
-
-        foreach ($this->shields as $shield) {
-            $collection->add($shield->getContext());
-        }
-
-        return $collection;
+        return $this->context;
     }
 }
