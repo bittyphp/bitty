@@ -2,64 +2,31 @@
 
 namespace Bitty\Security;
 
-use Bitty\Container\ContainerAwareInterface;
-use Bitty\Container\ContainerInterface;
 use Bitty\Http\Server\MiddlewareInterface;
 use Bitty\Http\Server\RequestHandlerInterface;
+use Bitty\Security\Context\ContextMap;
 use Bitty\Security\Context\ContextMapInterface;
 use Bitty\Security\Shield\ShieldInterface;
-use Psr\Container\ContainerInterface as PsrContainerInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-class SecurityMiddleware implements MiddlewareInterface, ContainerAwareInterface
+class SecurityMiddleware implements MiddlewareInterface
 {
-    /**
-     * @var PsrContainerInterface
-     */
-    protected $container = null;
-
-    /**
-     * @var ContextMapInterface
-     */
-    protected $contextMap = null;
-
     /**
      * @var ShieldInterface
      */
     protected $shield = null;
 
     /**
-     * @param ContextMapInterface $contextMap
      * @param ShieldInterface $shield
+     * @param ContextMapInterface|null $contextMap
      */
-    public function __construct(ContextMapInterface $contextMap, ShieldInterface $shield)
+    public function __construct(ShieldInterface $shield, ContextMapInterface $contextMap = null)
     {
-        $contextMap->add($shield->getContext());
-
-        $this->contextMap = $contextMap;
-        $this->shield     = $shield;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function setContainer(PsrContainerInterface $container)
-    {
-        if ($container instanceof ContainerInterface
-            && !$container->has('security_context')
-        ) {
-            $container->set('security_context', $this->contextMap);
+        if ($contextMap) {
+            $contextMap->add($shield->getContext());
         }
 
-        $this->container = $container;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getContainer()
-    {
-        return $this->container;
+        $this->shield = $shield;
     }
 
     /**
