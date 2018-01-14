@@ -18,13 +18,20 @@ class Context implements ContextInterface
     protected $paths = null;
 
     /**
+     * @var int
+     */
+    protected $delay = null;
+
+    /**
      * @param string $name
      * @param string[] $paths
+     * @param int $delay
      */
-    public function __construct($name, array $paths)
+    public function __construct($name, array $paths, $delay = 300)
     {
         $this->name  = $name;
         $this->paths = $paths;
+        $this->delay = $delay;
     }
 
     /**
@@ -51,9 +58,10 @@ class Context implements ContextInterface
     {
         if ('user' === $name) {
             $destroyed = $this->get('destroyed', null);
-            if ($destroyed && time() > $destroyed + 300) {
-                // this session has been destroyed.
-                // clear all out data.
+            if ($destroyed && time() > $destroyed + $this->delay) {
+                // This session has been destroyed.
+                // Clear out all data to prevent unauthorized use.
+                // TODO: Trigger alarm/log/event?
                 $this->clear();
             }
         }
