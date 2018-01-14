@@ -2,10 +2,12 @@
 
 namespace Bitty\Tests\Http\Server;
 
+use Bitty\Container\ContainerInterface;
 use Bitty\Http\Server\MiddlewareChain;
 use Bitty\Http\Server\MiddlewareHandler;
 use Bitty\Http\Server\MiddlewareInterface;
 use Bitty\Http\Server\RequestHandlerInterface;
+use Bitty\Tests\Stubs\ContainerAwareMiddlewareStubInterface;
 use Bitty\Tests\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -16,11 +18,18 @@ class MiddlewareChainTest extends TestCase
      */
     protected $fixture = null;
 
+    /**
+     * @var ContainerInterface
+     */
+    protected $container = null;
+
     protected function setUp()
     {
         parent::setUp();
 
-        $this->fixture = new MiddlewareChain();
+        $this->container = $this->createMock(ContainerInterface::class);
+
+        $this->fixture = new MiddlewareChain($this->container);
     }
 
     public function testInstanceOf()
@@ -83,5 +92,15 @@ class MiddlewareChainTest extends TestCase
 
         $this->fixture->setDefaultHandler($handler);
         $this->fixture->handle($request);
+    }
+
+    public function testContainerAwareMiddleware()
+    {
+        $middleware = $this->createMock(ContainerAwareMiddlewareStubInterface::class);
+        $middleware->expects($this->once())
+            ->method('setContainer')
+            ->with($this->container);
+
+        $this->fixture->add($middleware);
     }
 }
