@@ -14,7 +14,7 @@ class UserProviderCollection implements UserProviderInterface
     /**
      * @param UserProviderInterface[] $providers
      */
-    public function __construct(array $providers)
+    public function __construct(array $providers = [])
     {
         foreach ($providers as $provider) {
             $this->add($provider);
