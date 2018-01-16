@@ -368,13 +368,53 @@ class MyDatabaseUserProvider implements UserProviderInterface
 
 Encoders both encode and verify passwords. There are three encoders that come with Bitty that should handle most needs: `PlainTextEncoder`, `MessageDigestEncoder`, and the `BcryptEncoder` (recommended default).
 
-The `PlainTextEncoder`, as you may have guessed, returns plain text passwords. It comes in handy when testing the authentication system, but is definitely not recommended for real world use.
+#### PlainTextEncoder
+
+The `PlainTextEncoder`, as you may have guessed, doesn't actually encode a password; it simply returns password as it was received. It comes in handy when testing the authentication system, but is definitely not recommended for real world use.
+
+```php
+<?php
+
+use Bitty\Security\Encoder\PlainTextEncoder;
+
+$encoder = new PlainTextEncoder();
+
+$encoder->encode('password');
+```
+
+#### MessageDigestEncoder
 
 The `MessageDigestEncoder` wraps PHP's built-in `hash` function and supports a wide variety of hashing algorithms. This includes md5, sha1, sha256, sha512, and an entire list of others.
 
+```php
+<?php
+
+use Bitty\Security\Encoder\MessageDigestEncoder;
+
+$algorithm = 'sha256';
+$encoder   = new MessageDigestEncoder($algorithm);
+
+$encoder->encode('password');
+```
+
+#### BrcyptEncoder
+
 The recommended default encoder is the `BcryptEncoder`. It wraps PHP's `password_hash` and `password_verify` functions and is likely to be the most secure and reliable method of encoding user passwords.
 
-However, if the default encoders aren't enough, you can also build your own using the `EncoderInterface` or by extending the `AbstractEncoder`.
+```php
+<?php
+
+use Bitty\Security\Encoder\BrcyptEncoder;
+
+$cost    = 10;
+$encoder = new BrcyptEncoder($cost);
+
+$encoder->encode('password');
+```
+
+#### Custom Encoders
+
+If the default encoders aren't enough, you can also build your own using the `EncoderInterface` or by extending the `AbstractEncoder`. For example, if you're using PHP 7.2+, you could make an Argon2 encoder. This is the hashing function recommended by the [Open Web Application Security Project (OWASP)](https://www.owasp.org/index.php/Password_Storage_Cheat_Sheet).
 
 ## Authorization
 
