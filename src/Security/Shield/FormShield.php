@@ -57,14 +57,14 @@ class FormShield extends AbstractShield
             return;
         }
 
-        $usernameField = $this->config['login.username'];
-        $passwordField = $this->config['login.password'];
-        $rememberField = $this->config['login.remember'];
-
         $params = $request->getParsedBody();
         if (!is_array($params)) {
             return;
         }
+
+        $usernameField = $this->config['login.username'];
+        $passwordField = $this->config['login.password'];
+        $rememberField = $this->config['login.remember'];
 
         $username = empty($params[$usernameField]) ? '' : $params[$usernameField];
         $password = empty($params[$passwordField]) ? '' : $params[$passwordField];
