@@ -77,8 +77,6 @@ class FormShield extends AbstractShield
         $user = $this->authenticator->authenticate($username, $password);
         $this->context->set('user', $user);
 
-        // TODO: Remember me
-
         $target = $this->config['login.target'];
         if ($this->config['login.use_referrer']) {
             $target = $this->context->get('login.target', $target);
