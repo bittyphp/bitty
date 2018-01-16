@@ -49,7 +49,10 @@ class HttpBasicShield extends AbstractShield
     {
         $user = $this->context->get('user');
         if ($user) {
-            return $user;
+            $user = $this->authenticator->reloadUser($user);
+            if ($user) {
+                return $user;
+            }
         }
 
         $params   = $request->getServerParams();

@@ -51,4 +51,12 @@ class Authenticator implements AuthenticatorInterface
 
         return $user;
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function reloadUser(UserInterface $user)
+    {
+        return $this->userProvider->getUser($user->getUsername());
+    }
 }

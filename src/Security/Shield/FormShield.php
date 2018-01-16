@@ -33,6 +33,10 @@ class FormShield extends AbstractShield
         }
 
         $user = $this->context->get('user');
+        if ($user) {
+            $user = $this->authenticator->reloadUser($user);
+        }
+
         if (!$user) {
             $this->context->set('login.target', $path);
 
