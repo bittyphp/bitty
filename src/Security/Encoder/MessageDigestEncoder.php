@@ -13,12 +13,9 @@ class MessageDigestEncoder extends AbstractEncoder
 
     /**
      * @param string $algorithm
-     * @param int $maxPasswordLength Use zero to keep the default.
      */
-    public function __construct($algorithm, $maxPasswordLength = 0)
+    public function __construct($algorithm)
     {
-        parent::__construct($maxPasswordLength);
-
         if (!in_array($algorithm, hash_algos())) {
             throw new \InvalidArgumentException(
                 sprintf('"%s" is not a valid hash algorithm.', $algorithm)
