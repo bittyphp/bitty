@@ -15,25 +15,15 @@ class EncoderCollection
 
     /**
      * @param EncoderInterface[]|EncoderInterface $encoders
-     *
-     * @throws \InvalidArgumentException
      */
     public function __construct($encoders)
     {
-        if (is_object($encoders)) {
-            $this->addEncoder($encoders, UserInterface::class);
-        } elseif (is_array($encoders)) {
+        if (is_array($encoders)) {
             foreach ($encoders as $class => $encoder) {
                 $this->addEncoder($encoder, $class);
             }
         } else {
-            throw new \InvalidArgumentException(
-                sprintf(
-                    'Encoder must be an instance of %s or an array; %s given.',
-                    EncoderInterface::class,
-                    gettype($encoders)
-                )
-            );
+            $this->addEncoder($encoders, UserInterface::class);
         }
     }
 
