@@ -13,12 +13,9 @@ class BcryptEncoder extends AbstractEncoder
 
     /**
      * @param int $cost
-     * @param int $maxPasswordLength
      */
-    public function __construct($cost = 10, $maxPasswordLength = 4096)
+    public function __construct($cost = 10)
     {
-        parent::__construct($maxPasswordLength);
-
         $this->cost = $cost;
     }
 

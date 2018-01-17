@@ -7,6 +7,13 @@ use Psr\Http\Message\ServerRequestInterface;
 interface ContextInterface
 {
     /**
+     * Checks whether or not this should be the default context.
+     *
+     * @return bool
+     */
+    public function isDefault();
+
+    /**
      * Sets context data.
      *
      * @param string $name

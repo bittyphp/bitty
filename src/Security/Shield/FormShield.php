@@ -33,6 +33,10 @@ class FormShield extends AbstractShield
         }
 
         $user = $this->context->get('user');
+        if ($user) {
+            $user = $this->authenticator->reloadUser($user);
+        }
+
         if (!$user) {
             $this->context->set('login.target', $path);
 
@@ -53,7 +57,12 @@ class FormShield extends AbstractShield
      */
     protected function handleFormLogin(ServerRequestInterface $request)
     {
-        if ('GET' === $request->getMethod()) {
+        if ('POST' !== $request->getMethod()) {
+            return;
+        }
+
+        $params = $request->getParsedBody();
+        if (!is_array($params)) {
             return;
         }
 
@@ -61,7 +70,6 @@ class FormShield extends AbstractShield
         $passwordField = $this->config['login.password'];
         $rememberField = $this->config['login.remember'];
 
-        $params   = $request->getParsedBody();
         $username = empty($params[$usernameField]) ? '' : $params[$usernameField];
         $password = empty($params[$passwordField]) ? '' : $params[$passwordField];
         $remember = empty($params[$rememberField]) ? false : true;
@@ -72,8 +80,6 @@ class FormShield extends AbstractShield
 
         $user = $this->authenticator->authenticate($username, $password);
         $this->context->set('user', $user);
-
-        // TODO: Remember me
 
         $target = $this->config['login.target'];
         if ($this->config['login.use_referrer']) {

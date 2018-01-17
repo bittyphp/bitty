@@ -4,7 +4,7 @@ namespace Bitty\Security\User\Provider;
 
 use Bitty\Security\User\Provider\UserProviderInterface;
 
-class UserProviderChain implements UserProviderInterface
+class UserProviderCollection implements UserProviderInterface
 {
     /**
      * @var UserProviderInterface[]
@@ -14,7 +14,7 @@ class UserProviderChain implements UserProviderInterface
     /**
      * @param UserProviderInterface[] $providers
      */
-    public function __construct(array $providers)
+    public function __construct(array $providers = [])
     {
         foreach ($providers as $provider) {
             $this->add($provider);
@@ -22,7 +22,7 @@ class UserProviderChain implements UserProviderInterface
     }
 
     /**
-     * Adds a user provider to the chain.
+     * Adds a user provider to the collection.
      *
      * @param UserProviderInterface $userProvider
      */

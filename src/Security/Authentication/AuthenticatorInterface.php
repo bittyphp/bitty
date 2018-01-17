@@ -18,4 +18,16 @@ interface AuthenticatorInterface
      * @throws AuthenticationException
      */
     public function authenticate($username, $password);
+
+    /**
+     * Reloads a user.
+     *
+     * This ensures the user is still valid and loads any permission changes
+     * that might have occurred.
+     *
+     * @param UserInterface $user
+     *
+     * @return UserInterface
+     */
+    public function reloadUser(UserInterface $user);
 }

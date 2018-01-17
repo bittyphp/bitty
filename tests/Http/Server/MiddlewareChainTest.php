@@ -2,13 +2,13 @@
 
 namespace Bitty\Tests\Http\Server;
 
-use Bitty\Container\ContainerInterface;
 use Bitty\Http\Server\MiddlewareChain;
 use Bitty\Http\Server\MiddlewareHandler;
 use Bitty\Http\Server\MiddlewareInterface;
 use Bitty\Http\Server\RequestHandlerInterface;
 use Bitty\Tests\Stubs\ContainerAwareMiddlewareStubInterface;
 use Bitty\Tests\TestCase;
+use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 class MiddlewareChainTest extends TestCase

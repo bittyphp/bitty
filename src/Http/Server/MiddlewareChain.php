@@ -3,9 +3,9 @@
 namespace Bitty\Http\Server;
 
 use Bitty\Container\ContainerAwareInterface;
-use Bitty\Container\ContainerInterface;
 use Bitty\Http\Server\MiddlewareInterface;
 use Bitty\Http\Server\RequestHandlerInterface;
+use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 class MiddlewareChain implements RequestHandlerInterface
