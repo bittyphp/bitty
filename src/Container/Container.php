@@ -17,13 +17,6 @@ class Container implements ContainerInterface
     protected $services = [];
 
     /**
-     * Array of parameters.
-     *
-     * @var mixed[]
-     */
-    protected $parameters = [];
-
-    /**
      * Service provider.
      *
      * @var ServiceProviderInterface
@@ -32,52 +25,19 @@ class Container implements ContainerInterface
 
     /**
      * @param array $services
-     * @param array $parameters
      * @param ServiceProviderInterface|null $provider
      */
     public function __construct(
         array $services = [],
-        array $parameters = [],
         ServiceProviderInterface $provider = null
     ) {
-        $this->services   = $services;
-        $this->parameters = $parameters;
-        $this->provider   = $provider;
+        $this->services = $services;
+        $this->provider = $provider;
 
         if ($this->provider instanceof ContainerAwareInterface) {
             // hooray for circular references
             $this->provider->setContainer($this);
         }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function setParameter($name, $value)
-    {
-        $this->parameters[$name] = $value;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function hasParameter($name)
-    {
-        return isset($this->parameters[$name]);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getParameter($name)
-    {
-        if (!isset($this->parameters[$name])) {
-            throw new NotFoundException(
-                sprintf('Parameter "%s" does not exist.', $name)
-            );
-        }
-
-        return $this->parameters[$name];
     }
 
     /**

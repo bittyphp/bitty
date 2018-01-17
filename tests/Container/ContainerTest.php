@@ -31,57 +31,6 @@ class ContainerTest extends TestCase
     }
 
     /**
-     * @dataProvider sampleHasParameter
-     */
-    public function testHasParameter($parameters, $name, $expected)
-    {
-        $this->fixture = new Container([], $parameters);
-
-        $actual = $this->fixture->hasParameter($name);
-
-        $this->assertSame($expected, $actual);
-    }
-
-    public function sampleHasParameter()
-    {
-        $name = uniqid();
-
-        return [
-            'has true' => [
-                'parameters' => [$name => uniqid()],
-                'name' => $name,
-                'expected' => true,
-            ],
-            'has false' => [
-                'parameters' => [],
-                'name' => uniqid(),
-                'expected' => false,
-            ],
-        ];
-    }
-
-    public function testGetParameter()
-    {
-        $name  = uniqid();
-        $value = uniqid();
-
-        $this->fixture->setParameter($name, $value);
-        $actual = $this->fixture->getParameter($name);
-
-        $this->assertEquals($value, $actual);
-    }
-
-    public function testGetParameterThrowsException()
-    {
-        $name = uniqid();
-
-        $message = 'Parameter "'.$name.'" does not exist.';
-        $this->setExpectedException(NotFoundException::class, $message);
-
-        $this->fixture->getParameter($name);
-    }
-
-    /**
      * @dataProvider sampleHas
      */
     public function testHas($services, $name, $expected)
@@ -150,7 +99,7 @@ class ContainerTest extends TestCase
         $spy = $this->once();
         $provider->expects($spy)->method('setContainer');
 
-        $fixture = new Container([], [], $provider);
+        $fixture = new Container([], $provider);
 
         $actual = $spy->getInvocations()[0]->parameters[0];
         $this->assertSame($fixture, $actual);
@@ -161,7 +110,7 @@ class ContainerTest extends TestCase
         $name     = uniqid();
         $provider = $this->createMock(ServiceProviderInterface::class);
 
-        $this->fixture = new Container([], [], $provider);
+        $this->fixture = new Container([], $provider);
 
         $provider->expects($this->once())
             ->method('provide')
@@ -176,7 +125,7 @@ class ContainerTest extends TestCase
         $provider = $this->createMock(ServiceProviderInterface::class);
         $provider->method('provide')->willReturn($object);
 
-        $this->fixture = new Container([], [], $provider);
+        $this->fixture = new Container([], $provider);
 
         $actual = $this->fixture->get(uniqid());
 
