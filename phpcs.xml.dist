@@ -119,6 +119,12 @@
     </rule>
     <rule ref="Generic.PHP.NoSilencedErrors" />
 
+    <rule ref="Generic.Strings.UnnecessaryStringConcat">
+        <properties>
+            <property name="allowMultiline" value="true" />
+        </properties>
+    </rule>
+
     <rule ref="Generic.WhiteSpace.DisallowTabIndent" />
 
 </ruleset>
