@@ -27,5 +27,10 @@
             "Bitty\\" : "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Bitty\\Tests\\": "tests/"
+        }
+    },
     "minimum-stability": "dev"
 }
