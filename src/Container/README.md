@@ -34,13 +34,32 @@ $someThing = $container->get('some_thing');
 
 ## Adding an Entry
 
-You can add entries to Bitty's container a few different ways.
+You can add entries to Bitty's container a few different ways. All entries are adding using anonymous functions. When you first request an entry from the container, it calls the anonymous function and caches the result. The result can be anything - a string, an array, an object - you name it. On subsequent calls, you are given the same value each time.
+
+The function will always be called with the container itself as the first argument. This allows you to reference other items from the container, if needed. If you do not need access to the container, you can omit the parameter from the function signature.
+
+```php
+<?php
+
+use Acme\MyClass;
+use Psr\Container\ContainerInterface;
+
+// Access dependencies from the container
+$service = function (ContainerInterface $container) {
+    $dependency = $container->get('some_service');
+
+    return new MyClass($dependency);
+};
+
+// Omit the container parameter if not needed
+$parameter = function () {
+    return 'some-value';
+};
+```
 
 ### Via the Constructor
 
-The most direct way is passing all of your entries in when you build the container.
-
-The array key is the entry name and the value is an anonymous function that builds the thing you want to access. When the container calls the anonymous function, it passes in a reference to itself. This allows you to access anything from the container to inject into whatever thing you're building.
+The most direct way to add entries is by passing them all in when you build the container. However, this is probably not the most practical way to do things. The array key is the entry name and the value is an anonymous function that builds the thing you want to access.
 
 ```php
 <?php
@@ -48,16 +67,20 @@ The array key is the entry name and the value is an anonymous function that buil
 use Acme\MyClass;
 use Acme\MyOtherClass;
 use Bitty\Container\Container;
+use Psr\Container\ContainerInterface;
 
 $container = new Container(
     [
+        // Adding a parameter
         'some_parameter' => function () {
             return 'i-need-this-value';
         },
-        'my_service' => function ($container) {
+
+        // Adding services
+        'my_service' => function () {
             return new MyClass();
         },
-        'my_other_service' => function ($container) {
+        'my_other_service' => function (ContainerInterface $container) {
             $myParam   = $container->get('some_parameter');
             $myService = $container->get('my_service');
 
@@ -91,11 +114,48 @@ $container->set('my_other_service', function ($container) {
 });
 ```
 
-### Using a Service Provider
+### Via a Service Provider
 
-WARNING: This is based on a [developing standard](https://github.com/container-interop/service-provider) and may change drastically.
+The last, and most extensible, option is to build a service provider using  `Interop\Container\ServiceProviderInterface` and pass it to the container or late register it using the `register()` method.
 
-The last option is to build a service provider using  `Interop\Container\ServiceProviderInterface` and pass it to the container.
+You can build a service provider to load service settings from anywhere - an XML file, YAML file, or maybe even JSON. More information is available in the Service Provider section.
+
+## Extending an Entry
+
+You can extend a container entry using the `extend()` method. Extensions can also be used to check for an existing entry and create one if not found. The function signature is similar to adding entries, except now there will be a second (nullable) parameter passed in.
+
+You can also extend entries using service providers.
+
+```php
+<?php
+
+use Acme\MyClass;
+use Acme\MyOtherClass;
+use Bitty\Container\Container;
+use Psr\Container\ContainerInterface;
+
+$container = new Container(
+    [
+        'my_service' => function () {
+            return new MyClass();
+        },
+    ]
+);
+
+$container->extend('my_service', function (ContainerInterface $container, $previous = null) {
+    if (null === $previous) {
+        $previous = new MyClass();
+    }
+
+    return new MyOtherClass($previous);
+});
+```
+
+## Service Providers
+
+Service providers allow you to build or extend container services more easily and in a more portable way. It supports any implementation of `Interop\Container\ServiceProviderInterface` which means you can easily register the same service in different applications or projects.
+
+WARNING: This is based on a [developing standard](https://github.com/container-interop/service-provider) and may change.
 
 ```php
 <?php
@@ -109,14 +169,20 @@ class MyServiceProvider implements ServiceProviderInterface
     public function getFactories()
     {
         return [
-            // Your factories
+            'my_service' => function () {
+                return new MyClass();
+            },
         ];
     }
 
     public function getExtensions()
     {
         return [
-            // Your extensions
+            'my_service' => function (ContainerInterface $container, $previous = null) {
+                $myParam = $container->get('some_parameter');
+
+                return new MyOtherClass($myParam, $previous);
+            },
         ];
     }
 }
