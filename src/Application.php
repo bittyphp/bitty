@@ -4,13 +4,15 @@ namespace Bitty;
 
 use Bitty\Container\Container;
 use Bitty\Container\ContainerInterface;
-use Bitty\EventManager\EventManager;
-use Bitty\Http\Request;
-use Bitty\Http\Response;
+use Bitty\EventManager\EventManagerServiceProvider;
+use Bitty\Http\RequestServiceProvider;
+use Bitty\Http\ResponseServiceProvider;
 use Bitty\Http\Server\MiddlewareChain;
 use Bitty\Http\Server\MiddlewareInterface;
-use Bitty\Http\Server\RequestHandler;
-use Bitty\Router\Router;
+use Bitty\Http\Server\RequestHandlerServiceProvider;
+use Bitty\Router\RouterServiceProvider;
+use Interop\Container\ServiceProviderInterface;
+use Psr\Container\ContainerInterface as PsrContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 
 class Application
@@ -36,15 +38,23 @@ class Application
             $this->container = $container;
         }
 
-        $this->middleware = new MiddlewareChain($this->container);
+        $this->container->register(
+            [
+                new EventManagerServiceProvider(),
+                new RequestHandlerServiceProvider(),
+                new RequestServiceProvider(),
+                new ResponseServiceProvider(),
+                new RouterServiceProvider(),
+            ]
+        );
 
-        $this->setDefaultServices();
+        $this->middleware = new MiddlewareChain($this->container);
     }
 
     /**
      * Gets the container.
      *
-     * @return ContainerInterface
+     * @return PsrContainerInterface
      */
     public function getContainer()
     {
@@ -62,6 +72,16 @@ class Application
     }
 
     /**
+     * Registers a list of service providers.
+     *
+     * @param ServiceProviderInterface[] $providers
+     */
+    public function register(array $providers)
+    {
+        $this->container->register($providers);
+    }
+
+    /**
      * Runs the application.
      */
     public function run()
@@ -73,39 +93,6 @@ class Application
         $response = $this->middleware->handle($request);
 
         $this->sendResponse($response);
-    }
-
-    /**
-     * Sets up the default required services.
-     *
-     * TODO: This should probably be moved to its own class.
-     */
-    protected function setDefaultServices()
-    {
-        if (!$this->container->has('router')) {
-            $router = new Router();
-            $this->container->set('router', $router);
-        }
-
-        if (!$this->container->has('request_handler')) {
-            $requestHandler = new RequestHandler($this->container->get('router'));
-            $this->container->set('request_handler', $requestHandler);
-        }
-
-        if (!$this->container->has('request')) {
-            $request = Request::createFromGlobals();
-            $this->container->set('request', $request);
-        }
-
-        if (!$this->container->has('response')) {
-            $response = new Response();
-            $this->container->set('response', $response);
-        }
-
-        if (!$this->container->has('event_manager')) {
-            $eventManager = new EventManager();
-            $this->container->set('event_manager', $eventManager);
-        }
     }
 
     /**

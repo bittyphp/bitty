@@ -5,12 +5,17 @@ namespace Bitty\Tests;
 use Bitty\Application;
 use Bitty\Container\Container;
 use Bitty\Container\ContainerInterface;
+use Bitty\EventManager\EventManagerServiceProvider;
+use Bitty\Http\RequestServiceProvider;
+use Bitty\Http\ResponseServiceProvider;
 use Bitty\Http\Server\MiddlewareInterface;
 use Bitty\Http\Server\RequestHandler;
 use Bitty\Http\Server\RequestHandlerInterface;
+use Bitty\Http\Server\RequestHandlerServiceProvider;
 use Bitty\Http\Stream;
-use Bitty\Router\RouterInterface;
+use Bitty\Router\RouterServiceProvider;
 use Bitty\Tests\TestCase;
+use Interop\Container\ServiceProviderInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -35,51 +40,39 @@ class ApplicationTest extends TestCase
         $this->fixture = new Application($this->container);
     }
 
-    /**
-     * @dataProvider sampleDefaultServices
-     */
-    public function testDefaultServicesSet($id, $className)
+    public function testDefaultServicesRegistered()
     {
-        $fixture   = new Application();
-        $container = $fixture->getContainer();
+        $spy = $this->once();
+        $this->container->expects($spy)->method('register');
 
-        $this->assertInstanceOf($className, $container->get($id));
-    }
+        $fixture = new Application($this->container);
 
-    /**
-     * @dataProvider sampleDefaultServices
-     */
-    public function testDefaultServicesSetOnCustomContainer($id, $className)
-    {
-        $container = new Container();
-        $fixture   = new Application($container);
+        $actual = [];
+        foreach ($spy->getInvocations()[0]->parameters[0] as $item) {
+            $actual[] = get_class($item);
+        }
 
-        $this->assertInstanceOf($className, $container->get($id));
-    }
-
-    /**
-     * @dataProvider sampleDefaultServices
-     */
-    public function testDefaultServicesNotReset($id, $className)
-    {
-        $service = $this->createMock($className);
-
-        $container = new Container();
-        $container->set($id, $service);
-
-        new Application($container);
-
-        $this->assertSame($service, $container->get($id));
-    }
-
-    public function sampleDefaultServices()
-    {
-        return [
-            'router' => ['router', RouterInterface::class],
-            'request_handler' => ['request_handler', RequestHandlerInterface::class],
-            'request' => ['request', ServerRequestInterface::class],
-            'response' => ['response', ResponseInterface::class],
+        $expected = [
+            EventManagerServiceProvider::class,
+            RequestHandlerServiceProvider::class,
+            RequestServiceProvider::class,
+            ResponseServiceProvider::class,
+            RouterServiceProvider::class,
         ];
+
+        sort($actual);
+        sort($expected);
+
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testNoContainerSetsContainer()
+    {
+        $fixture = new Application();
+
+        $actual = $fixture->getContainer();
+
+        $this->assertInstanceOf(ContainerInterface::class, $actual);
     }
 
     public function testGetContainer()
@@ -87,6 +80,17 @@ class ApplicationTest extends TestCase
         $actual = $this->fixture->getContainer();
 
         $this->assertSame($this->container, $actual);
+    }
+
+    public function testRegister()
+    {
+        $provider = $this->createMock(ServiceProviderInterface::class);
+
+        $this->container->expects($this->once())
+            ->method('register')
+            ->with([$provider]);
+
+        $this->fixture->register([$provider]);
     }
 
     public function testRunSetsRequestHandlerContainer()
@@ -225,10 +229,7 @@ class ApplicationTest extends TestCase
      */
     protected function createContainer()
     {
-        return $this->createConfiguredMock(
-            ContainerInterface::class,
-            ['has' => true]
-        );
+        return $this->createMock(ContainerInterface::class);
     }
 
     /**
