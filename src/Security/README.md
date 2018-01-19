@@ -36,7 +36,35 @@ $app->add(...);
 
 ### Accessing the Security Context
 
-At some point, you'll probably need access to the security context to determine who is logged in. Bitty does not force this context to be shared in a specific way, so it's up to you to share it. Luckily, that's fairly easy.
+At some point, you'll probably need access to the security context to determine who is logged in. By default, Bitty registers a `security_context` service with the container. You can use this service to see who is logged in.
+
+Even if you use multiple shields and each shield has a separate user, the security context will determine which user is being used based on the request given and return that user.
+
+```php
+<?php
+
+use Bitty\Application;
+use Bitty\Security\SecurityMiddleware;
+use Bitty\Security\Shield\FormShield;
+
+$app = new Application();
+
+$app->add(
+    new SecurityMiddleware(
+        new FormShield(...)
+    )
+);
+
+$request = $app->getContainer()->get('request');
+
+// See who is logged in.
+$user = $app->getContainer()->get('security_context')->getUser($request);
+
+```
+
+### Custom Security Context
+
+If you want to use a custom security context, you can manually create one and pass it into the security middleware.
 
 ```php
 <?php
@@ -50,9 +78,6 @@ $app = new Application();
 
 // Define your context.
 $myContext = new ContextMap();
-$app->getContainer()->set('my_security_context', function () use ($contextMap) {
-    return $contextMap;
-});
 
 $app->add(
     new SecurityMiddleware(
@@ -64,8 +89,8 @@ $app->add(
 
 $request = $app->getContainer()->get('request');
 
-// Access your context and see who is logged in.
-$user = $app->getContainer()->get('my_security_context')->getUser($request);
+// See who is logged in.
+$user = $myContext->getUser($request);
 
 ```
 
