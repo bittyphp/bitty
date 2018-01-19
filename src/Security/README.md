@@ -50,7 +50,9 @@ $app = new Application();
 
 // Define your context.
 $myContext = new ContextMap();
-$app->getContainer()->set('my_security_context', $myContext);
+$app->getContainer()->set('my_security_context', function () use ($contextMap) {
+    return $contextMap;
+});
 
 $app->add(
     new SecurityMiddleware(

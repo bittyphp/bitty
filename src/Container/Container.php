@@ -5,87 +5,41 @@ namespace Bitty\Container;
 use Bitty\Container\ContainerAwareInterface;
 use Bitty\Container\ContainerInterface;
 use Bitty\Container\Exception\NotFoundException;
-use Bitty\Container\ServiceProviderInterface;
+use Interop\Container\ServiceProviderInterface;
+use Psr\Container\ContainerInterface as PsrContainerInterface;
 
 class Container implements ContainerInterface
 {
     /**
-     * Array of services.
-     *
+     * @var callable[]
+     */
+    protected $callables = [];
+
+    /**
      * @var mixed[]
      */
-    protected $services = [];
+    protected $cache = [];
 
     /**
-     * Array of parameters.
-     *
-     * @var mixed[]
+     * @param callable[] $callables
+     * @param ServiceProviderInterface[] $providers
      */
-    protected $parameters = [];
-
-    /**
-     * Service provider.
-     *
-     * @var ServiceProviderInterface
-     */
-    protected $provider = null;
-
-    /**
-     * @param array $services
-     * @param array $parameters
-     * @param ServiceProviderInterface|null $provider
-     */
-    public function __construct(
-        array $services = [],
-        array $parameters = [],
-        ServiceProviderInterface $provider = null
-    ) {
-        $this->services   = $services;
-        $this->parameters = $parameters;
-        $this->provider   = $provider;
-
-        if ($this->provider instanceof ContainerAwareInterface) {
-            // hooray for circular references
-            $this->provider->setContainer($this);
-        }
+    public function __construct(array $callables = [], array $providers = [])
+    {
+        $this->callables = $callables;
+        $this->register($providers);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function setParameter($name, $value)
+    public function set($id, $callable)
     {
-        $this->parameters[$name] = $value;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function hasParameter($name)
-    {
-        return isset($this->parameters[$name]);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getParameter($name)
-    {
-        if (!isset($this->parameters[$name])) {
-            throw new NotFoundException(
-                sprintf('Parameter "%s" does not exist.', $name)
-            );
+        if (isset($this->cache[$id])) {
+            unset($this->cache[$id]);
         }
 
-        return $this->parameters[$name];
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function set($id, $object)
-    {
-        $this->services[$id] = $object;
+        $this->callables[$id] = $callable;
     }
 
     /**
@@ -93,11 +47,7 @@ class Container implements ContainerInterface
      */
     public function has($id)
     {
-        if ('container' === $id) {
-            return true;
-        }
-
-        return isset($this->services[$id]);
+        return isset($this->callables[$id]);
     }
 
     /**
@@ -105,22 +55,61 @@ class Container implements ContainerInterface
      */
     public function get($id)
     {
-        if ('container' === $id) {
-            return $this;
+        if (isset($this->cache[$id])) {
+            return $this->cache[$id];
         }
 
-        if (isset($this->services[$id])) {
-            return $this->services[$id];
-        }
+        if (isset($this->callables[$id])) {
+            $this->cache[$id] = $this->callables[$id]($this);
+            if ($this->cache[$id] instanceof ContainerAwareInterface) {
+                $this->cache[$id]->setContainer($this);
+            }
 
-        if (null !== $this->provider) {
-            $this->services[$id] = $this->provider->provide($id);
-
-            return $this->services[$id];
+            return $this->cache[$id];
         }
 
         throw new NotFoundException(
             sprintf('Service "%s" does not exist.', $id)
         );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function extend($id, $callable)
+    {
+        if (!isset($this->callables[$id])) {
+            $this->callables[$id] = $callable;
+
+            return;
+        }
+
+        $factory = $this->callables[$id];
+
+        $this->callables[$id] = function (PsrContainerInterface $container) use ($factory, $callable) {
+            $previous = $factory($container);
+
+            return $callable($container, $previous);
+        };
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function register(array $providers)
+    {
+        foreach ($providers as $provider) {
+            $this->callables = array_merge(
+                $this->callables,
+                $provider->getFactories()
+            );
+        }
+
+        foreach ($providers as $provider) {
+            $extensions = $provider->getExtensions();
+            foreach ($extensions as $id => $extension) {
+                $this->extend($id, $extension);
+            }
+        }
     }
 }

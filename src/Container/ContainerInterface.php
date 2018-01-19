@@ -2,44 +2,31 @@
 
 namespace Bitty\Container;
 
+use Interop\Container\ServiceProviderInterface;
 use Psr\Container\ContainerInterface as PsrContainerInterface;
-use Psr\Container\NotFoundExceptionInterface;
 
 interface ContainerInterface extends PsrContainerInterface
 {
     /**
-     * Sets a parameter value.
+     * Sets a callable to build a service.
      *
-     * @param string $name Name of parameter.
-     * @param mixed $value Value of parameter.
+     * @param string $id ID of service to build.
+     * @param callable $callable Callable to build the service.
      */
-    public function setParameter($name, $value);
+    public function set($id, $callable);
 
     /**
-     * Checks if a parameter exists.
+     * Extends a callable.
      *
-     * @param string $name Name of parameter.
-     *
-     * @return bool
+     * @param string $id
+     * @param callable $callable
      */
-    public function hasParameter($name);
+    public function extend($id, $callable);
 
     /**
-     * Gets a parameter value.
+     * Registers a list of service providers.
      *
-     * @param string $name Name of parameter.
-     *
-     * @return mixed
-     *
-     * @throws NotFoundExceptionInterface
+     * @param ServiceProviderInterface[] $providers
      */
-    public function getParameter($name);
-
-    /**
-     * Sets an instantiated service.
-     *
-     * @param string $id ID of service.
-     * @param object $object Object representing the service.
-     */
-    public function set($id, $object);
+    public function register(array $providers);
 }
