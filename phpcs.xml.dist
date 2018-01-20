@@ -34,6 +34,8 @@
 
     <rule ref="Generic.Classes.DuplicateClassName" />
 
+    <rule ref="Generic.CodeAnalysis.UnusedFunctionParameter" />
+
     <rule ref="Generic.Commenting.Todo" />
     <rule ref="Generic.Commenting.DocComment" />
     <rule ref="Generic.Commenting.DocComment.MissingShort">
@@ -51,6 +53,8 @@
         <type>warning</type>
         <severity>1</severity>
     </rule>
+
+    <rule ref="Generic.ControlStructures.InlineControlStructure" />
 
     <rule ref="Generic.Files.ByteOrderMark" />
     <rule ref="Generic.Files.EndFileNewline" />
@@ -126,5 +130,32 @@
     </rule>
 
     <rule ref="Generic.WhiteSpace.DisallowTabIndent" />
+    <rule ref="Generic.WhiteSpace.ScopeIndent" />
 
+    <rule ref="Squiz.Classes.ClassDeclaration" />
+
+    <rule ref="Squiz.ControlStructures.ForEachLoopDeclaration" />
+    <rule ref="Squiz.ControlStructures.ForLoopDeclaration" />
+
+    <rule ref="Squiz.Functions.FunctionDeclarationArgumentSpacing">
+        <properties>
+            <property name="equalsSpacing" value="1" />
+        </properties>
+    </rule>
+
+    <rule ref="Squiz.PHP.CommentedOutCode" />
+
+    <rule ref="Squiz.Strings.ConcatenationSpacing">
+        <properties>
+            <property name="ignoreNewlines" value="true" />
+        </properties>
+    </rule>
+
+    <rule ref="Squiz.WhiteSpace.MemberVarSpacing">
+        <properties>
+            <property name="spacing" value="1" />
+            <property name="spacingBeforeFirst" value="0" />
+        </properties>
+    </rule>
+    <rule ref="Squiz.WhiteSpace.SuperfluousWhitespace" />
 </ruleset>
