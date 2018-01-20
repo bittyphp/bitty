@@ -36,7 +36,7 @@ $app->add(...);
 
 ### Accessing the Security Context
 
-At some point, you'll probably need access to the security context to determine who is logged in. By default, Bitty registers a `security_context` service with the container. You can use this service to see who is logged in.
+At some point, you'll probably need access to the security context to determine who is logged in. Bitty registers a `security_context` service with the container automatically when you add the security middleware. If a different security context has already been defined, it will NOT overwrite it. You can use the security context to see who is logged in.
 
 Even if you use multiple shields and each shield has a separate user, the security context will determine which user is being used based on the request given and return that user.
 
