@@ -1,4 +1,4 @@
-# Bitty Security
+# Security
 
 Bitty supports multiple security layers, covering multiple secured areas, with different authentication methods, using multiple user providers, with multiple password encoders, and supports different authorization strategies for each area. That's a whole lot of security!
 

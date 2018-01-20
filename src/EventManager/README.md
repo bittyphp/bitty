@@ -1,4 +1,4 @@
-# Bitty Event Manager
+# Event Manager
 
 Bitty comes with an Event Manager that follows the proposed  [PSR-14](https://github.com/php-fig/fig-standards/blob/master/proposed/event-manager.md) standard. The event manager can be used to attach listeners to certain events or actions that happen. When the system triggers those events, all the listeners for that event will automatically be called.
 

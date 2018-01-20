@@ -1,4 +1,4 @@
-# Bitty Container
+# Container
 
 Bitty comes with a [PSR-11](http://www.php-fig.org/psr/psr-11/) compliant container. The container supports registering service providers that follow the (experimental) [service provider standard](https://github.com/container-interop/service-provider).
 
