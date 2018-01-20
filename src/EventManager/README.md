@@ -160,7 +160,7 @@ $event = new Event('some.event', $someTarget, ['param 1', 'param 2']);
 $eventManager->trigger($event);
 ```
 
-### Advanced Usage
+## Event Propagation
 
 If, for whatever reason, you need an event to stop propagating through the system, you can easily stop it at any time using the `stopPropagation()` method.
 
@@ -177,7 +177,7 @@ $eventManager = $app->getContainer()->get('event_manager');
 $eventManager->attach('some.event', function (EventInterface $event) {
     // Do stuff
 
-    $event->stopPropagation();
+    $event->stopPropagation(true);
 });
 
 $eventManager->trigger('some.event');
