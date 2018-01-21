@@ -190,11 +190,10 @@ If you want to use the event manager outside of the Bitty application, it can be
 ```php
 <?php
 
-use Bitty\Application;
+use Acme\Container;
 use Bitty\EventManager\EventManagerServiceProvider;
 
-$app = new Application();
+$container = new Container();
 
-// This happens automatically inside the application
-$app->getContainer()->register([new EventManagerServiceProvider()]);
+$container->register([new EventManagerServiceProvider()]);
 ```
