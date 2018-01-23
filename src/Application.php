@@ -146,9 +146,5 @@ class Application
         }
 
         echo (string) $response->getBody();
-
-        if (function_exists('fastcgi_finish_request')) {
-            fastcgi_finish_request();
-        }
     }
 }
