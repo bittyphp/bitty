@@ -7,6 +7,7 @@ use Bitty\Http\Exception\InternalServerErrorException;
 use Bitty\Http\Exception\NotFoundException;
 use Bitty\Http\Server\RequestHandler;
 use Bitty\Http\Server\RequestHandlerInterface;
+use Bitty\Router\Exception\NotFoundException as RouteNotFoundException;
 use Bitty\Router\RouteInterface;
 use Bitty\Router\RouterInterface;
 use Bitty\Tests\Stubs\InvokableContainerAwareStubInterface;
@@ -52,16 +53,14 @@ class RequestHandlerTest extends TestCase
 
     public function testHandleCallsRouter()
     {
-        $path     = uniqid();
-        $method   = uniqid();
-        $request  = $this->createRequest($path, $method);
+        $request  = $this->createRequest();
         $callback = function () {
         };
 
         $route = $this->createRoute($callback);
         $this->router->expects($this->once())
             ->method('find')
-            ->with('/'.$path, $method)
+            ->with($request)
             ->willReturn($route);
 
         $this->fixture->handle($request);
@@ -70,7 +69,9 @@ class RequestHandlerTest extends TestCase
     public function testHandleThrowsNotFoundException()
     {
         $request = $this->createRequest();
-        $this->router->method('find')->willReturn(false);
+
+        $exception = new RouteNotFoundException();
+        $this->router->method('find')->willThrowException($exception);
 
         $message = 'Not Found';
         $this->setExpectedException(NotFoundException::class, $message);
@@ -274,9 +275,7 @@ class RequestHandlerTest extends TestCase
 
     public function testHandleThrowsInternalServerErrorException()
     {
-        $path    = uniqid();
-        $method  = uniqid();
-        $request = $this->createRequest($path, $method);
+        $request = $this->createRequest();
 
         $route = $this->createRoute();
         $this->router->method('find')->willReturn($route);

@@ -7,6 +7,7 @@ use Bitty\Container\ContainerAwareTrait;
 use Bitty\Http\Exception\InternalServerErrorException;
 use Bitty\Http\Exception\NotFoundException;
 use Bitty\Http\Server\RequestHandlerInterface;
+use Bitty\Router\Exception\NotFoundException as RouteNotFoundException;
 use Bitty\Router\RouterInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -33,11 +34,9 @@ class RequestHandler implements RequestHandlerInterface, ContainerAwareInterface
      */
     public function handle(ServerRequestInterface $request)
     {
-        $path   = '/'.ltrim($request->getUri()->getPath(), '/');
-        $method = $request->getMethod();
-
-        $route = $this->router->find($path, $method);
-        if (false === $route) {
+        try {
+            $route = $this->router->find($request);
+        } catch (RouteNotFoundException $exception) {
             throw new NotFoundException();
         }
 
