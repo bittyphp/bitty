@@ -82,6 +82,31 @@ class Application
     }
 
     /**
+     * Adds a route.
+     *
+     * @param string[]|string $methods
+     * @param string $path
+     * @param callable $callable
+     * @param string[] $constraints
+     * @param string|null $name
+     */
+    public function addRoute(
+        $methods,
+        $path,
+        $callable,
+        array $constraints = [],
+        $name = null
+    ) {
+        $this->container->get('route.collection')->add(
+            $methods,
+            $path,
+            $callable,
+            $constraints,
+            $name
+        );
+    }
+
+    /**
      * Runs the application.
      */
     public function run()
