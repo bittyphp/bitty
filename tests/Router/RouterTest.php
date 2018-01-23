@@ -3,10 +3,13 @@
 namespace Bitty\Tests\Router;
 
 use Bitty\Router\Exception\NotFoundException;
+use Bitty\Router\RouteCollectionInterface;
 use Bitty\Router\RouteInterface;
+use Bitty\Router\RouteMatcherInterface;
 use Bitty\Router\Router;
 use Bitty\Router\RouterInterface;
 use Bitty\Tests\TestCase;
+use Psr\Http\Message\ServerRequestInterface;
 
 class RouterTest extends TestCase
 {
@@ -15,11 +18,24 @@ class RouterTest extends TestCase
      */
     protected $fixture = null;
 
+    /**
+     * @var RouteCollectionInterface
+     */
+    protected $routes = null;
+
+    /**
+     * @var RouteMatcherInterface
+     */
+    protected $matcher = null;
+
     protected function setUp()
     {
         parent::setUp();
 
-        $this->fixture = new Router();
+        $this->routes  = $this->createMock(RouteCollectionInterface::class);
+        $this->matcher = $this->createMock(RouteMatcherInterface::class);
+
+        $this->fixture = new Router($this->routes, $this->matcher);
     }
 
     public function testInstanceOf()
@@ -27,126 +43,34 @@ class RouterTest extends TestCase
         $this->assertInstanceOf(RouterInterface::class, $this->fixture);
     }
 
-    public function testAdd()
-    {
-        $methods     = ['get', 'pOsT'];
-        $path        = uniqid();
-        $constraints = [uniqid()];
-        $name        = uniqid();
-        $callback    = function () {
-        };
-
-        $this->fixture->add($methods, $path, $callback, $constraints, $name);
-
-        $actual = $this->fixture->get($name);
-
-        $this->assertInstanceOf(RouteInterface::class, $actual);
-        $this->assertEquals(['GET', 'POST'], $actual->getMethods());
-        $this->assertEquals($path, $actual->getPath());
-        $this->assertEquals($callback, $actual->getCallback());
-        $this->assertEquals($constraints, $actual->getConstraints());
-        $this->assertEquals($name, $actual->getName());
-        $this->assertEquals('route_0', $actual->getIdentifier());
-    }
-
-    public function testAddWithoutNameUsesIdentifier()
-    {
-        $methods     = ['get', 'pOsT'];
-        $path        = uniqid();
-        $constraints = [uniqid()];
-        $callback    = function () {
-        };
-
-        $this->fixture->add($methods, $path, $callback, $constraints);
-
-        $actual = $this->fixture->get('route_0');
-
-        $this->assertInstanceOf(RouteInterface::class, $actual);
-        $this->assertEquals(['GET', 'POST'], $actual->getMethods());
-        $this->assertEquals($path, $actual->getPath());
-        $this->assertEquals($callback, $actual->getCallback());
-        $this->assertEquals($constraints, $actual->getConstraints());
-        $this->assertNull($actual->getName());
-        $this->assertEquals('route_0', $actual->getIdentifier());
-    }
-
-    public function testMultipleAddsIncrementsIdentifier()
-    {
-        $nameA    = uniqid();
-        $nameB    = uniqid();
-        $callback = function () {
-        };
-
-        $this->fixture->add(uniqid(), uniqid(), $callback, [], $nameA);
-        $this->fixture->add(uniqid(), uniqid(), $callback, [], $nameB);
-
-        $actualA = $this->fixture->get($nameA);
-        $actualB = $this->fixture->get($nameB);
-
-        $this->assertEquals('route_0', $actualA->getIdentifier());
-        $this->assertEquals('route_1', $actualB->getIdentifier());
-    }
-
-    public function testAddInvalidCallbackThrowsException()
-    {
-        $message = 'Callback must be a callable; NULL given.';
-        $this->setExpectedException(\InvalidArgumentException::class, $message);
-
-        $this->fixture->add(uniqid(), uniqid(), null);
-    }
-
-    public function testRemoveRoute()
-    {
-        $name     = uniqid();
-        $callback = function () {
-        };
-
-        $this->fixture->add(uniqid(), uniqid(), $callback, [], $name);
-        $this->fixture->remove($name);
-
-        $this->assertFalse($this->fixture->has($name));
-    }
-
-    public function testRemoveUndefinedRoute()
+    public function testHas()
     {
         $name = uniqid();
+        $has  = (bool) rand(0, 1);
 
-        $this->fixture->remove($name);
-
-        $this->assertFalse($this->fixture->has($name));
-    }
-
-    public function testHasExistingRoute()
-    {
-        $name     = uniqid();
-        $callback = function () {
-        };
-
-        $this->fixture->add(uniqid(), uniqid(), $callback, [], $name);
+        $this->routes->expects($this->once())
+            ->method('has')
+            ->with($name)
+            ->willReturn($has);
 
         $actual = $this->fixture->has($name);
 
-        $this->assertTrue($actual);
-    }
-
-    public function testHasNonExistentRoute()
-    {
-        $actual = $this->fixture->has(uniqid());
-
-        $this->assertFalse($actual);
+        $this->assertEquals($has, $actual);
     }
 
     public function testGetExistingRoute()
     {
-        $name     = uniqid();
-        $callback = function () {
-        };
+        $name  = uniqid();
+        $route = $this->createMock(RouteInterface::class);
 
-        $this->fixture->add(uniqid(), uniqid(), $callback, [], $name);
+        $this->routes->expects($this->once())
+            ->method('get')
+            ->with($name)
+            ->willReturn($route);
 
         $actual = $this->fixture->get($name);
 
-        $this->assertInstanceOf(RouteInterface::class, $actual);
+        $this->assertSame($route, $actual);
     }
 
     public function testGetNonExistentRouteThrowsException()
@@ -159,117 +83,33 @@ class RouterTest extends TestCase
         $this->fixture->get($name);
     }
 
-    /**
-     * @dataProvider sampleFind
-     */
-    public function testFind($routes, $path, $method, $expectedName, $expecedParams)
+    public function testFind()
     {
-        foreach ($routes as $route) {
-            call_user_func_array([$this->fixture, 'add'], $route);
-        }
+        $name    = uniqid();
+        $route   = $this->createMock(RouteInterface::class);
+        $request = $this->createMock(ServerRequestInterface::class);
 
-        $actual = $this->fixture->find($path, $method);
+        $this->matcher->expects($this->once())
+            ->method('match')
+            ->with($request)
+            ->willReturn($route);
 
-        $this->assertEquals($expectedName, $actual->getName());
-        $this->assertEquals($expecedParams, $actual->getParams());
-    }
+        $actual = $this->fixture->find($request);
 
-    public function sampleFind()
-    {
-        $nameA    = uniqid('name');
-        $nameB    = uniqid('name');
-        $pathA    = '/'.uniqid('path');
-        $pathB    = '/'.uniqid('path');
-        $paramA   = uniqid('param');
-        $paramB   = uniqid('param');
-        $callback = function () {
-        };
-
-        return [
-            'open route' => [
-                'routes' => [
-                    [[], $pathA, $callback, [], $nameA],
-                ],
-                'path' => $pathA,
-                'method' => 'GET',
-                'expectedName' => $nameA,
-                'expectedParams' => [],
-            ],
-            'simple route' => [
-                'routes' => [
-                    ['GET', $pathA, $callback, [], $nameA],
-                ],
-                'path' => $pathA,
-                'method' => 'GET',
-                'expectedName' => $nameA,
-                'expectedParams' => [],
-            ],
-            'simple route, multiple methods' => [
-                'routes' => [
-                    [['GET', 'POST'], $pathA, $callback, [], $nameA],
-                ],
-                'path' => $pathA,
-                'method' => 'POST',
-                'expectedName' => $nameA,
-                'expectedParams' => [],
-            ],
-            'multiple simple routes, same path' => [
-                'routes' => [
-                    ['GET', $pathA, $callback, [], $nameA],
-                    ['POST', $pathA, $callback, [], $nameB],
-                ],
-                'path' => $pathA,
-                'method' => 'POST',
-                'expectedName' => $nameB,
-                'expectedParams' => [],
-            ],
-            'multiple simple routes, unique paths' => [
-                'routes' => [
-                    ['GET', $pathA, $callback, [], $nameA],
-                    ['POST', $pathB, $callback, [], $nameB],
-                ],
-                'path' => $pathB,
-                'method' => 'POST',
-                'expectedName' => $nameB,
-                'expectedParams' => [],
-            ],
-            'constraint route' => [
-                'routes' => [
-                    ['GET', $pathA.'/{paramA}', $callback, ['paramA' => '.+'], $nameA],
-                ],
-                'path' => $pathA.'/'.$paramA,
-                'method' => 'GET',
-                'expectedName' => $nameA,
-                'expectedParams' => ['paramA' => $paramA],
-            ],
-            'constraint route, multiple params' => [
-                'routes' => [
-                    ['GET', $pathA.'/{paramA}/{paramB}', $callback, ['paramA' => '\w+', 'paramB' => '.+'], $nameA],
-                ],
-                'path' => $pathA.'/'.$paramA.'/'.$paramB,
-                'method' => 'GET',
-                'expectedName' => $nameA,
-                'expectedParams' => ['paramA' => $paramA, 'paramB' => $paramB],
-            ],
-            'multiple constraint routes, same path' => [
-                'routes' => [
-                    ['GET', $pathA.'/{paramA}', $callback, ['paramA' => '\d+'], $nameA],
-                    ['GET', $pathA.'/{paramA}', $callback, ['paramA' => '\w+'], $nameB],
-                ],
-                'path' => $pathA.'/'.$paramA,
-                'method' => 'GET',
-                'expectedName' => $nameB,
-                'expectedParams' => ['paramA' => $paramA],
-            ],
-        ];
+        $this->assertSame($route, $actual);
     }
 
     public function testFindThrowsException()
     {
+        $request = $this->createMock(ServerRequestInterface::class);
+
         $message = 'Route not found';
         $this->setExpectedException(NotFoundException::class, $message);
 
-        $this->fixture->find(uniqid(), uniqid());
+        $exception = new NotFoundException();
+        $this->matcher->method('match')->willThrowException($exception);
+
+        $this->fixture->find($request);
     }
 
     public function testGenerateUriThrowsException()
@@ -285,9 +125,14 @@ class RouterTest extends TestCase
     /**
      * @dataProvider sampleGenerateUri
      */
-    public function testGenerateUri($route, $name, $params, $expected)
+    public function testGenerateUri($path, $name, $params, $expected)
     {
-        call_user_func_array([$this->fixture, 'add'], $route);
+        $route = $this->createConfiguredMock(RouteInterface::class, ['getPath' => $path]);
+
+        $this->routes->expects($this->once())
+            ->method('get')
+            ->with($name)
+            ->willReturn($route);
 
         $actual = $this->fixture->generateUri($name, $params);
 
@@ -296,40 +141,26 @@ class RouterTest extends TestCase
 
     public function sampleGenerateUri()
     {
-        $name     = uniqid('name');
-        $path     = '/'.uniqid('path');
-        $paramA   = uniqid('param');
-        $paramB   = uniqid('param');
-        $callback = function () {
-        };
+        $name   = uniqid('name');
+        $path   = '/'.uniqid('path');
+        $paramA = uniqid('param');
+        $paramB = uniqid('param');
 
         return [
             'no params' => [
-                'route' => ['GET', $path, $callback, [], $name],
+                'path' => $path,
                 'name' => $name,
                 'params' => [],
                 'expected' => $path,
             ],
             'one param' => [
-                'route' => [
-                    'GET',
-                    $path.'/{paramA}',
-                    $callback,
-                    ['paramA' => '.+'],
-                    $name,
-                ],
+                'path' => $path.'/{paramA}',
                 'name' => $name,
                 'params' => ['paramA' => $paramA],
                 'expected' => $path.'/'.$paramA,
             ],
             'multiple params' => [
-                'route' => [
-                    'GET',
-                    $path.'/{paramA}/{paramB}',
-                    $callback,
-                    ['paramA' => '.+', 'paramB' => '.+'],
-                    $name,
-                ],
+                'path' => $path.'/{paramA}/{paramB}',
                 'name' => $name,
                 'params' => ['paramA' => $paramA, 'paramB' => $paramB],
                 'expected' => $path.'/'.$paramA.'/'.$paramB,

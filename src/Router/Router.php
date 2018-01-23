@@ -3,68 +3,31 @@
 namespace Bitty\Router;
 
 use Bitty\Router\Exception\NotFoundException;
-use Bitty\Router\Route;
-use Bitty\Router\RouteInterface;
+use Bitty\Router\RouteCollectionInterface;
+use Bitty\Router\RouteMatcherInterface;
 use Bitty\Router\RouterInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 class Router implements RouterInterface
 {
     /**
-     * List of route data.
-     *
-     * @var mixed[]
+     * @var RouteCollectionInterface
      */
-    protected $routes = [];
+    protected $routes = null;
 
     /**
-     * Route counter.
-     *
-     * @var int
+     * @var RouteMatcherInterface
      */
-    protected $routeCounter = 0;
+    protected $matcher = null;
 
     /**
-     * Adds a new route.
-     *
-     * @param string[]|string $methods
-     * @param string $path
-     * @param callback $callback
-     * @param string[] $constraints
-     * @param string|null $name
+     * @param RouteCollectionInterface $routes
+     * @param RouteMatcherInterface $matcher
      */
-    public function add(
-        $methods,
-        $path,
-        $callback,
-        array $constraints = [],
-        $name = null
-    ) {
-        $route = new Route(
-            $methods,
-            $path,
-            $callback,
-            $constraints,
-            $name,
-            $this->routeCounter++
-        );
-
-        if (null === $name) {
-            $name = $route->getIdentifier();
-        }
-
-        $this->routes[$name] = $route;
-    }
-
-    /**
-     * Removes a route.
-     *
-     * @param string $name Name of the route.
-     */
-    public function remove($name)
+    public function __construct(RouteCollectionInterface $routes, RouteMatcherInterface $matcher)
     {
-        if (isset($this->routes[$name])) {
-            unset($this->routes[$name]);
-        }
+        $this->routes  = $routes;
+        $this->matcher = $matcher;
     }
 
     /**
@@ -72,7 +35,7 @@ class Router implements RouterInterface
      */
     public function has($name)
     {
-        return isset($this->routes[$name]);
+        return $this->routes->has($name);
     }
 
     /**
@@ -80,8 +43,9 @@ class Router implements RouterInterface
      */
     public function get($name)
     {
-        if (isset($this->routes[$name])) {
-            return $this->routes[$name];
+        $route = $this->routes->get($name);
+        if ($route) {
+            return $route;
         }
 
         throw new NotFoundException(sprintf('No route named "%s" exists.', $name));
@@ -90,19 +54,9 @@ class Router implements RouterInterface
     /**
      * {@inheritDoc}
      */
-    public function find($path, $method)
+    public function find(ServerRequestInterface $request)
     {
-        foreach ($this->routes as $route) {
-            if (!$this->isMethodMatch($route, $method)) {
-                continue;
-            }
-
-            if ($this->isPathMatch($route, $path)) {
-                return $route;
-            }
-        }
-
-        throw new NotFoundException();
+        return $this->matcher->match($request);
     }
 
     /**
@@ -118,56 +72,5 @@ class Router implements RouterInterface
         }
 
         return $path;
-    }
-
-    /**
-     * Checks if the route matches the request method.
-     *
-     * @param RouteInterface $route
-     * @param string $method
-     *
-     * @return bool
-     */
-    protected function isMethodMatch(RouteInterface $route, $method)
-    {
-        $methods = $route->getMethods();
-        if ([] === $methods) {
-            // any method allowed
-            return true;
-        }
-
-        return in_array($method, $methods);
-    }
-
-    /**
-     * Checks if the route matches the request path.
-     *
-     * @param RouteInterface $route
-     * @param string $path
-     *
-     * @return bool
-     */
-    protected function isPathMatch(RouteInterface $route, $path)
-    {
-        $pattern = $route->getPattern();
-        if ($pattern === $path) {
-            return true;
-        }
-
-        $matches = [];
-        if (!preg_match("`^$pattern$`", $path, $matches)) {
-            return false;
-        }
-
-        $params = [];
-        foreach ($matches as $key => $value) {
-            if (!is_int($key)) {
-                $params[$key] = $value;
-            }
-        }
-
-        $route->setParams($params);
-
-        return true;
     }
 }
