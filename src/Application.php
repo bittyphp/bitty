@@ -86,7 +86,7 @@ class Application
      */
     public function run()
     {
-        $requestHandler = $this->container->get('request_handler');
+        $requestHandler = $this->container->get('request.handler');
         $this->middleware->setDefaultHandler($requestHandler);
 
         $request  = $this->container->get('request');

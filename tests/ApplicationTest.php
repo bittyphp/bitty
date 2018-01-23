@@ -279,7 +279,7 @@ class ApplicationTest extends TestCase
             ->willReturnMap(
                 [
                     ['request', $request],
-                    ['request_handler', $requestHandler],
+                    ['request.handler', $requestHandler],
                 ]
             );
     }

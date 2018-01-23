@@ -23,7 +23,7 @@ class RequestHandlerServiceProvider implements ServiceProviderInterface
     public function getExtensions()
     {
         return [
-            'request_handler' => function (ContainerInterface $container, RequestHandlerInterface $previous = null) {
+            'request.handler' => function (ContainerInterface $container, RequestHandlerInterface $previous = null) {
                 if ($previous) {
                     return $previous;
                 }

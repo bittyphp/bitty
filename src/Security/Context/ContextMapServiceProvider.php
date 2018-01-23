@@ -23,7 +23,7 @@ class ContextMapServiceProvider implements ServiceProviderInterface
     public function getExtensions()
     {
         return [
-            'security_context' => function (ContainerInterface $container, ContextMapInterface $previous = null) {
+            'security.context' => function (ContainerInterface $container, ContextMapInterface $previous = null) {
                 if ($previous) {
                     return $previous;
                 }

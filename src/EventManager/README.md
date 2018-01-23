@@ -40,7 +40,7 @@ use Bitty\Application;
 
 $app = new Application();
 
-$eventManager = $app->getContainer()->get('event_manager');
+$eventManager = $app->getContainer()->get('event.manager');
 ```
 
 ## Attaching a Listener
@@ -59,7 +59,7 @@ use Bitty\EventManager\EventInterface;
 
 $app = new Application();
 
-$eventManager = $app->getContainer()->get('event_manager');
+$eventManager = $app->getContainer()->get('event.manager');
 $eventManager->attach('some.event', function (EventInterface $event, $previous = null) {
     // Do stuff
 });
@@ -81,7 +81,7 @@ use Bitty\Application;
 
 $app = new Application();
 
-$eventManager = $app->getContainer()->get('event_manager');
+$eventManager = $app->getContainer()->get('event.manager');
 
 $eventManager->attach('some.event', function () {
     // This will trigger SECOND
@@ -107,7 +107,7 @@ use Bitty\Application;
 
 $app = new Application();
 
-$eventManager = $app->getContainer()->get('event_manager');
+$eventManager = $app->getContainer()->get('event.manager');
 
 $callable = function () {
     // Do stuff
@@ -131,7 +131,7 @@ use Bitty\Application;
 
 $app = new Application();
 
-$eventManager = $app->getContainer()->get('event_manager');
+$eventManager = $app->getContainer()->get('event.manager');
 
 $eventManager->clearListeners('some.event');
 ```
@@ -150,7 +150,7 @@ use Bitty\EventManager\Event;
 
 $app = new Application();
 
-$eventManager = $app->getContainer()->get('event_manager');
+$eventManager = $app->getContainer()->get('event.manager');
 
 // Make the event manager build and then trigger the event
 $eventManager->trigger('some.event', $someTarget, ['param 1', 'param 2']);
@@ -172,7 +172,7 @@ use Bitty\EventManager\EventInterface;
 
 $app = new Application();
 
-$eventManager = $app->getContainer()->get('event_manager');
+$eventManager = $app->getContainer()->get('event.manager');
 
 $eventManager->attach('some.event', function (EventInterface $event) {
     // Do stuff

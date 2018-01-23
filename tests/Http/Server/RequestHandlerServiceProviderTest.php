@@ -39,8 +39,8 @@ class RequestHandlerServiceProviderTest extends TestCase
     {
         $actual = $this->fixture->getExtensions();
 
-        $this->assertEquals(['request_handler'], array_keys($actual));
-        $this->assertInternalType('callable', $actual['request_handler']);
+        $this->assertEquals(['request.handler'], array_keys($actual));
+        $this->assertInternalType('callable', $actual['request.handler']);
     }
 
     public function testCallbackWithoutPreviousCallsContainer()
