@@ -2,9 +2,9 @@
 
 namespace Bitty\Tests\Router;
 
-use Bitty\Router\RouteInterface;
 use Bitty\Router\RouteCollection;
 use Bitty\Router\RouteCollectionInterface;
+use Bitty\Router\RouteInterface;
 use Bitty\Tests\TestCase;
 
 class RouteCollectionTest extends TestCase
