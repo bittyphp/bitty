@@ -24,6 +24,5 @@ class NotAcceptableException extends HttpException
     /**
      * @var string
      */
-    protected $description = 'The resource is not capable of generating '
-        .'responses acceptable to the requested accept headers.';
+    protected $description = 'The resource is not capable of generating responses acceptable to the requested accept headers.';
 }

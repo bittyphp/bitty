@@ -24,6 +24,5 @@ class InternalServerErrorException extends HttpException
     /**
      * @var string
      */
-    protected $description = 'The server encountered an unexpected condition '
-        .'which prevented it from fulfilling the request.';
+    protected $description = 'The server encountered an unexpected condition which prevented it from fulfilling the request.';
 }

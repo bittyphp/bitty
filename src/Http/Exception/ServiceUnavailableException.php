@@ -24,6 +24,5 @@ class ServiceUnavailableException extends HttpException
     /**
      * @var string
      */
-    protected $description = 'The server is currently unable to handle the '
-        .'request due to a temporary overloading or maintenance of the server.';
+    protected $description = 'The server is currently unable to handle the request due to a temporary overloading or maintenance of the server.';
 }
