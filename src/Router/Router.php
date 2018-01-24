@@ -33,6 +33,19 @@ class Router implements RouterInterface
     /**
      * {@inheritDoc}
      */
+    public function add(
+        $methods,
+        $path,
+        $callable,
+        array $constraints = [],
+        $name = null
+    ) {
+        $this->routes->add($methods, $path, $callable, $constraints, $name);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function has($name)
     {
         return $this->routes->has($name);

@@ -9,6 +9,23 @@ use Psr\Http\Message\ServerRequestInterface;
 interface RouterInterface
 {
     /**
+     * Adds a new route.
+     *
+     * @param string[]|string $methods
+     * @param string $path
+     * @param callable $callable
+     * @param string[] $constraints
+     * @param string|null $name
+     */
+    public function add(
+        $methods,
+        $path,
+        $callable,
+        array $constraints = [],
+        $name = null
+    );
+
+    /**
      * Checks if a route exists.
      *
      * @param string $name Name of the route.

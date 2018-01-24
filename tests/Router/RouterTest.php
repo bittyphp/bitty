@@ -43,6 +43,22 @@ class RouterTest extends TestCase
         $this->assertInstanceOf(RouterInterface::class, $this->fixture);
     }
 
+    public function testAdd()
+    {
+        $methods     = [uniqid('method'), uniqid('method')];
+        $path        = uniqid('path');
+        $callable    = function () {
+        };
+        $constraints = [uniqid('key') => uniqid('value')];
+        $name        = uniqid('name');
+
+        $this->routes->expects($this->once())
+            ->method('add')
+            ->with($methods, $path, $callable, $constraints, $name);
+
+        $this->fixture->add($methods, $path, $callable, $constraints, $name);
+    }
+
     public function testHas()
     {
         $name = uniqid();
