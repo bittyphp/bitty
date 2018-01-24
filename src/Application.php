@@ -86,7 +86,7 @@ class Application
      *
      * @param string[]|string $methods
      * @param string $path
-     * @param callable $callable
+     * @param callable|string $callable
      * @param string[] $constraints
      * @param string|null $name
      */

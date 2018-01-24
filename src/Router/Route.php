@@ -30,7 +30,7 @@ class Route implements RouteInterface
     /**
      * Route callback.
      *
-     * @var callback
+     * @var callable|string
      */
     protected $callback = null;
 
@@ -58,7 +58,7 @@ class Route implements RouteInterface
     /**
      * @param string[]|string $methods
      * @param string $path
-     * @param callback $callback
+     * @param callable|string $callback
      * @param string[] $constraints
      * @param string|null $name
      * @param int $identifier
@@ -126,22 +126,22 @@ class Route implements RouteInterface
     /**
      * Sets the route callback.
      *
-     * @param callback $callback Callback to call.
+     * @param callable|string $callback Callback to call.
      *
      * @throws \InvalidArgumentException
      */
     public function setCallback($callback)
     {
-        if (!is_callable($callback)) {
-            throw new \InvalidArgumentException(
-                sprintf(
-                    'Callback must be a callable; %s given.',
-                    gettype($callback)
-                )
-            );
+        if (is_callable($callback) || is_string($callback)) {
+            $this->callback = $callback;
         }
 
-        $this->callback = $callback;
+        throw new \InvalidArgumentException(
+            sprintf(
+                'Callback must be a callable or string; %s given.',
+                gettype($callback)
+            )
+        );
     }
 
     /**
@@ -177,10 +177,10 @@ class Route implements RouteInterface
     {
         $pattern = $this->path;
 
-        foreach ($this->constraints as $_name => $_pattern) {
+        foreach ($this->constraints as $name => $regex) {
             $pattern = str_replace(
-                '{'.$_name.'}',
-                '(?<'.$_name.'>'.$_pattern.')',
+                '{'.$name.'}',
+                '(?<'.$name.'>'.$regex.')',
                 $pattern
             );
         }

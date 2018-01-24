@@ -49,7 +49,7 @@ class RequestHandler implements RequestHandlerInterface, ContainerAwareInterface
     /**
      * Triggers the callback, passing in the request and parameters.
      *
-     * @param callback $callback
+     * @param callable|string $callback
      * @param ServerRequestInterface $request
      * @param array $params
      *
@@ -61,23 +61,34 @@ class RequestHandler implements RequestHandlerInterface, ContainerAwareInterface
             return $callback($request, $params);
         }
 
-        if (is_object($callback) && method_exists($callback, '__invoke')) {
-            $this->applyContainerIfAware($callback);
+        if (is_string($callback)) {
+            $class  = $callback;
+            $action = null;
+            $parts  = explode(':', $callback);
+            if (2 === count($parts)) {
+                list($class, $action) = $parts;
+            } elseif (1 !== count($parts)) {
+                throw new InternalServerErrorException(
+                    sprintf('Callback "%s" is malformed.', $callback)
+                );
+            }
 
-            return $callback($request, $params);
-        }
+            if ($this->container->has($class)) {
+                $controller = $this->container->get($class);
+            } else {
+                $controller = new $class();
+            }
 
-        if (is_array($callback)) {
-            $class  = array_shift($callback);
-            $action = array_shift($callback);
-
-            $controller = is_object($class) ? $class : new $class();
             $this->applyContainerIfAware($controller);
 
-            return call_user_func_array(
-                [$controller, $action],
-                [$request, $params]
-            );
+            if (null !== $action) {
+                return call_user_func_array(
+                    [$controller, $action],
+                    [$request, $params]
+                );
+            }
+
+            return $controller($request, $params);
         }
 
         throw new InternalServerErrorException();

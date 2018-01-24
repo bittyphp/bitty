@@ -88,7 +88,7 @@ class RouteCollectionTest extends TestCase
 
     public function testAddInvalidCallbackThrowsException()
     {
-        $message = 'Callback must be a callable; NULL given.';
+        $message = 'Callback must be a callable or string; NULL given.';
         $this->setExpectedException(\InvalidArgumentException::class, $message);
 
         $this->fixture->add(uniqid(), uniqid(), null);
