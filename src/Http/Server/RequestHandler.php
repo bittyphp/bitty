@@ -7,7 +7,6 @@ use Bitty\Http\Server\RequestHandlerInterface;
 use Bitty\Router\CallbackBuilderInterface;
 use Bitty\Router\Exception\NotFoundException as RouteNotFoundException;
 use Bitty\Router\RouterInterface;
-use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 class RequestHandler implements RequestHandlerInterface
@@ -46,20 +45,6 @@ class RequestHandler implements RequestHandlerInterface
         $callback = $route->getCallback();
         $params   = $route->getParams();
 
-        return $this->triggerCallback($callback, $request, $params);
-    }
-
-    /**
-     * Triggers the callback, passing in the request and parameters.
-     *
-     * @param callable|string $callback
-     * @param ServerRequestInterface $request
-     * @param array $params
-     *
-     * @return ResponseInterface
-     */
-    protected function triggerCallback($callback, ServerRequestInterface $request, array $params)
-    {
         list($controller, $action) = $this->builder->build($callback);
 
         if (null !== $action) {
