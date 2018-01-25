@@ -113,28 +113,6 @@ class ApplicationTest extends TestCase
         $this->fixture->addRoute($methods, $path, $callable, $constraints, $name);
     }
 
-    public function testRunSetsRequestHandlerContainer()
-    {
-        $requestHandler = $this->createMock(RequestHandler::class);
-        $this->setUpDependencies(null, null, $requestHandler);
-
-        $requestHandler->expects($this->once())
-            ->method('setContainer')
-            ->with($this->container);
-
-        $this->fixture->run();
-    }
-
-    public function testRunDoesNotSetsRequestHandlerContainer()
-    {
-        $requestHandler = $this->createMock(RequestHandlerInterface::class);
-        $this->setUpDependencies(null, null, $requestHandler);
-
-        $requestHandler->expects($this->never())->method('setContainer');
-
-        $this->fixture->run();
-    }
-
     public function testRunCallsRequestHandlerHandle()
     {
         $request        = $this->createMock(ServerRequestInterface::class);
