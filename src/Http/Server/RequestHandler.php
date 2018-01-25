@@ -2,31 +2,35 @@
 
 namespace Bitty\Http\Server;
 
-use Bitty\Container\ContainerAwareInterface;
-use Bitty\Container\ContainerAwareTrait;
 use Bitty\Http\Exception\InternalServerErrorException;
 use Bitty\Http\Exception\NotFoundException;
 use Bitty\Http\Server\RequestHandlerInterface;
+use Bitty\Router\CallbackBuilderInterface;
 use Bitty\Router\Exception\NotFoundException as RouteNotFoundException;
 use Bitty\Router\RouterInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-class RequestHandler implements RequestHandlerInterface, ContainerAwareInterface
+class RequestHandler implements RequestHandlerInterface
 {
-    use ContainerAwareTrait;
-
     /**
      * @var RouterInterface
      */
     protected $router = null;
 
     /**
-     * @param RouterInterface $router
+     * @var CallbackBuilderInterface
      */
-    public function __construct(RouterInterface $router)
+    protected $builder = null;
+
+    /**
+     * @param RouterInterface $router
+     * @param CallbackBuilderInterface $builder
+     */
+    public function __construct(RouterInterface $router, CallbackBuilderInterface $builder)
     {
-        $this->router = $router;
+        $this->router  = $router;
+        $this->builder = $builder;
     }
 
     /**
@@ -57,52 +61,15 @@ class RequestHandler implements RequestHandlerInterface, ContainerAwareInterface
      */
     protected function triggerCallback($callback, ServerRequestInterface $request, array $params)
     {
-        if ($callback instanceof \Closure) {
-            return $callback($request, $params);
+        list($controller, $action) = $this->builder->build($callback);
+
+        if (null !== $action) {
+            return call_user_func_array(
+                [$controller, $action],
+                [$request, $params]
+            );
         }
 
-        if (is_string($callback)) {
-            $class  = $callback;
-            $action = null;
-            $parts  = explode(':', $callback);
-            if (2 === count($parts)) {
-                list($class, $action) = $parts;
-            } elseif (1 !== count($parts)) {
-                throw new InternalServerErrorException(
-                    sprintf('Callback "%s" is malformed.', $callback)
-                );
-            }
-
-            if ($this->container->has($class)) {
-                $controller = $this->container->get($class);
-            } else {
-                $controller = new $class();
-            }
-
-            $this->applyContainerIfAware($controller);
-
-            if (null !== $action) {
-                return call_user_func_array(
-                    [$controller, $action],
-                    [$request, $params]
-                );
-            }
-
-            return $controller($request, $params);
-        }
-
-        throw new InternalServerErrorException();
-    }
-
-    /**
-     * Sets the container on the callback, if it's container aware.
-     *
-     * @param callback $callback
-     */
-    protected function applyContainerIfAware($callback)
-    {
-        if ($callback instanceof ContainerAwareInterface) {
-            $callback->setContainer($this->container);
-        }
+        return $controller($request, $params);
     }
 }
