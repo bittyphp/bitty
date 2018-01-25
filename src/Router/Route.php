@@ -134,6 +134,8 @@ class Route implements RouteInterface
     {
         if (is_callable($callback) || is_string($callback)) {
             $this->callback = $callback;
+
+            return;
         }
 
         throw new \InvalidArgumentException(
