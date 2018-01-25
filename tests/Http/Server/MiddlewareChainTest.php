@@ -7,6 +7,7 @@ use Bitty\Http\Server\MiddlewareHandler;
 use Bitty\Http\Server\MiddlewareInterface;
 use Bitty\Http\Server\RequestHandlerInterface;
 use Bitty\Tests\Stubs\ContainerAwareMiddlewareStubInterface;
+use Bitty\Tests\Stubs\ContainerAwareRequestHandlerStubInterface;
 use Bitty\Tests\TestCase;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -40,6 +41,20 @@ class MiddlewareChainTest extends TestCase
     public function testDefaultHandler()
     {
         $handler = $this->createMock(RequestHandlerInterface::class);
+
+        $this->fixture->setDefaultHandler($handler);
+        $actual = $this->fixture->getDefaultHandler();
+
+        $this->assertSame($handler, $actual);
+    }
+
+    public function testContainerAwareDefaultHandler()
+    {
+        $handler = $this->createMock(ContainerAwareRequestHandlerStubInterface::class);
+
+        $handler->expects($this->once())
+            ->method('setContainer')
+            ->with($this->container);
 
         $this->fixture->setDefaultHandler($handler);
         $actual = $this->fixture->getDefaultHandler();
