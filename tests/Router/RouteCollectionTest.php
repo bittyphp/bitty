@@ -48,36 +48,35 @@ class RouteCollectionTest extends TestCase
         $this->assertEquals('route_0', $actual->getIdentifier());
     }
 
+    public function testAddWithStringCallback()
+    {
+        $callback = uniqid();
+
+        $this->fixture->add(uniqid(), uniqid(), $callback, [], uniqid());
+
+        $actual = $this->fixture->get($name);
+
+        $this->assertEquals($callback, $actual->getCallback());
+    }
+
     public function testAddWithoutNameUsesIdentifier()
     {
-        $methods     = ['get', 'pOsT'];
-        $path        = uniqid();
-        $constraints = [uniqid()];
-        $callback    = function () {
-        };
-
-        $this->fixture->add($methods, $path, $callback, $constraints);
+        $this->fixture->add(uniqid(), uniqid(), uniqid());
 
         $actual = $this->fixture->get('route_0');
 
         $this->assertInstanceOf(RouteInterface::class, $actual);
-        $this->assertEquals(['GET', 'POST'], $actual->getMethods());
-        $this->assertEquals($path, $actual->getPath());
-        $this->assertEquals($callback, $actual->getCallback());
-        $this->assertEquals($constraints, $actual->getConstraints());
         $this->assertNull($actual->getName());
         $this->assertEquals('route_0', $actual->getIdentifier());
     }
 
     public function testMultipleAddsIncrementsIdentifier()
     {
-        $nameA    = uniqid();
-        $nameB    = uniqid();
-        $callback = function () {
-        };
+        $nameA = uniqid();
+        $nameB = uniqid();
 
-        $this->fixture->add(uniqid(), uniqid(), $callback, [], $nameA);
-        $this->fixture->add(uniqid(), uniqid(), $callback, [], $nameB);
+        $this->fixture->add(uniqid(), uniqid(), uniqid(), [], $nameA);
+        $this->fixture->add(uniqid(), uniqid(), uniqid(), [], $nameB);
 
         $actualA = $this->fixture->get($nameA);
         $actualB = $this->fixture->get($nameB);
