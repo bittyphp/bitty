@@ -52,9 +52,9 @@ class RouteCollectionTest extends TestCase
     {
         $callback = uniqid();
 
-        $this->fixture->add(uniqid(), uniqid(), $callback, [], uniqid());
+        $this->fixture->add(uniqid(), uniqid(), $callback);
 
-        $actual = $this->fixture->get($name);
+        $actual = $this->fixture->get('route_0');
 
         $this->assertEquals($callback, $actual->getCallback());
     }
