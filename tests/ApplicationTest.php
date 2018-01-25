@@ -9,7 +9,6 @@ use Bitty\EventManager\EventManagerServiceProvider;
 use Bitty\Http\RequestServiceProvider;
 use Bitty\Http\ResponseServiceProvider;
 use Bitty\Http\Server\MiddlewareInterface;
-use Bitty\Http\Server\RequestHandler;
 use Bitty\Http\Server\RequestHandlerInterface;
 use Bitty\Http\Server\RequestHandlerServiceProvider;
 use Bitty\Http\Stream;

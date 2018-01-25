@@ -2,7 +2,6 @@
 
 namespace Bitty\Http\Server;
 
-use Bitty\Http\Exception\InternalServerErrorException;
 use Bitty\Http\Exception\NotFoundException;
 use Bitty\Http\Server\RequestHandlerInterface;
 use Bitty\Router\CallbackBuilderInterface;
