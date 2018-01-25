@@ -2,6 +2,7 @@
 
 namespace Bitty\Tests\Router;
 
+use Bitty\Router\CallbackBuilderInterface;
 use Bitty\Router\RouteCollectionInterface;
 use Bitty\Router\RouteMatcherInterface;
 use Bitty\Router\RouterInterface;
@@ -40,10 +41,17 @@ class RouterServiceProviderTest extends TestCase
     {
         $actual = $this->fixture->getExtensions();
 
-        $expected = ['route.collection', 'route.matcher', 'router'];
+        $expected = [
+            'route.collection',
+            'route.matcher',
+            'route.callback.builder',
+            'router',
+        ];
+
         $this->assertEquals($expected, array_keys($actual));
         $this->assertInternalType('callable', $actual['route.collection']);
         $this->assertInternalType('callable', $actual['route.matcher']);
+        $this->assertInternalType('callable', $actual['route.callback.builder']);
         $this->assertInternalType('callable', $actual['router']);
     }
 
@@ -95,6 +103,29 @@ class RouterServiceProviderTest extends TestCase
 
         $container = $this->createMock(ContainerInterface::class);
         $previous  = $this->createMock(RouteMatcherInterface::class);
+        $actual    = $callable($container, $previous);
+
+        $this->assertSame($previous, $actual);
+    }
+
+    public function testRouteCallbackBuilderCallbackResponseWithoutPrevious()
+    {
+        $extensions = $this->fixture->getExtensions();
+        $callable   = $extensions['route.callback.builder'];
+
+        $container = $this->createMock(ContainerInterface::class);
+        $actual    = $callable($container);
+
+        $this->assertInstanceOf(CallbackBuilderInterface::class, $actual);
+    }
+
+    public function testRouteCallbackBuilderCallbackResponseWithPrevious()
+    {
+        $extensions = $this->fixture->getExtensions();
+        $callable   = $extensions['route.callback.builder'];
+
+        $container = $this->createMock(ContainerInterface::class);
+        $previous  = $this->createMock(CallbackBuilderInterface::class);
         $actual    = $callable($container, $previous);
 
         $this->assertSame($previous, $actual);

@@ -2,6 +2,8 @@
 
 namespace Bitty\Router;
 
+use Bitty\Router\CallbackBuilder;
+use Bitty\Router\CallbackBuilderInterface;
 use Bitty\Router\RouteCollection;
 use Bitty\Router\RouteCollectionInterface;
 use Bitty\Router\RouteMatcher;
@@ -42,6 +44,13 @@ class RouterServiceProvider implements ServiceProviderInterface
                 $routes = $container->get('route.collection');
 
                 return new RouteMatcher($routes);
+            },
+            'route.callback.builder' => function (ContainerInterface $container, CallbackBuilderInterface $previous = null) {
+                if ($previous) {
+                    return $previous;
+                }
+
+                return new CallbackBuilder($container);
             },
             'router' => function (ContainerInterface $container, RouterInterface $previous = null) {
                 if ($previous) {

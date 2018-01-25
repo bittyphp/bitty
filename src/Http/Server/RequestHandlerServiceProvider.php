@@ -28,9 +28,10 @@ class RequestHandlerServiceProvider implements ServiceProviderInterface
                     return $previous;
                 }
 
-                $router = $container->get('router');
+                $router  = $container->get('router');
+                $builder = $container->get('route.callback.builder');
 
-                return new RequestHandler($router);
+                return new RequestHandler($router, $builder);
             },
         ];
     }
