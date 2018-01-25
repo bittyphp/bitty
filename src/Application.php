@@ -86,21 +86,21 @@ class Application
      *
      * @param string[]|string $methods
      * @param string $path
-     * @param callable|string $callable
+     * @param \Closure|string $callback
      * @param string[] $constraints
      * @param string|null $name
      */
     public function addRoute(
         $methods,
         $path,
-        $callable,
+        $callback,
         array $constraints = [],
         $name = null
     ) {
         $this->container->get('route.collection')->add(
             $methods,
             $path,
-            $callable,
+            $callback,
             $constraints,
             $name
         );

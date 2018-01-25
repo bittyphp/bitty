@@ -23,7 +23,7 @@ interface CallbackBuilderInterface
      * If using a class name, it will still check to see if the container knows
      * how to build it. Otherwise it assumes the class doesn't have a constructor.
      *
-     * @param string $callback
+     * @param \Closure|string $callback
      *
      * @return mixed[]
      *

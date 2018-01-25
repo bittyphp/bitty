@@ -11,14 +11,14 @@ interface RouteCollectionInterface extends CollectionInterface
      *
      * @param string[]|string $methods
      * @param string $path
-     * @param callable $callable
+     * @param \Closure|string $callback
      * @param string[] $constraints
      * @param string|null $name
      */
     public function add(
         $methods,
         $path,
-        $callable,
+        $callback,
         array $constraints = [],
         $name = null
     );

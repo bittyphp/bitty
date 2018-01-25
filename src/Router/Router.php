@@ -36,11 +36,11 @@ class Router implements RouterInterface
     public function add(
         $methods,
         $path,
-        $callable,
+        $callback,
         array $constraints = [],
         $name = null
     ) {
-        $this->routes->add($methods, $path, $callable, $constraints, $name);
+        $this->routes->add($methods, $path, $callback, $constraints, $name);
     }
 
     /**

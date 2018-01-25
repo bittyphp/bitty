@@ -21,14 +21,14 @@ class RouteCollection extends Collection implements RouteCollectionInterface
     public function add(
         $methods,
         $path,
-        $callable,
+        $callback,
         array $constraints = [],
         $name = null
     ) {
         $route = new Route(
             $methods,
             $path,
-            $callable,
+            $callback,
             $constraints,
             $name,
             $this->routeCounter++

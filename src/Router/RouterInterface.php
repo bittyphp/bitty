@@ -13,14 +13,14 @@ interface RouterInterface
      *
      * @param string[]|string $methods
      * @param string $path
-     * @param callable|string $callable
+     * @param \Closure|string $callback
      * @param string[] $constraints
      * @param string|null $name
      */
     public function add(
         $methods,
         $path,
-        $callable,
+        $callback,
         array $constraints = [],
         $name = null
     );

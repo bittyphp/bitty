@@ -30,7 +30,7 @@ class Route implements RouteInterface
     /**
      * Route callback.
      *
-     * @var callable|string
+     * @var \Closure|string
      */
     protected $callback = null;
 
@@ -58,7 +58,7 @@ class Route implements RouteInterface
     /**
      * @param string[]|string $methods
      * @param string $path
-     * @param callable|string $callback
+     * @param \Closure|string $callback
      * @param string[] $constraints
      * @param string|null $name
      * @param int $identifier

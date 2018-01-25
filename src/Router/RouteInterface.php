@@ -28,7 +28,7 @@ interface RouteInterface
     /**
      * Gets the route callback.
      *
-     * @return callable|string
+     * @return \Closure|string
      */
     public function getCallback();
 
