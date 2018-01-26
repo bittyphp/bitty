@@ -2,6 +2,7 @@
 
 namespace Bitty\Tests\Router;
 
+use Bitty\Router\Exception\NotFoundException;
 use Bitty\Router\RouteCollection;
 use Bitty\Router\RouteCollectionInterface;
 use Bitty\Router\RouteInterface;
@@ -91,5 +92,15 @@ class RouteCollectionTest extends TestCase
         $this->setExpectedException(\InvalidArgumentException::class, $message);
 
         $this->fixture->add(uniqid(), uniqid(), null);
+    }
+
+    public function testGetThrowsException()
+    {
+        $name = uniqid();
+
+        $message = 'No route named "'.$name.'" exists.';
+        $this->setExpectedException(NotFoundException::class, $message);
+
+        $this->fixture->get($name);
     }
 }
