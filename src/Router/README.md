@@ -2,6 +2,12 @@
 
 Bitty's router supports [PSR-7](http://www.php-fig.org/psr/psr-7/) HTTP message interfaces. When a route is called, it is passed an instance of `Psr\Http\Message\ServerRequestInterface` and must return an instance of `Psr\Http\Message\ResponseInterface`.
 
+The router itself is merely a wrapper around a few services:
+
+1. **The route collection.** This holds all the routes to be shared between other router services. Can be accessed directly from the container using `route.collection`.
+2. **The route matcher.** Matches routes against an HTTP request. Can be accessed directly using `route.matcher`.
+3. **URI generator.** Generates a URI for a given route. Can be accessed directly using `uri.generator`.
+
 ## Adding a Route
 
 Routes can be customized pretty well. Bitty supports the following options:
@@ -13,7 +19,7 @@ Routes can be customized pretty well. Bitty supports the following options:
 
 ### Basic Usage
 
-For convenience, routes can be added directly from the application level. Or you can choose to access the router directly and add routes to it.
+For convenience, routes can be added directly from the application level. Or you can choose to access the router and add routes that way.
 
 ```php
 <?php
@@ -60,7 +66,7 @@ $app->addRoute(['GET', 'POST'], '/resource/path', function (ServerRequestInterfa
 
 ### Resource Pattern Matching
 
-You can define patterns to create routes that automatically extract variables from the route path, e.g. getting a product's ID or the slug for a blog entry. Routes that contain patterns MUST specify the constraints to fulfill those patters. Constraints are specified by passing in an additional array.
+You can define patterns to create routes that automatically extract variables from the route path, e.g. getting a product's ID or the slug for a blog entry. Routes that contain patterns MUST specify the constraints to fulfill those patterns. Constraints are specified by passing in an additional array.
 
 ```php
 <?php
@@ -99,7 +105,8 @@ Lets create a route that triggers an action in a controller class. First, we mak
 ```php
 <?php
 
-use Acme\Controller;
+namespace Acme\Controller;
+
 use Bitty\Http\Response;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -125,6 +132,8 @@ $app = new Application();
 $app->addRoute('GET', '/resource/path', ExampleController::class.':test');
 ```
 
+Additionally, if the callback implements the `ContainerAwareInterface`, it will be passed the container. However, since the class name can be a registered service in the container, you could build the controller using the specific services you need instead of getting access to the whole container.
+
 ### Named Routes
 
 Named routes are handy if you know you'll be referencing them later, like by building a URL that points to it. You can specify the name for a route by passing in a fifth parameter (remember, the fourth parameter is an array of constraints).
@@ -138,4 +147,119 @@ use Bitty\Application;
 $app = new Application();
 
 $app->addRoute('GET', '/foo', ExampleController::class, [], 'foo_route');
+```
+
+## Checking For a Route
+
+You can check if a named route exists using the `has()` method.
+
+```php
+<?php
+
+use Bitty\Application;
+
+$app    = new Application();
+$router = $app->getContainer()->get('router');
+
+if ($router->has('some.route')) {
+    echo 'it exists!';
+}
+```
+
+## Fetching a Route
+
+There are two ways to fetch a route: 1) You can get the route by name, or 2) You can find the route using the HTTP request.
+
+### By Name
+
+You can use the `get()` method to fetch any named route. This will return a route object, which you can then modify or use as you desire. However, if the route doesn't exist a `NotFoundException` will be thrown.
+
+```php
+<?php
+
+use Bitty\Application;
+
+$app    = new Application();
+$router = $app->getContainer()->get('router');
+
+// Get a route
+$route = $router->get('some.route');
+
+// Change it to accept both GET and POST requests
+$route->setMethods(['GET', 'POST']);
+```
+
+### By Request
+
+You can use the `find()` method to fetch a route based on a request. This allows you to find both named or unnamed routes. Similar to `get()`, if the route doesn't exist a `NotFoundException` will be thrown. If it finds a route, the route object will be returned.
+
+```php
+<?php
+
+use Bitty\Application;
+
+$app     = new Application();
+$router  = $app->getContainer()->get('router');
+$request = $app->getContainer()->get('request');
+
+// Find a matching route
+$route = $router->find($request);
+```
+
+## Generating a URI
+
+At some point, you likely need to create a URI to reference for a particular route. The router can use the route data, including filling in extra parameters, to generate such a URI for you. By default, the URI it returns only includes the path relative to root.
+
+```php
+<?php
+
+use Bitty\Application;
+
+$app = new Application();
+
+$app->addRoute(
+    'GET',
+    '/products/{id}',
+    ExampleController::class,
+    ['id' => '\d+'],
+    'view_product'
+);
+
+$router = $app->getContainer()->get('router');
+
+$uri = $router->generateUri('view_product', ['id' => 123]);
+// Outputs: /products/123
+```
+
+To return an absolute URI, you'll need to define your domain and tell the router you want the absolute URI.
+
+```php
+<?php
+
+use Bitty\Application;
+use Bitty\Router\UriGeneratorInterface;
+
+$app = new Application();
+
+// Set your domain
+$app->getContainer()->set('uri.domain', function () {
+    return 'http://example.com';
+});
+
+$app->addRoute(
+    'GET',
+    '/products/{id}',
+    ExampleController::class,
+    ['id' => '\d+'],
+    'view_product'
+);
+
+$router = $app->getContainer()->get('router');
+
+$uri = $router->generateUri(
+    'view_product',
+    ['id' => 123],
+    UriGeneratorInterface::ABSOLUTE_URI
+);
+// Outputs: http://example.com/products/123
 ```
