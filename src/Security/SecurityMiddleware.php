@@ -15,7 +15,7 @@ use Psr\Http\Message\ServerRequestInterface;
 class SecurityMiddleware implements MiddlewareInterface, ContainerAwareInterface
 {
     /**
-     * @var ContainerInterface
+     * @var PsrContainerInterface
      */
     protected $container = null;
 
@@ -40,7 +40,7 @@ class SecurityMiddleware implements MiddlewareInterface, ContainerAwareInterface
     /**
      * {@inheritDoc}
      */
-    public function setContainer(PsrContainerInterface $container)
+    public function setContainer(PsrContainerInterface $container = null)
     {
         if ($container instanceof ContainerInterface) {
             $container->register([new ContextMapServiceProvider()]);
