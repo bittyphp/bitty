@@ -49,6 +49,10 @@ class SecurityMiddleware implements MiddlewareInterface, ContainerAwareInterface
             $contextMap->add($this->shield->getContext());
         }
 
+        if ($this->shield instanceof ContainerAwareInterface) {
+            $this->shield->setContainer($container);
+        }
+
         $this->container = $container;
     }
 

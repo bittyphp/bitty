@@ -2,14 +2,18 @@
 
 namespace Bitty\Security\Shield;
 
+use Bitty\Container\ContainerAwareInterface;
+use Bitty\Container\ContainerAwareTrait;
 use Bitty\Security\Authentication\AuthenticatorInterface;
 use Bitty\Security\Authorization\AuthorizerInterface;
 use Bitty\Security\Context\ContextInterface;
 use Bitty\Security\Shield\ShieldInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-abstract class AbstractShield implements ShieldInterface
+abstract class AbstractShield implements ShieldInterface, ContainerAwareInterface
 {
+    use ContainerAwareTrait;
+
     /**
      * @var ContextInterface
      */
