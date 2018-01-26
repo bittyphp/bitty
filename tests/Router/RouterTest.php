@@ -2,12 +2,12 @@
 
 namespace Bitty\Tests\Router;
 
-use Bitty\Router\Exception\NotFoundException;
 use Bitty\Router\RouteCollectionInterface;
 use Bitty\Router\RouteInterface;
 use Bitty\Router\RouteMatcherInterface;
 use Bitty\Router\Router;
 use Bitty\Router\RouterInterface;
+use Bitty\Router\UriGeneratorInterface;
 use Bitty\Tests\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -28,14 +28,20 @@ class RouterTest extends TestCase
      */
     protected $matcher = null;
 
+    /**
+     * @var UriGeneratorInterface
+     */
+    protected $uriGenerator = null;
+
     protected function setUp()
     {
         parent::setUp();
 
-        $this->routes  = $this->createMock(RouteCollectionInterface::class);
-        $this->matcher = $this->createMock(RouteMatcherInterface::class);
+        $this->routes       = $this->createMock(RouteCollectionInterface::class);
+        $this->matcher      = $this->createMock(RouteMatcherInterface::class);
+        $this->uriGenerator = $this->createMock(UriGeneratorInterface::class);
 
-        $this->fixture = new Router($this->routes, $this->matcher);
+        $this->fixture = new Router($this->routes, $this->matcher, $this->uriGenerator);
     }
 
     public function testInstanceOf()
@@ -74,7 +80,7 @@ class RouterTest extends TestCase
         $this->assertEquals($has, $actual);
     }
 
-    public function testGetExistingRoute()
+    public function testGet()
     {
         $name  = uniqid();
         $route = $this->createMock(RouteInterface::class);
@@ -87,16 +93,6 @@ class RouterTest extends TestCase
         $actual = $this->fixture->get($name);
 
         $this->assertSame($route, $actual);
-    }
-
-    public function testGetNonExistentRouteThrowsException()
-    {
-        $name = uniqid();
-
-        $message = 'No route named "'.$name.'" exists.';
-        $this->setExpectedException(NotFoundException::class, $message);
-
-        $this->fixture->get($name);
     }
 
     public function testFind()
@@ -115,72 +111,20 @@ class RouterTest extends TestCase
         $this->assertSame($route, $actual);
     }
 
-    public function testFindThrowsException()
-    {
-        $request = $this->createMock(ServerRequestInterface::class);
-
-        $message = 'Route not found';
-        $this->setExpectedException(NotFoundException::class, $message);
-
-        $exception = new NotFoundException();
-        $this->matcher->method('match')->willThrowException($exception);
-
-        $this->fixture->find($request);
-    }
-
-    public function testGenerateUriThrowsException()
-    {
-        $name = uniqid();
-
-        $message = 'No route named "'.$name.'" exists.';
-        $this->setExpectedException(NotFoundException::class, $message);
-
-        $this->fixture->generateUri($name);
-    }
-
-    /**
-     * @dataProvider sampleGenerateUri
-     */
-    public function testGenerateUri($path, $name, $params, $expected)
-    {
-        $route = $this->createConfiguredMock(RouteInterface::class, ['getPath' => $path]);
-
-        $this->routes->expects($this->once())
-            ->method('get')
-            ->with($name)
-            ->willReturn($route);
-
-        $actual = $this->fixture->generateUri($name, $params);
-
-        $this->assertEquals($expected, $actual);
-    }
-
-    public function sampleGenerateUri()
+    public function testGenerateUri()
     {
         $name   = uniqid('name');
-        $path   = '/'.uniqid('path');
-        $paramA = uniqid('param');
-        $paramB = uniqid('param');
+        $params = [uniqid('param'), uniqid('param')];
+        $type   = uniqid('type');
+        $uri    = uniqid('uri');
 
-        return [
-            'no params' => [
-                'path' => $path,
-                'name' => $name,
-                'params' => [],
-                'expected' => $path,
-            ],
-            'one param' => [
-                'path' => $path.'/{paramA}',
-                'name' => $name,
-                'params' => ['paramA' => $paramA],
-                'expected' => $path.'/'.$paramA,
-            ],
-            'multiple params' => [
-                'path' => $path.'/{paramA}/{paramB}',
-                'name' => $name,
-                'params' => ['paramA' => $paramA, 'paramB' => $paramB],
-                'expected' => $path.'/'.$paramA.'/'.$paramB,
-            ],
-        ];
+        $this->uriGenerator->expects($this->once())
+            ->method('generate')
+            ->with($name, $params, $type)
+            ->willReturn($uri);
+
+        $actual = $this->fixture->generateUri($name, $params, $type);
+
+        $this->assertEquals($uri, $actual);
     }
 }

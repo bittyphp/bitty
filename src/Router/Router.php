@@ -2,10 +2,10 @@
 
 namespace Bitty\Router;
 
-use Bitty\Router\Exception\NotFoundException;
 use Bitty\Router\RouteCollectionInterface;
 use Bitty\Router\RouteMatcherInterface;
 use Bitty\Router\RouterInterface;
+use Bitty\Router\UriGeneratorInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 class Router implements RouterInterface
@@ -21,13 +21,23 @@ class Router implements RouterInterface
     protected $matcher = null;
 
     /**
+     * @var UriGeneratorInterface
+     */
+    protected $uriGenerator = null;
+
+    /**
      * @param RouteCollectionInterface $routes
      * @param RouteMatcherInterface $matcher
+     * @param UriGeneratorInterface $uriGenerator
      */
-    public function __construct(RouteCollectionInterface $routes, RouteMatcherInterface $matcher)
-    {
-        $this->routes  = $routes;
-        $this->matcher = $matcher;
+    public function __construct(
+        RouteCollectionInterface $routes,
+        RouteMatcherInterface $matcher,
+        UriGeneratorInterface $uriGenerator
+    ) {
+        $this->routes       = $routes;
+        $this->matcher      = $matcher;
+        $this->uriGenerator = $uriGenerator;
     }
 
     /**
@@ -56,12 +66,7 @@ class Router implements RouterInterface
      */
     public function get($name)
     {
-        $route = $this->routes->get($name);
-        if ($route) {
-            return $route;
-        }
-
-        throw new NotFoundException(sprintf('No route named "%s" exists.', $name));
+        return $this->routes->get($name);
     }
 
     /**
@@ -75,15 +80,11 @@ class Router implements RouterInterface
     /**
      * {@inheritDoc}
      */
-    public function generateUri($name, array $params = [])
-    {
-        $route = $this->get($name);
-
-        $path = $route->getPath();
-        foreach ($params as $id => $value) {
-            $path = str_replace('{'.$id.'}', (string) $value, $path);
-        }
-
-        return $path;
+    public function generateUri(
+        $name,
+        array $params = [],
+        $type = UriGeneratorInterface::ABSOLUTE_PATH
+    ) {
+        return $this->uriGenerator->generate($name, $params, $type);
     }
 }
