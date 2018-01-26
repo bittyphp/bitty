@@ -7,6 +7,7 @@ use Bitty\Router\RouteCollectionInterface;
 use Bitty\Router\RouteMatcherInterface;
 use Bitty\Router\RouterInterface;
 use Bitty\Router\RouterServiceProvider;
+use Bitty\Router\UriGeneratorInterface;
 use Bitty\Tests\TestCase;
 use Interop\Container\ServiceProviderInterface;
 use Psr\Container\ContainerInterface;
@@ -45,6 +46,7 @@ class RouterServiceProviderTest extends TestCase
             'route.collection',
             'route.matcher',
             'route.callback.builder',
+            'uri.generator',
             'router',
         ];
 
@@ -52,6 +54,7 @@ class RouterServiceProviderTest extends TestCase
         $this->assertInternalType('callable', $actual['route.collection']);
         $this->assertInternalType('callable', $actual['route.matcher']);
         $this->assertInternalType('callable', $actual['route.callback.builder']);
+        $this->assertInternalType('callable', $actual['uri.generator']);
         $this->assertInternalType('callable', $actual['router']);
     }
 
@@ -131,6 +134,93 @@ class RouterServiceProviderTest extends TestCase
         $this->assertSame($previous, $actual);
     }
 
+    public function testUriGeneratorCallbackChecksForDomain()
+    {
+        $extensions = $this->fixture->getExtensions();
+        $callable   = $extensions['uri.generator'];
+
+        $routes    = $this->createMock(RouteCollectionInterface::class);
+        $container = $this->createMock(ContainerInterface::class);
+        $container->method('get')->willReturnMap(
+            [
+                ['route.collection', $routes],
+            ]
+        );
+
+        $container->expects($this->once())->method('has')->with('uri.domain');
+
+        $callable($container);
+    }
+
+    public function testUriGeneratorCallbackResponseWithoutPreviousWithDomain()
+    {
+        $extensions = $this->fixture->getExtensions();
+        $callable   = $extensions['uri.generator'];
+
+        $routes    = $this->createMock(RouteCollectionInterface::class);
+        $container = $this->createMock(ContainerInterface::class);
+        $container->method('has')->willReturn(true);
+        $container->expects($this->exactly(2))->method('get')->willReturnMap(
+            [
+                ['route.collection', $routes],
+                ['uri.domain', uniqid()],
+            ]
+        );
+
+        $actual = $callable($container);
+
+        $this->assertInstanceOf(UriGeneratorInterface::class, $actual);
+    }
+
+    public function testUriGeneratorCallbackResponseWithoutPreviousWithoutDomain()
+    {
+        $extensions = $this->fixture->getExtensions();
+        $callable   = $extensions['uri.generator'];
+
+        $routes    = $this->createMock(RouteCollectionInterface::class);
+        $container = $this->createMock(ContainerInterface::class);
+        $container->method('has')->willReturn(false);
+        $container->expects($this->once())->method('get')->willReturnMap(
+            [
+                ['route.collection', $routes],
+            ]
+        );
+
+        $actual = $callable($container);
+
+        $this->assertInstanceOf(UriGeneratorInterface::class, $actual);
+    }
+
+    public function testUriGeneratorCallbackResponseWithoutPrevious()
+    {
+        $extensions = $this->fixture->getExtensions();
+        $callable   = $extensions['uri.generator'];
+
+        $routes    = $this->createMock(RouteCollectionInterface::class);
+        $container = $this->createMock(ContainerInterface::class);
+        $container->method('get')->willReturnMap(
+            [
+                ['route.collection', $routes],
+            ]
+        );
+
+        $actual = $callable($container);
+
+        $this->assertInstanceOf(UriGeneratorInterface::class, $actual);
+    }
+
+    public function testUriGeneratorCallbackResponseWithPrevious()
+    {
+        $extensions = $this->fixture->getExtensions();
+        $callable   = $extensions['uri.generator'];
+
+        $container = $this->createMock(ContainerInterface::class);
+        $previous  = $this->createMock(UriGeneratorInterface::class);
+        $actual    = $callable($container, $previous);
+
+        $this->assertSame($previous, $actual);
+    }
+
     public function testRouterCallbackResponseWithoutPrevious()
     {
         $extensions = $this->fixture->getExtensions();
@@ -138,11 +228,13 @@ class RouterServiceProviderTest extends TestCase
 
         $routes    = $this->createMock(RouteCollectionInterface::class);
         $matcher   = $this->createMock(RouteMatcherInterface::class);
+        $generator = $this->createMock(UriGeneratorInterface::class);
         $container = $this->createMock(ContainerInterface::class);
         $container->method('get')->willReturnMap(
             [
                 ['route.collection', $routes],
                 ['route.matcher', $matcher],
+                ['uri.generator', $generator],
             ]
         );
 
