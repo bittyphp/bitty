@@ -9,10 +9,10 @@ use Bitty\EventManager\EventManagerServiceProvider;
 use Bitty\Http\RequestServiceProvider;
 use Bitty\Http\ResponseServiceProvider;
 use Bitty\Http\Server\MiddlewareInterface;
-use Bitty\Http\Server\RequestHandler;
 use Bitty\Http\Server\RequestHandlerInterface;
 use Bitty\Http\Server\RequestHandlerServiceProvider;
 use Bitty\Http\Stream;
+use Bitty\Router\RouteCollectionInterface;
 use Bitty\Router\RouterServiceProvider;
 use Bitty\Tests\TestCase;
 use Interop\Container\ServiceProviderInterface;
@@ -93,26 +93,23 @@ class ApplicationTest extends TestCase
         $this->fixture->register([$provider]);
     }
 
-    public function testRunSetsRequestHandlerContainer()
+    public function testAddRoute()
     {
-        $requestHandler = $this->createMock(RequestHandler::class);
-        $this->setUpDependencies(null, null, $requestHandler);
+        $methods     = [uniqid('method'), uniqid('method')];
+        $path        = uniqid('path');
+        $callable    = function () {
+        };
+        $constraints = [uniqid('key') => uniqid('value')];
+        $name        = uniqid('name');
 
-        $requestHandler->expects($this->once())
-            ->method('setContainer')
-            ->with($this->container);
+        $routes = $this->createMock(RouteCollectionInterface::class);
+        $this->setUpDependencies(null, null, null, $routes);
 
-        $this->fixture->run();
-    }
+        $routes->expects($this->once())
+            ->method('add')
+            ->with($methods, $path, $callable, $constraints, $name);
 
-    public function testRunDoesNotSetsRequestHandlerContainer()
-    {
-        $requestHandler = $this->createMock(RequestHandlerInterface::class);
-        $this->setUpDependencies(null, null, $requestHandler);
-
-        $requestHandler->expects($this->never())->method('setContainer');
-
-        $this->fixture->run();
+        $this->fixture->addRoute($methods, $path, $callable, $constraints, $name);
     }
 
     public function testRunCallsRequestHandlerHandle()
@@ -257,11 +254,13 @@ class ApplicationTest extends TestCase
      * @param ServerRequestInterface $request
      * @param ResponseInterface $response
      * @param RequestHandlerInterface $requestHandler
+     * @param RouteCollectionInterface $routes
      */
     protected function setUpDependencies(
         ServerRequestInterface $request = null,
         ResponseInterface $response = null,
-        RequestHandlerInterface $requestHandler = null
+        RequestHandlerInterface $requestHandler = null,
+        RouteCollectionInterface $routes = null
     ) {
         if (null === $request) {
             $request = $this->createMock(ServerRequestInterface::class);
@@ -272,6 +271,9 @@ class ApplicationTest extends TestCase
         if (null === $requestHandler) {
             $requestHandler = $this->createMock(RequestHandlerInterface::class);
         }
+        if (null === $routes) {
+            $routes = $this->createMock(RouteCollectionInterface::class);
+        }
 
         $requestHandler->method('handle')->willReturn($response);
 
@@ -279,7 +281,8 @@ class ApplicationTest extends TestCase
             ->willReturnMap(
                 [
                     ['request', $request],
-                    ['request_handler', $requestHandler],
+                    ['request.handler', $requestHandler],
+                    ['route.collection', $routes],
                 ]
             );
     }

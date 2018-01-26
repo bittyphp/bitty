@@ -82,11 +82,36 @@ class Application
     }
 
     /**
+     * Adds a route.
+     *
+     * @param string[]|string $methods
+     * @param string $path
+     * @param \Closure|string $callback
+     * @param string[] $constraints
+     * @param string|null $name
+     */
+    public function addRoute(
+        $methods,
+        $path,
+        $callback,
+        array $constraints = [],
+        $name = null
+    ) {
+        $this->container->get('route.collection')->add(
+            $methods,
+            $path,
+            $callback,
+            $constraints,
+            $name
+        );
+    }
+
+    /**
      * Runs the application.
      */
     public function run()
     {
-        $requestHandler = $this->container->get('request_handler');
+        $requestHandler = $this->container->get('request.handler');
         $this->middleware->setDefaultHandler($requestHandler);
 
         $request  = $this->container->get('request');
@@ -121,9 +146,5 @@ class Application
         }
 
         echo (string) $response->getBody();
-
-        if (function_exists('fastcgi_finish_request')) {
-            fastcgi_finish_request();
-        }
     }
 }

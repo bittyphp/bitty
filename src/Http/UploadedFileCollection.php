@@ -14,7 +14,9 @@ class UploadedFileCollection extends Collection
      */
     public function __construct(array $files)
     {
-        $this->data = $this->collapseFileTree($files);
+        $data = $this->collapseFileTree($files);
+
+        parent::__construct($data);
     }
 
     /**

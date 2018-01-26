@@ -20,7 +20,7 @@ class ServerCollection extends Collection
         ];
 
         $headers = [];
-        foreach ($this->data as $key => $value) {
+        foreach ($this as $key => $value) {
             if (0 === strpos($key, 'HTTP_')) {
                 $name = $this->normalizeHeader(substr($key, 5));
 

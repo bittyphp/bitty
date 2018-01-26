@@ -4,9 +4,27 @@ namespace Bitty\Router;
 
 use Bitty\Router\Exception\NotFoundException;
 use Bitty\Router\RouteInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 interface RouterInterface
 {
+    /**
+     * Adds a new route.
+     *
+     * @param string[]|string $methods
+     * @param string $path
+     * @param \Closure|string $callback
+     * @param string[] $constraints
+     * @param string|null $name
+     */
+    public function add(
+        $methods,
+        $path,
+        $callback,
+        array $constraints = [],
+        $name = null
+    );
+
     /**
      * Checks if a route exists.
      *
@@ -28,16 +46,15 @@ interface RouterInterface
     public function get($name);
 
     /**
-     * Finds a route for a given path.
+     * Finds a route for the given request.
      *
-     * @param string $path URI path to find route for.
-     * @param string $method The request method being used.
+     * @param ServerRequestInterface $request
      *
      * @return RouteInterface
      *
      * @throws NotFoundException When unable to find a route.
      */
-    public function find($path, $method);
+    public function find(ServerRequestInterface $request);
 
     /**
      * Generates a URI for a named route.

@@ -38,8 +38,8 @@ class EventManagerServiceProviderTest extends TestCase
     {
         $actual = $this->fixture->getExtensions();
 
-        $this->assertEquals(['event_manager'], array_keys($actual));
-        $this->assertInternalType('callable', $actual['event_manager']);
+        $this->assertEquals(['event.manager'], array_keys($actual));
+        $this->assertInternalType('callable', $actual['event.manager']);
     }
 
     public function testCallbackResponseWithoutPrevious()

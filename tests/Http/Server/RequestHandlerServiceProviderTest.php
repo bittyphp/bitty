@@ -4,6 +4,7 @@ namespace Bitty\Tests\Http\Server;
 
 use Bitty\Http\Server\RequestHandlerInterface;
 use Bitty\Http\Server\RequestHandlerServiceProvider;
+use Bitty\Router\CallbackBuilderInterface;
 use Bitty\Router\RouterInterface;
 use Bitty\Tests\TestCase;
 use Interop\Container\ServiceProviderInterface;
@@ -39,8 +40,8 @@ class RequestHandlerServiceProviderTest extends TestCase
     {
         $actual = $this->fixture->getExtensions();
 
-        $this->assertEquals(['request_handler'], array_keys($actual));
-        $this->assertInternalType('callable', $actual['request_handler']);
+        $this->assertEquals(['request.handler'], array_keys($actual));
+        $this->assertInternalType('callable', $actual['request.handler']);
     }
 
     public function testCallbackWithoutPreviousCallsContainer()
@@ -49,11 +50,17 @@ class RequestHandlerServiceProviderTest extends TestCase
         $callable   = reset($extensions);
 
         $router    = $this->createMock(RouterInterface::class);
+        $builder   = $this->createMock(CallbackBuilderInterface::class);
         $container = $this->createMock(ContainerInterface::class);
-        $container->expects($this->once())
+        $container->expects($this->exactly(2))
             ->method('get')
-            ->with('router')
-            ->willReturn($router);
+            ->withConsecutive(['router'], ['route.callback.builder'])
+            ->willReturnMap(
+                [
+                    ['router', $router],
+                    ['route.callback.builder', $builder],
+                ]
+            );
 
         $callable($container);
     }
@@ -64,8 +71,14 @@ class RequestHandlerServiceProviderTest extends TestCase
         $callable   = reset($extensions);
 
         $router    = $this->createMock(RouterInterface::class);
+        $builder   = $this->createMock(CallbackBuilderInterface::class);
         $container = $this->createMock(ContainerInterface::class);
-        $container->method('get')->willReturn($router);
+        $container->method('get')->willReturnMap(
+            [
+                ['router', $router],
+                ['route.callback.builder', $builder],
+            ]
+        );
 
         $actual = $callable($container);
 
@@ -78,8 +91,10 @@ class RequestHandlerServiceProviderTest extends TestCase
         $callable   = reset($extensions);
 
         $container = $this->createMock(ContainerInterface::class);
-        $previous  = $this->createMock(RequestHandlerInterface::class);
-        $actual    = $callable($container, $previous);
+        $container->expects($this->never())->method('get');
+
+        $previous = $this->createMock(RequestHandlerInterface::class);
+        $actual   = $callable($container, $previous);
 
         $this->assertSame($previous, $actual);
     }

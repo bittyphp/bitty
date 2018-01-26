@@ -2,7 +2,7 @@
 
 namespace Bitty;
 
-interface CollectionInterface
+interface CollectionInterface extends \Iterator
 {
     /**
      * Returns all the data.

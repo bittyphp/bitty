@@ -23,7 +23,7 @@ class EventManagerServiceProvider implements ServiceProviderInterface
     public function getExtensions()
     {
         return [
-            'event_manager' => function (ContainerInterface $container, EventManagerInterface $previous = null) {
+            'event.manager' => function (ContainerInterface $container, EventManagerInterface $previous = null) {
                 if ($previous) {
                     return $previous;
                 }

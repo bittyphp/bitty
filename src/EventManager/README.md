@@ -1,4 +1,4 @@
-# Bitty Event Manager
+# Event Manager
 
 Bitty comes with an Event Manager that follows the proposed  [PSR-14](https://github.com/php-fig/fig-standards/blob/master/proposed/event-manager.md) standard. The event manager can be used to attach listeners to certain events or actions that happen. When the system triggers those events, all the listeners for that event will automatically be called.
 
@@ -40,7 +40,7 @@ use Bitty\Application;
 
 $app = new Application();
 
-$eventManager = $app->getContainer()->get('event_manager');
+$eventManager = $app->getContainer()->get('event.manager');
 ```
 
 ## Attaching a Listener
@@ -59,7 +59,7 @@ use Bitty\EventManager\EventInterface;
 
 $app = new Application();
 
-$eventManager = $app->getContainer()->get('event_manager');
+$eventManager = $app->getContainer()->get('event.manager');
 $eventManager->attach('some.event', function (EventInterface $event, $previous = null) {
     // Do stuff
 });
@@ -81,7 +81,7 @@ use Bitty\Application;
 
 $app = new Application();
 
-$eventManager = $app->getContainer()->get('event_manager');
+$eventManager = $app->getContainer()->get('event.manager');
 
 $eventManager->attach('some.event', function () {
     // This will trigger SECOND
@@ -107,7 +107,7 @@ use Bitty\Application;
 
 $app = new Application();
 
-$eventManager = $app->getContainer()->get('event_manager');
+$eventManager = $app->getContainer()->get('event.manager');
 
 $callable = function () {
     // Do stuff
@@ -131,7 +131,7 @@ use Bitty\Application;
 
 $app = new Application();
 
-$eventManager = $app->getContainer()->get('event_manager');
+$eventManager = $app->getContainer()->get('event.manager');
 
 $eventManager->clearListeners('some.event');
 ```
@@ -150,7 +150,7 @@ use Bitty\EventManager\Event;
 
 $app = new Application();
 
-$eventManager = $app->getContainer()->get('event_manager');
+$eventManager = $app->getContainer()->get('event.manager');
 
 // Make the event manager build and then trigger the event
 $eventManager->trigger('some.event', $someTarget, ['param 1', 'param 2']);
@@ -172,7 +172,7 @@ use Bitty\EventManager\EventInterface;
 
 $app = new Application();
 
-$eventManager = $app->getContainer()->get('event_manager');
+$eventManager = $app->getContainer()->get('event.manager');
 
 $eventManager->attach('some.event', function (EventInterface $event) {
     // Do stuff
@@ -190,11 +190,10 @@ If you want to use the event manager outside of the Bitty application, it can be
 ```php
 <?php
 
-use Bitty\Application;
+use Acme\Container;
 use Bitty\EventManager\EventManagerServiceProvider;
 
-$app = new Application();
+$container = new Container();
 
-// This happens automatically inside the application
-$app->getContainer()->register([new EventManagerServiceProvider()]);
+$container->register([new EventManagerServiceProvider()]);
 ```

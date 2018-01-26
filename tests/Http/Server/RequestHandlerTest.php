@@ -2,18 +2,15 @@
 
 namespace Bitty\Tests\Http\Server;
 
-use Bitty\Container\ContainerAwareInterface;
-use Bitty\Http\Exception\InternalServerErrorException;
 use Bitty\Http\Exception\NotFoundException;
 use Bitty\Http\Server\RequestHandler;
 use Bitty\Http\Server\RequestHandlerInterface;
+use Bitty\Router\CallbackBuilderInterface;
+use Bitty\Router\Exception\NotFoundException as RouteNotFoundException;
 use Bitty\Router\RouteInterface;
 use Bitty\Router\RouterInterface;
-use Bitty\Tests\Stubs\InvokableContainerAwareStubInterface;
 use Bitty\Tests\Stubs\InvokableResponseStub;
-use Bitty\Tests\Stubs\InvokableStubInterface;
 use Bitty\Tests\TestCase;
-use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UriInterface;
@@ -31,258 +28,117 @@ class RequestHandlerTest extends TestCase
     protected $router = null;
 
     /**
-     * @var ContainerInterface
+     * @var CallbackBuilderInterface
      */
-    protected $container = null;
+    protected $builder = null;
 
     protected function setUp()
     {
         parent::setUp();
 
-        $this->router = $this->createMock(RouterInterface::class);
+        $this->router  = $this->createMock(RouterInterface::class);
+        $this->builder = $this->createMock(CallbackBuilderInterface::class);
 
-        $this->fixture = new RequestHandler($this->router);
+        $this->fixture = new RequestHandler($this->router, $this->builder);
     }
 
     public function testInstanceOf()
     {
         $this->assertInstanceOf(RequestHandlerInterface::class, $this->fixture);
-        $this->assertInstanceOf(ContainerAwareInterface::class, $this->fixture);
     }
 
     public function testHandleCallsRouter()
     {
-        $path     = uniqid();
-        $method   = uniqid();
-        $request  = $this->createRequest($path, $method);
+        $request  = $this->createRequest();
+        $route    = $this->createRoute();
         $callback = function () {
         };
 
-        $route = $this->createRoute($callback);
+        $this->builder->method('build')->willReturn([$callback, null]);
+
         $this->router->expects($this->once())
             ->method('find')
-            ->with('/'.$path, $method)
+            ->with($request)
             ->willReturn($route);
 
         $this->fixture->handle($request);
     }
 
-    public function testHandleThrowsNotFoundException()
-    {
-        $request = $this->createRequest();
-        $this->router->method('find')->willReturn(false);
-
-        $message = 'Not Found';
-        $this->setExpectedException(NotFoundException::class, $message);
-
-        $this->fixture->handle($request);
-    }
-
-    public function testHandleCallsClosureCallback()
+    public function testHandleCallsBuilder()
     {
         $request  = $this->createRequest();
-        $params   = [uniqid(), uniqid()];
-        $self     = $this;
-        $callback = function ($a, $b) use ($self, $request, $params) {
-            $this->assertSame($request, $a);
-            $this->assertSame($params, $b);
-        };
+        $callback = uniqid('callback');
+        $route    = $this->createRoute($callback);
 
-        $route = $this->createRoute($callback, $params);
         $this->router->method('find')->willReturn($route);
+
+        $this->builder->expects($this->once())
+            ->method('build')
+            ->with($callback)
+            ->willReturn([$this->createMock(InvokableResponseStub::class), null]);
 
         $this->fixture->handle($request);
-    }
-
-    public function testHandleReturnsClosureCallbackResponse()
-    {
-        $request  = $this->createRequest();
-        $response = $this->createMock(ResponseInterface::class);
-        $callback = function () use ($response) {
-            return $response;
-        };
-
-        $route = $this->createRoute($callback);
-        $this->router->method('find')->willReturn($route);
-
-        $actual = $this->fixture->handle($request);
-
-        $this->assertSame($response, $actual);
     }
 
     /**
-     * @dataProvider sampleInvokables
+     * @dataProvider sampleMethods
      */
-    public function testHandleCallsInvokableCallback($data)
+    public function testHandleTriggersCallback($method)
     {
-        $this->setContainer();
-
         $request  = $this->createRequest();
         $params   = [uniqid(), uniqid()];
-        $callback = $this->createMock($data['class']);
+        $callback = uniqid('callback');
+        $route    = $this->createRoute($callback, $params);
+        $object   = $this->createMock(InvokableResponseStub::class);
 
-        $route = $this->createRoute($callback, $params);
         $this->router->method('find')->willReturn($route);
+        $this->builder->method('build')->willReturn([$object, $method]);
 
-        $callback->expects($this->once())
-            ->method('__invoke')
+        $object->expects($this->once())
+            ->method($method ?? '__invoke')
             ->with($request, $params);
 
         $this->fixture->handle($request);
     }
 
     /**
-     * @dataProvider sampleInvokables
+     * @dataProvider sampleMethods
      */
-    public function testHandleSetsContainerOnInvokableCallback($data)
+    public function testHandleReturnsCallbackResponse($method)
     {
-        $this->setContainer();
-
         $request  = $this->createRequest();
-        $callback = $this->createMock($data['class']);
-
-        $route = $this->createRoute($callback);
-        $this->router->method('find')->willReturn($route);
-
-        $callback->expects($this->exactly($data['calls']))
-            ->method('setContainer')
-            ->with($this->container);
-
-        $this->fixture->handle($request);
-    }
-
-    /**
-     * @dataProvider sampleInvokables
-     */
-    public function testHandleReturnsInvokableCallbackResponse($data)
-    {
-        $this->setContainer();
-
-        $request  = $this->createRequest();
+        $params   = [uniqid(), uniqid()];
+        $callback = uniqid('callback');
+        $route    = $this->createRoute($callback, $params);
+        $object   = $this->createMock(InvokableResponseStub::class);
         $response = $this->createMock(ResponseInterface::class);
-        $callback = $this->createConfiguredMock(
-            $data['class'],
-            ['__invoke' => $response]
-        );
 
-        $route = $this->createRoute($callback);
         $this->router->method('find')->willReturn($route);
+        $this->builder->method('build')->willReturn([$object, $method]);
+        $object->method('__invoke')->willReturn($response);
 
         $actual = $this->fixture->handle($request);
 
         $this->assertSame($response, $actual);
     }
 
-    public function testHandleCallsArrayCallback()
-    {
-        $this->setContainer();
-
-        $request  = $this->createRequest();
-        $callback = [InvokableResponseStub::class, '__invoke'];
-
-        $route = $this->createRoute($callback);
-        $this->router->method('find')->willReturn($route);
-
-        $actual = $this->fixture->handle($request);
-
-        $this->assertInstanceOf(ResponseInterface::class, $actual);
-    }
-
-    /**
-     * @dataProvider sampleInvokables
-     */
-    public function testHandleCallsArrayObjectCallback($data)
-    {
-        $this->setContainer();
-
-        $request    = $this->createRequest();
-        $params     = [uniqid(), uniqid()];
-        $controller = $this->createMock($data['class']);
-        $callback   = [$controller, '__invoke'];
-
-        $route = $this->createRoute($callback, $params);
-        $this->router->method('find')->willReturn($route);
-
-        $controller->expects($this->once())
-            ->method('__invoke')
-            ->with($request, $params);
-
-        $this->fixture->handle($request);
-    }
-
-    /**
-     * @dataProvider sampleInvokables
-     */
-    public function testHandleSetsContainerOnArrayCallback($data)
-    {
-        $this->setContainer();
-
-        $request    = $this->createRequest();
-        $controller = $this->createMock($data['class']);
-        $callback   = [$controller, '__invoke'];
-
-        $route = $this->createRoute($callback);
-        $this->router->method('find')->willReturn($route);
-
-        $controller->expects($this->exactly($data['calls']))
-            ->method('setContainer')
-            ->with($this->container);
-
-        $this->fixture->handle($request);
-    }
-
-    /**
-     * @dataProvider sampleInvokables
-     */
-    public function testHandleReturnsArrayCallbackResponse($data)
-    {
-        $this->setContainer();
-
-        $request    = $this->createRequest();
-        $response   = $this->createMock(ResponseInterface::class);
-        $controller = $this->createConfiguredMock(
-            $data['class'],
-            ['__invoke' => $response]
-        );
-        $callback   = [$controller, '__invoke'];
-
-        $route = $this->createRoute($callback);
-        $this->router->method('find')->willReturn($route);
-
-        $actual = $this->fixture->handle($request);
-
-        $this->assertSame($response, $actual);
-    }
-
-    public function sampleInvokables()
+    public function sampleMethods()
     {
         return [
-            [
-                [
-                    'class' => InvokableStubInterface::class,
-                    'calls' => 0,
-                ],
-            ],
-            [
-                [
-                    'class' => InvokableContainerAwareStubInterface::class,
-                    'calls' => 1,
-                ],
-            ],
+            [null],
+            ['__invoke'],
         ];
     }
 
-    public function testHandleThrowsInternalServerErrorException()
+    public function testHandleThrowsNotFoundException()
     {
-        $path    = uniqid();
-        $method  = uniqid();
-        $request = $this->createRequest($path, $method);
+        $request = $this->createRequest();
 
-        $route = $this->createRoute();
-        $this->router->method('find')->willReturn($route);
+        $exception = new RouteNotFoundException();
+        $this->router->method('find')->willThrowException($exception);
 
-        $message = 'Internal Server Error';
-        $this->setExpectedException(InternalServerErrorException::class, $message);
+        $message = 'Not Found';
+        $this->setExpectedException(NotFoundException::class, $message);
 
         $this->fixture->handle($request);
     }
@@ -328,14 +184,5 @@ class RequestHandlerTest extends TestCase
                 'getParams' => $params,
             ]
         );
-    }
-
-    /**
-     * Creates a container and sets it on the fixture.
-     */
-    protected function setContainer()
-    {
-        $this->container = $this->createMock(ContainerInterface::class);
-        $this->fixture->setContainer($this->container);
     }
 }

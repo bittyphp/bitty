@@ -1,4 +1,4 @@
-# Bitty Container
+# Container
 
 Bitty comes with a [PSR-11](http://www.php-fig.org/psr/psr-11/) compliant container. The container supports registering service providers that follow the (experimental) [service provider standard](https://github.com/container-interop/service-provider).
 
@@ -194,8 +194,21 @@ Then pass your provider(s) into the container.
 <?php
 
 use Acme\MyServiceProvider;
+use Bitty\Application;
 use Bitty\Container\Container;
 
+$app = new Application();
+
+// You'll likely pass the providers in when you build the application
+// This is a wrappper for Container::register()
+$app->register(
+    [
+        new MyServiceProvider(),
+        // ...
+    ]
+);
+
+// Or build the container yourself
 $container = new Container(
     [
         // Services not built by the provider
@@ -206,7 +219,7 @@ $container = new Container(
     ]
 );
 
-// Or registering it/them
+// Or call Container::register() directly
 $container->register(
     [
         new MyServiceProvider(),
