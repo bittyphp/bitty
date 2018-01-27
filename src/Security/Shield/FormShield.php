@@ -85,8 +85,6 @@ class FormShield extends AbstractShield
             $this->context->remove('login.target');
         }
 
-        $this->triggerEvent('security.login', $user);
-
         return new RedirectResponse($target);
     }
 

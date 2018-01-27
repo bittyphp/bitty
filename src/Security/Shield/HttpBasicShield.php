@@ -63,8 +63,6 @@ class HttpBasicShield extends AbstractShield
 
         $user = $this->authenticate($username, $password);
 
-        $this->triggerEvent('security.login', $user);
-
         return $user;
     }
 
