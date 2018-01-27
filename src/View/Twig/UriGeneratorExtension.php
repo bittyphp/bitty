@@ -11,14 +11,14 @@ class UriGeneratorExtension extends Twig_Extension
     /**
      * @var UriGeneratorInterface
      */
-    protected $urlGenerator = null;
+    protected $uriGenerator = null;
 
     /**
-     * @param UriGeneratorInterface $urlGenerator
+     * @param UriGeneratorInterface $uriGenerator
      */
-    public function __construct(UriGeneratorInterface $urlGenerator)
+    public function __construct(UriGeneratorInterface $uriGenerator)
     {
-        $this->urlGenerator = $urlGenerator;
+        $this->uriGenerator = $uriGenerator;
     }
 
     /**
@@ -42,7 +42,7 @@ class UriGeneratorExtension extends Twig_Extension
      */
     public function path($name, array $params = [])
     {
-        return $this->urlGenerator->generate($name, $params);
+        return $this->uriGenerator->generate($name, $params);
     }
 
     /**
@@ -55,6 +55,6 @@ class UriGeneratorExtension extends Twig_Extension
      */
     public function absoluteUri($name, array $params = [])
     {
-        return $this->urlGenerator->generate($name, $params, UriGeneratorInterface::ABSOLUTE_URI);
+        return $this->uriGenerator->generate($name, $params, UriGeneratorInterface::ABSOLUTE_URI);
     }
 }
