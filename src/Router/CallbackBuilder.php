@@ -28,6 +28,8 @@ class CallbackBuilder implements CallbackBuilderInterface
     public function build($callback)
     {
         if ($callback instanceof \Closure) {
+            $callback = $callback->bindTo($this->container);
+
             return [$callback, null];
         }
 

@@ -36,15 +36,19 @@ class CallbackBuilderTest extends TestCase
         $this->assertInstanceOf(CallbackBuilderInterface::class, $this->fixture);
     }
 
-    public function testBuildReturnsClosure()
+    public function testBuildSetsContainerOnClosure()
     {
         $callback = function () {
+            if (!$this instanceof ContainerInterface) {
+                $this->fail('Container not set');
+            }
         };
 
         $actual = $this->fixture->build($callback);
 
-        $this->assertSame($callback, $actual[0]);
+        $this->assertNotSame($callback, $actual[0]);
         $this->assertNull($actual[1]);
+        $this->assertNull($actual[0]());
     }
 
     /**
