@@ -21,11 +21,9 @@ class HttpBasicShield extends AbstractShield
 
         $user = $this->getUser($request);
         if ($user) {
-            if ($this->authorizer->authorize($user, $match['roles'])) {
-                return;
-            }
+            $this->authorize($user, $match['roles']);
 
-            return new Response('', 403);
+            return;
         }
 
         $headers = [
@@ -63,8 +61,9 @@ class HttpBasicShield extends AbstractShield
             return;
         }
 
-        $user = $this->authenticator->authenticate($username, $password);
-        $this->context->set('user', $user);
+        $user = $this->authenticate($username, $password);
+
+        $this->triggerEvent('security.login', $user);
 
         return $user;
     }
