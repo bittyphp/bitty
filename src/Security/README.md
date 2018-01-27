@@ -96,7 +96,7 @@ $user = $myContext->getUser($request);
 
 ## Security Events
 
-The security system triggers events for the following actions. You can use the `EventManager` to create a listener for the events of your choosing and perform additional security measures. Some examples of things you could do are: logging authentication requests, counting authentication failures to raise security, or sending an email or SMS alert when someone's account logs in from an unknown location. Check out the Event Manager documentation for more information on creating an event listener.
+The security system triggers events for the following actions. You can use the `EventManager` to create a listener for the events of your choosing and perform additional security measures. Some examples of things you could do are: logging authentication requests, counting authentication failures to raise security, or sending an email or SMS alert when someone's account logs in from an unknown location.
 
 | Event                           | Target          | Parameters                                  | When                          |
 |---------------------------------|-----------------|---------------------------------------------|-------------------------------|
@@ -110,7 +110,7 @@ The security system triggers events for the following actions. You can use the `
 
 ### Example Listener
 
-Here's an example listener that monitors for authentication failures and simply logs them as errors.
+Here's an example listener that monitors for authentication failures and simply logs them as errors. Check out the Event Manager documentation if you want more information on creating an event listener.
 
 ```php
 <?php
