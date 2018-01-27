@@ -308,6 +308,10 @@ $authenticator = new Authenticator(
                 // Password is "user"
                 'password' => '$2y$10$99Ru4p3RYylJObg919g1iOCvbI0hPl/glCjRwITNQ7cHO6jxdumrC',
                 'roles' => ['ROLE_USER'],
+
+                // Optionally, you an specifiy a salt.
+                // However, bcrypt gets its from the password string.
+                // 'salt' => null,
             ],
             'admin' => [
                 // Password is "admin"
