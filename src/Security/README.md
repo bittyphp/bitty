@@ -98,15 +98,15 @@ $user = $myContext->getUser($request);
 
 The security system triggers events for the following actions. You can use the `EventManager` to create a listener for the events of your choosing and perform additional actions. Some examples of things you could do are: logging authentication requests, counting authentication failures to raise security, or sending an email when someone logs in from a new IP address.
 
-| Event | Target | Parameters | When |
-|-------|--------|------------|------|
-| security.authentication.start | `null` | `['username' => string]` | Authentication has started. |
-| security.authentication.failure | `null` | `['username' => string, 'error' => string]` | Authentication has failed. |
-| security.authentication.success | `UserInterface` | `[]` | Authentication has succeeded. |
-| security.authorization.start | `UserInterface` | `[]` | Authorization has started. |
-| security.authorization.failure | `UserInterface` | `['error' => string]` | Authorization has failed. |
-| security.authorization.success | `UserInterface` | `[]` | Authorization has succeeded. |
-| security.logout | `UserInterface` | `[]` | When a user logs out. |
+| Event                           | Target          | Parameters                                  | When                          |
+|---------------------------------|-----------------|---------------------------------------------|-------------------------------|
+| security.authentication.start   | `null`          | `['username' => string]`                    | Authentication has started.   |
+| security.authentication.failure | `null`          | `['username' => string, 'error' => string]` | Authentication has failed.    |
+| security.authentication.success | `UserInterface` | `[]`                                        | Authentication has succeeded. |
+| security.authorization.start    | `UserInterface` | `[]`                                        | Authorization has started.    |
+| security.authorization.failure  | `UserInterface` | `['error' => string]`                       | Authorization has failed.     |
+| security.authorization.success  | `UserInterface` | `[]`                                        | Authorization has succeeded.  |
+| security.logout                 | `UserInterface` | `[]`                                        | When a user logs out.         |
 
 ### Example Listener
 
