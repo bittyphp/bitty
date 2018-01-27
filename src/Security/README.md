@@ -94,6 +94,51 @@ $user = $myContext->getUser($request);
 
 ```
 
+## Security Events
+
+The security system triggers events for the following actions. You can use the `EventManager` to create a listener for the events of your choosing and perform additional actions. Some examples of things you could do are: logging authentication requests, counting authentication failures to raise security, or sending an email when someone logs in from a new IP address.
+
+| Event                           | Target          | Parameters                                  | When                          |
+|---------------------------------|-----------------|---------------------------------------------|-------------------------------|
+| security.authentication.start   | `null`          | `['username' => string]`                    | Authentication has started.   |
+| security.authentication.failure | `null`          | `['username' => string, 'error' => string]` | Authentication has failed.    |
+| security.authentication.success | `UserInterface` | `[]`                                        | Authentication has succeeded. |
+| security.authorization.start    | `UserInterface` | `[]`                                        | Authorization has started.    |
+| security.authorization.failure  | `UserInterface` | `['error' => string]`                       | Authorization has failed.     |
+| security.authorization.success  | `UserInterface` | `[]`                                        | Authorization has succeeded.  |
+| security.logout                 | `UserInterface` | `[]`                                        | When a user logs out.         |
+
+### Example Listener
+
+Here's an example listener that monitors for authentication failures and simply logs them as errors.
+
+```php
+<?php
+
+use Bitty\Application;
+use Bitty\EventManager\EventInterface;
+
+$app = new Application();
+
+$logger = $app->getContainer()->get('my.logger');
+
+$eventManager = $app->getContainer()->get('event.manager');
+$eventManager->attach(
+    'security.authorization.failure',
+    function (EventInterface $event) use ($logger) {
+        $params = $event->getParams();
+
+        $logger->error(
+            sprintf(
+                'User "%s" failed to login: %s',
+                $params['username'],
+                $params['error']
+            )
+        );
+    }
+);
+```
+
 ## Shields
 
 Bitty uses "shields" to protect secure areas from unauthorized access. One or multiple shields can be in place to protect the areas you want to secure. For example, you can have one shield to grant basic access and a completely separate shield to restrict access to an administration area. Multiple users can be logged into the separate areas at the same time. Or you can use one shield to secure both areas, but require different authorization for each area. It's all up to you.

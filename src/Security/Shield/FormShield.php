@@ -22,7 +22,10 @@ class FormShield extends AbstractShield
         }
 
         if ($path === $this->config['logout.path']) {
+            $user = $this->context->get('user');
+
             $this->context->clear();
+            $this->triggerEvent('security.logout', $user);
 
             return new RedirectResponse($this->config['logout.target']);
         }
@@ -43,9 +46,7 @@ class FormShield extends AbstractShield
             return new RedirectResponse($this->config['login.path']);
         }
 
-        if (!$this->authorizer->authorize($user, $match['roles'])) {
-            return new Response('', 403);
-        }
+        $this->authorize($user, $match['roles']);
     }
 
     /**
@@ -68,18 +69,15 @@ class FormShield extends AbstractShield
 
         $usernameField = $this->config['login.username'];
         $passwordField = $this->config['login.password'];
-        $rememberField = $this->config['login.remember'];
 
         $username = empty($params[$usernameField]) ? '' : $params[$usernameField];
         $password = empty($params[$passwordField]) ? '' : $params[$passwordField];
-        $remember = empty($params[$rememberField]) ? false : true;
 
         if (empty($username) || empty($password)) {
             return;
         }
 
-        $user = $this->authenticator->authenticate($username, $password);
-        $this->context->set('user', $user);
+        $user = $this->authenticate($username, $password);
 
         $target = $this->config['login.target'];
         if ($this->config['login.use_referrer']) {
@@ -100,7 +98,6 @@ class FormShield extends AbstractShield
             'login.target' => '/',
             'login.username' => 'username',
             'login.password' => 'password',
-            'login.remember' => 'remember',
             'login.use_referrer' => true,
             'logout.path' => '/logout',
             'logout.target' => '/',

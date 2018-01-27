@@ -2,12 +2,19 @@
 
 namespace Bitty\Security\Shield;
 
+use Bitty\Container\ContainerAwareInterface;
 use Bitty\Security\Context\ContextCollection;
 use Bitty\Security\Shield\ShieldInterface;
+use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-class ShieldCollection implements ShieldInterface
+class ShieldCollection implements ShieldInterface, ContainerAwareInterface
 {
+    /**
+     * @var ContainerInterface
+     */
+    protected $container = null;
+
     /**
      * @var ShieldInterface[]
      */
@@ -31,12 +38,38 @@ class ShieldCollection implements ShieldInterface
     }
 
     /**
+     * {@inheritDoc}
+     */
+    public function setContainer(ContainerInterface $container = null)
+    {
+        foreach ($this->shields as $shield) {
+            if ($shield instanceof ContainerAwareInterface) {
+                $shield->setContainer($container);
+            }
+        }
+
+        $this->container = $container;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getContainer()
+    {
+        return $this->container;
+    }
+
+    /**
      * Adds a shield to the collection.
      *
      * @param ShieldInterface $shield
      */
     public function add(ShieldInterface $shield)
     {
+        if ($shield instanceof ContainerAwareInterface) {
+            $shield->setContainer($this->container);
+        }
+
         $this->shields[] = $shield;
         $this->context->add($shield->getContext());
     }

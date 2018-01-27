@@ -14,7 +14,7 @@ trait ContainerAwareTrait
     /**
      * {@inheritDoc}
      */
-    public function setContainer(ContainerInterface $container)
+    public function setContainer(ContainerInterface $container = null)
     {
         $this->container = $container;
     }
