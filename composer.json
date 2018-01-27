@@ -1,5 +1,5 @@
 {
-    "name": "bizurkur/bitty",
+    "name": "bittyphp/bitty",
     "description": "A tiny and simple MVC framework. No fuss, no muss, no coconuts.",
     "type": "library",
     "license": "MIT",
