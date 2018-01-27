@@ -132,11 +132,11 @@ $app = new Application();
 $app->addRoute('GET', '/resource/path', ExampleController::class.':test');
 ```
 
-Additionally, if the callback implements the `ContainerAwareInterface`, it will be passed the container. However, since the class name can be a registered service in the container, you could build the controller using the specific services you need instead of getting access to the whole container.
+Additionally, if the callback implements the `ContainerAwareInterface`, the container will be set. However, since the class name can be a registered service in the container, you could build the controller using the specific services you need instead of getting access to the whole container.
 
 ### Named Routes
 
-Named routes are handy if you know you'll be referencing them later, like by building a URL that points to it. You can specify the name for a route by passing in a fifth parameter (remember, the fourth parameter is an array of constraints).
+Named routes are handy if you know you'll be referencing them later, like by building a URI that points to it. You can specify the name for a route by passing in a fifth parameter (remember, the fourth parameter is an array of constraints).
 
 ```php
 <?php
