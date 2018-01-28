@@ -18,4 +18,4 @@ before_script:
 
 script:
   - vendor/bin/phpunit
-  - vendor/bin/phpcs
+  - vendor/bin/phpcs -n
