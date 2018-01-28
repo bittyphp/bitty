@@ -2,21 +2,21 @@
 
 namespace Bitty\Container;
 
-use Psr\Container\ContainerInterface;
+use Psr\Container\ContainerInterface as PsrContainerInterface;
 
 interface ContainerAwareInterface
 {
     /**
      * Sets the container.
      *
-     * @param ContainerInterface $container
+     * @param PsrContainerInterface $container
      */
-    public function setContainer(ContainerInterface $container = null);
+    public function setContainer(PsrContainerInterface $container = null);
 
     /**
      * Gets the container.
      *
-     * @return ContainerInterface
+     * @return PsrContainerInterface
      */
     public function getContainer();
 }

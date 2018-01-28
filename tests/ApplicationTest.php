@@ -112,6 +112,9 @@ class ApplicationTest extends TestCase
         $this->fixture->addRoute($methods, $path, $callable, $constraints, $name);
     }
 
+    /**
+     * @runInSeparateProcess
+     */
     public function testRunCallsRequestHandlerHandle()
     {
         $request        = $this->createMock(ServerRequestInterface::class);
@@ -125,10 +128,13 @@ class ApplicationTest extends TestCase
         $this->fixture->run();
     }
 
+    /**
+     * @runInSeparateProcess
+     */
     public function testRunCallsMiddleware()
     {
         $request        = $this->createMock(ServerRequestInterface::class);
-        $response       = $this->createMock(ResponseInterface::class);
+        $response       = $this->createResponse();
         $requestHandler = $this->createMock(RequestHandlerInterface::class);
         $this->setUpDependencies($request, null, $requestHandler);
 
@@ -205,6 +211,9 @@ class ApplicationTest extends TestCase
         ];
     }
 
+    /**
+     * @runInSeparateProcess
+     */
     public function testRunOutputsResponseBody()
     {
         $body     = uniqid('body');
@@ -237,7 +246,7 @@ class ApplicationTest extends TestCase
      *
      * @return ResponseInterface
      */
-    protected function createResponse(array $headers = [], string $body = '')
+    protected function createResponse(array $headers = [], $body = '')
     {
         return $this->createConfiguredMock(
             ResponseInterface::class,
@@ -266,7 +275,7 @@ class ApplicationTest extends TestCase
             $request = $this->createMock(ServerRequestInterface::class);
         }
         if (null === $response) {
-            $response = $this->createMock(ResponseInterface::class);
+            $response = $this->createResponse();
         }
         if (null === $requestHandler) {
             $requestHandler = $this->createMock(RequestHandlerInterface::class);

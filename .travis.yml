@@ -1,0 +1,21 @@
+
+# https://docs.travis-ci.com/user/reference/trusty
+dist: trusty
+sudo: false
+
+# https://docs.travis-ci.com/user/languages/php/
+language: php
+php:
+  - '5.5'
+  - '5.6'
+  - '7.0'
+  - '7.1'
+  - '7.2'
+
+# https://docs.travis-ci.com/user/customizing-the-build/
+before_script:
+  - composer install
+
+script:
+  - vendor/bin/phpunit
+  - vendor/bin/phpcs -n

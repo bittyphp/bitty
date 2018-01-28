@@ -2,19 +2,19 @@
 
 namespace Bitty\Container;
 
-use Psr\Container\ContainerInterface;
+use Psr\Container\ContainerInterface as PsrContainerInterface;
 
 trait ContainerAwareTrait
 {
     /**
-     * @var ContainerInterface
+     * @var PsrContainerInterface
      */
     protected $container = null;
 
     /**
      * {@inheritDoc}
      */
-    public function setContainer(ContainerInterface $container = null)
+    public function setContainer(PsrContainerInterface $container = null)
     {
         $this->container = $container;
     }

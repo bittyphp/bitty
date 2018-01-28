@@ -94,14 +94,14 @@ class TwigTest extends TestCase
 
     public function testAddExtension()
     {
-        $name      = uniqid('name');
-        $extension = $this->createConfiguredMock(Twig_ExtensionInterface::class, ['getName' => $name]);
+        $extension = $this->createMock(Twig_ExtensionInterface::class);
 
         $this->fixture->addExtension($extension);
 
         $actual = $this->fixture->getEnvironment()->getExtensions();
 
-        $this->assertSame($extension, $actual[$name]);
+        $last = end($actual);
+        $this->assertSame($extension, $last);
     }
 
     public function testGetLoader()
