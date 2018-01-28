@@ -14,6 +14,7 @@ php:
 
 # https://docs.travis-ci.com/user/customizing-the-build/
 before_script:
+  # Install packages
   - if [[ -n "$CODACY_PROJECT_TOKEN" ]]; then
         composer require codacy/coverage -n ;
     else
@@ -21,14 +22,19 @@ before_script:
     fi
 
 script:
+  # Lint check
+  - find . \( -name '*.php' \) -exec php -lf {} \;
+  # Unit tests
   - if [[ -n "$CODACY_PROJECT_TOKEN" ]]; then
         vendor/bin/phpunit --coverage-clover build/coverage/xml ;
     else
         vendor/bin/phpunit ;
     fi
+  # Code sniffer
   - vendor/bin/phpcs -n
 
 after_script:
+  # Track code coverage
   - if [[ -n "$CODACY_PROJECT_TOKEN" ]]; then
         vendor/bin/codacycoverage clover build/coverage/xml ;
     fi
