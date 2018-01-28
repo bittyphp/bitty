@@ -14,11 +14,20 @@ php:
 
 # https://docs.travis-ci.com/user/customizing-the-build/
 before_script:
-  - composer require codacy/coverage -n
+  - if [[ -n "$CODACY_PROJECT_TOKEN" ]]; then
+        composer require codacy/coverage -n ;
+    else
+        composer install -n ;
+    fi
 
 script:
-  - vendor/bin/phpunit --coverage-clover build/coverage/xml
-  - vendor/bin/phpcs -n
+  - if [[ -n "$CODACY_PROJECT_TOKEN" ]]; then
+        vendor/bin/phpunit --coverage-clover build/coverage/xml ;
+    else
+        vendor/bin/phpunit ;
+    fi
 
 after_script:
-  - vendor/bin/codacycoverage clover build/coverage/xml
+  - if [[ -n "$CODACY_PROJECT_TOKEN" ]]; then
+        vendor/bin/codacycoverage clover build/coverage/xml ;
+    fi
