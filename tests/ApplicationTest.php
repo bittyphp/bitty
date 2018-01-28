@@ -45,7 +45,7 @@ class ApplicationTest extends TestCase
         $spy = $this->once();
         $this->container->expects($spy)->method('register');
 
-        $fixture = new Application($this->container);
+        new Application($this->container);
 
         $actual = [];
         foreach ($spy->getInvocations()[0]->parameters[0] as $item) {

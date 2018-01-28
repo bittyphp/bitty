@@ -121,11 +121,10 @@ class CookieTest extends TestCase
 
     public function sampleStrings()
     {
-        $name    = uniqid('name');
-        $value   = uniqid('value');
-        $path    = uniqid('path');
-        $domain  = uniqid('domain');
-        $expires = rand();
+        $name   = uniqid('name');
+        $value  = uniqid('value');
+        $path   = uniqid('path');
+        $domain = uniqid('domain');
 
         return [
             'deleted' => [
