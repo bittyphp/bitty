@@ -1,5 +1,7 @@
 # Bitty
 
+[![Build Status](https://travis-ci.org/bittyphp/bitty.svg?branch=master)](https://travis-ci.org/bittyphp/bitty)
+
 A tiny and simple MVC framework. No fuss, no muss, no coconuts.
 
 ## Standards
