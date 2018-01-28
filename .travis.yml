@@ -23,7 +23,10 @@ before_script:
 
 script:
   # Lint check
-  - find . \( -name '*.php' \) -exec php -lf {} \;
+  # https://gist.github.com/mathiasverraes/3096500
+  - for DIR in src tests; do
+        find $DIR -type f -name '*.php' -exec php -l {} \; | (! grep -v "No syntax errors detected" ) ;
+    done
   # Unit tests
   - if [[ -n "$CODACY_PROJECT_TOKEN" ]]; then
         vendor/bin/phpunit --coverage-clover build/coverage/xml ;
