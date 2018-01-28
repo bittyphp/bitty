@@ -95,7 +95,7 @@ class RequestHandlerTest extends TestCase
         $this->builder->method('build')->willReturn([$object, $method]);
 
         $object->expects($this->once())
-            ->method($method ?? '__invoke')
+            ->method($method ?: '__invoke')
             ->with($request, $params);
 
         $this->fixture->handle($request);
