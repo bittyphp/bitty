@@ -14,8 +14,11 @@ php:
 
 # https://docs.travis-ci.com/user/customizing-the-build/
 before_script:
-  - composer install
+  - composer require codacy/coverage -n
 
 script:
-  - vendor/bin/phpunit
+  - vendor/bin/phpunit --coverage-clover build/coverage/xml
   - vendor/bin/phpcs -n
+
+after_script:
+  - vendor/bin/codacycoverage clover build/coverage/xml
