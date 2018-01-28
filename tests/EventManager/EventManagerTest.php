@@ -71,7 +71,7 @@ class EventManagerTest extends TestCase
         $callbackC = $this->createCallback('C');
         $callbackD = $this->createCallback('D');
 
-        $this->fixture->attach($name, $callbackA);
+        $this->fixture->attach($name, $callbackA, 1);
         $this->fixture->attach($name, $callbackB, 10);
         $this->fixture->attach($name, $callbackC, -10);
         $this->fixture->attach($name, $callbackD);
@@ -188,7 +188,7 @@ class EventManagerTest extends TestCase
         $callbackB = $this->createMock(InvokableStubInterface::class);
         $callbackB->method('__invoke')->willReturn($response);
 
-        $this->fixture->attach($name, $callbackA);
+        $this->fixture->attach($name, $callbackA, 1);
         $this->fixture->attach($name, $callbackB);
 
         $actual = $this->fixture->trigger($name);
@@ -207,7 +207,7 @@ class EventManagerTest extends TestCase
         );
         $callbackB = $this->createCallback();
 
-        $this->fixture->attach($name, $callbackA);
+        $this->fixture->attach($name, $callbackA, 1);
         $this->fixture->attach($name, $callbackB);
 
         $callbackA->expects($this->once())->method('__invoke');
