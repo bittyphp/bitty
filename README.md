@@ -1,6 +1,7 @@
 # Bitty
 
 [![Build Status](https://travis-ci.org/bittyphp/bitty.svg?branch=master)](https://travis-ci.org/bittyphp/bitty)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/e4d6cdab063548db9a00bd616cf992a0)](https://www.codacy.com/app/bittyphp/bitty)
 
 A tiny and simple MVC framework. No fuss, no muss, no coconuts.
 

@@ -97,7 +97,6 @@ class RouterTest extends TestCase
 
     public function testFind()
     {
-        $name    = uniqid();
         $route   = $this->createMock(RouteInterface::class);
         $request = $this->createMock(ServerRequestInterface::class);
 
