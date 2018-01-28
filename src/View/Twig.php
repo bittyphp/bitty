@@ -95,28 +95,6 @@ class Twig implements ViewInterface
     }
 
     /**
-     * Adds a Twig filter.
-     *
-     * @param string $name
-     * @param Twig_SimpleFilter $filter
-     */
-    public function addFilter($name, Twig_SimpleFilter $filter)
-    {
-        $this->environment->addFilter($name, $filter);
-    }
-
-    /**
-     * Adds a Twig function.
-     *
-     * @param string $name
-     * @param Twig_SimpleFunction $function
-     */
-    public function addFunction($name, Twig_SimpleFunction $function)
-    {
-        $this->environment->addFunction($name, $function);
-    }
-
-    /**
      * Gets the Twig loader.
      *
      * This allows for direct manipulation of anything not already defined here.
