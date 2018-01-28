@@ -26,6 +26,7 @@ script:
     else
         vendor/bin/phpunit ;
     fi
+  - vendor/bin/phpcs -n
 
 after_script:
   - if [[ -n "$CODACY_PROJECT_TOKEN" ]]; then
