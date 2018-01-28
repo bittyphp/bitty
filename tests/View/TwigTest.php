@@ -94,7 +94,7 @@ class TwigTest extends TestCase
 
     public function testAddExtension()
     {
-        $extension = $this->createConfiguredMock(Twig_ExtensionInterface::class);
+        $extension = $this->createMock(Twig_ExtensionInterface::class);
 
         $this->fixture->addExtension($extension);
 
