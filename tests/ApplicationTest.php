@@ -112,6 +112,9 @@ class ApplicationTest extends TestCase
         $this->fixture->addRoute($methods, $path, $callable, $constraints, $name);
     }
 
+    /**
+     * @runInSeparateProcess
+     */
     public function testRunCallsRequestHandlerHandle()
     {
         $request        = $this->createMock(ServerRequestInterface::class);
@@ -125,6 +128,9 @@ class ApplicationTest extends TestCase
         $this->fixture->run();
     }
 
+    /**
+     * @runInSeparateProcess
+     */
     public function testRunCallsMiddleware()
     {
         $request        = $this->createMock(ServerRequestInterface::class);
@@ -205,6 +211,9 @@ class ApplicationTest extends TestCase
         ];
     }
 
+    /**
+     * @runInSeparateProcess
+     */
     public function testRunOutputsResponseBody()
     {
         $body     = uniqid('body');
