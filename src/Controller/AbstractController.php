@@ -22,7 +22,7 @@ abstract class AbstractController implements ContainerAwareInterface
      *
      * @return ResponseInterface
      */
-    protected function redirectToRoute($name, array $params = [])
+    public function redirectToRoute($name, array $params = [])
     {
         $uri = $this->container->get('uri.generator')->generate($name, $params);
 
@@ -37,7 +37,7 @@ abstract class AbstractController implements ContainerAwareInterface
      *
      * @return ResponseInterface
      */
-    protected function render($template, array $data = [])
+    public function render($template, array $data = [])
     {
         $view = $this->container->get('view');
         if (!$view instanceof ViewInterface) {

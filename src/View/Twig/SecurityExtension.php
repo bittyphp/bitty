@@ -12,7 +12,7 @@ class SecurityExtension extends Twig_Extension
     /**
      * @var ContextMapInterface
      */
-    protected $securityContext = null;
+    protected $context = null;
 
     /**
      * @var ServerRequestInterface
@@ -20,13 +20,13 @@ class SecurityExtension extends Twig_Extension
     protected $request = null;
 
     /**
-     * @param ContextMapInterface $securityContext
+     * @param ContextMapInterface $context
      * @param ServerRequestInterface $request
      */
-    public function __construct(ContextMapInterface $securityContext, ServerRequestInterface $request)
+    public function __construct(ContextMapInterface $context, ServerRequestInterface $request)
     {
-        $this->securityContext = $securityContext;
-        $this->request         = $request;
+        $this->context = $context;
+        $this->request = $request;
     }
 
     /**
@@ -48,7 +48,7 @@ class SecurityExtension extends Twig_Extension
      */
     public function isGranted($role)
     {
-        $user = $this->securityContext->getUser($this->request);
+        $user = $this->context->getUser($this->request);
         if (!$user) {
             return false;
         }
