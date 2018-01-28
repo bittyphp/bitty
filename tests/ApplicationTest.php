@@ -134,7 +134,7 @@ class ApplicationTest extends TestCase
     public function testRunCallsMiddleware()
     {
         $request        = $this->createMock(ServerRequestInterface::class);
-        $response       = $this->createMock(ResponseInterface::class);
+        $response       = $this->createResponse();
         $requestHandler = $this->createMock(RequestHandlerInterface::class);
         $this->setUpDependencies($request, null, $requestHandler);
 
@@ -275,7 +275,7 @@ class ApplicationTest extends TestCase
             $request = $this->createMock(ServerRequestInterface::class);
         }
         if (null === $response) {
-            $response = $this->createMock(ResponseInterface::class);
+            $response = $this->createResponse();
         }
         if (null === $requestHandler) {
             $requestHandler = $this->createMock(RequestHandlerInterface::class);
