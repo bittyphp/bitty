@@ -50,7 +50,7 @@ class Twig extends AbstractView
     /**
      * {@inheritDoc}
      */
-    public function render($template, array $data = [])
+    public function render($template, $data = [])
     {
         return $this->environment->load($template)->render($data);
     }
