@@ -3,12 +3,11 @@
 namespace Bitty\Tests\View;
 
 use Bitty\Tests\TestCase;
+use Bitty\View\AbstractView;
 use Bitty\View\Twig;
-use Bitty\View\ViewInterface;
-use Psr\Http\Message\ResponseInterface;
-use Twig_Loader_Filesystem;
 use Twig_Environment;
 use Twig_ExtensionInterface;
+use Twig_Loader_Filesystem;
 
 class TwigTest extends TestCase
 {
@@ -31,7 +30,7 @@ class TwigTest extends TestCase
 
     public function testInstanceOf()
     {
-        $this->assertInstanceOf(ViewInterface::class, $this->fixture);
+        $this->assertInstanceOf(AbstractView::class, $this->fixture);
     }
 
     /**
@@ -79,17 +78,6 @@ class TwigTest extends TestCase
         $actual = $this->fixture->renderBlock('test.html.twig', 'hello', ['name' => $name]);
 
         $this->assertEquals('Hello, '.$name.PHP_EOL, $actual);
-    }
-
-    /**
-     * @dataProvider sampleRender
-     */
-    public function testRenderResponse($template, $data, $expected)
-    {
-        $actual = $this->fixture->renderResponse($template, $data);
-
-        $this->assertInstanceOf(ResponseInterface::class, $actual);
-        $this->assertEquals($expected, (string) $actual->getBody());
     }
 
     public function testAddExtension()

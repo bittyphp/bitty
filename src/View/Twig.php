@@ -2,9 +2,7 @@
 
 namespace Bitty\View;
 
-use Bitty\Http\Response;
-use Bitty\View\ViewInterface;
-use Psr\Http\Message\ResponseInterface;
+use Bitty\View\AbstractView;
 use Twig_Environment;
 use Twig_ExtensionInterface;
 use Twig_Loader_Filesystem;
@@ -19,7 +17,7 @@ use Twig_SimpleFunction;
  *
  * @see https://twig.symfony.com/
  */
-class Twig implements ViewInterface
+class Twig extends AbstractView
 {
     /**
      * @var Twig_Loader_Filesystem
@@ -69,19 +67,6 @@ class Twig implements ViewInterface
     public function renderBlock($template, $block, array $data = [])
     {
         return $this->environment->load($template)->renderBlock($block, $data);
-    }
-
-    /**
-     * Renders an HTTP response using the template and given data.
-     *
-     * @param string $template Template to render.
-     * @param array $data Data to pass to template.
-     *
-     * @return ResponseInterface
-     */
-    public function renderResponse($template, array $data = [])
-    {
-        return new Response($this->render($template, $data));
     }
 
     /**
