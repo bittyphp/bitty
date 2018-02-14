@@ -1,7 +1,7 @@
 # Bitty
 
 [![Build Status](https://travis-ci.org/bittyphp/bitty.svg?branch=master)](https://travis-ci.org/bittyphp/bitty)
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/e4d6cdab063548db9a00bd616cf992a0)](https://www.codacy.com/app/bittyphp/bitty)
+[![Codacy Badge](https://api.codacy.com/project/badge/Coverage/e4d6cdab063548db9a00bd616cf992a0)](https://www.codacy.com/app/bittyphp/bitty)
 [![Total Downloads](https://poser.pugx.org/bittyphp/bitty/downloads)](https://packagist.org/packages/bittyphp/bitty)
 [![License](https://poser.pugx.org/bittyphp/bitty/license)](https://packagist.org/packages/bittyphp/bitty)
 
