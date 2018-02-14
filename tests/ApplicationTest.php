@@ -3,17 +3,17 @@
 namespace Bitty\Tests;
 
 use Bitty\Application;
+use Bitty\Application\EventManagerServiceProvider;
+use Bitty\Application\RequestServiceProvider;
+use Bitty\Application\RouterServiceProvider;
 use Bitty\Container\Container;
 use Bitty\Container\ContainerInterface;
-use Bitty\EventManager\EventManagerServiceProvider;
-use Bitty\Http\RequestServiceProvider;
-use Bitty\Http\ResponseServiceProvider;
-use Bitty\Http\Server\MiddlewareInterface;
-use Bitty\Http\Server\RequestHandlerInterface;
-use Bitty\Http\Server\RequestHandlerServiceProvider;
+use Bitty\Middleware\MiddlewareInterface;
+use Bitty\Middleware\RequestHandlerInterface;
 use Bitty\Http\Stream;
 use Bitty\Router\RouteCollectionInterface;
-use Bitty\Router\RouterServiceProvider;
+use Bitty\Tests\Stubs\ContainerAwareMiddlewareStubInterface;
+use Bitty\Tests\Stubs\ContainerAwareRequestHandlerStubInterface;
 use Bitty\Tests\TestCase;
 use Interop\Container\ServiceProviderInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -54,9 +54,7 @@ class ApplicationTest extends TestCase
 
         $expected = [
             EventManagerServiceProvider::class,
-            RequestHandlerServiceProvider::class,
             RequestServiceProvider::class,
-            ResponseServiceProvider::class,
             RouterServiceProvider::class,
         ];
 
@@ -82,6 +80,17 @@ class ApplicationTest extends TestCase
         $this->assertSame($this->container, $actual);
     }
 
+    public function testContainerAwareMiddlewareSetsContainer()
+    {
+        $middleware = $this->createMock(ContainerAwareMiddlewareStubInterface::class);
+
+        $middleware->expects($this->once())
+            ->method('setContainer')
+            ->with($this->container);
+
+        $this->fixture->add($middleware);
+    }
+
     public function testRegister()
     {
         $provider = $this->createMock(ServiceProviderInterface::class);
@@ -93,12 +102,60 @@ class ApplicationTest extends TestCase
         $this->fixture->register([$provider]);
     }
 
-    public function testAddRoute()
+    /**
+     * @dataProvider sampleMapRoutes
+     */
+    public function testMapRoutes($method, $expected)
+    {
+        $path        = uniqid('path');
+        $callable    = uniqid('callable');
+        $constraints = [uniqid('key') => uniqid('value')];
+        $name        = uniqid('name');
+
+        $routes = $this->createMock(RouteCollectionInterface::class);
+        $this->setUpDependencies(null, null, null, $routes);
+
+        $routes->expects($this->once())
+            ->method('add')
+            ->with($expected, $path, $callable, $constraints, $name);
+
+        $this->fixture->$method($path, $callable, $constraints, $name);
+    }
+
+    /**
+     * @dataProvider sampleMapRoutes
+     */
+    public function testMapRoutesResponse($method, $expected)
+    {
+        $route  = $this->createMock(RouteInterface::class);
+        $routes = $this->createConfiguredMock(
+            RouteCollectionInterface::class,
+            ['add' => $route]
+        );
+        $this->setUpDependencies(null, null, null, $routes);
+
+        $actual = $this->fixture->$method(uniqid(), uniqid(), [uniqid()], uniqid());
+
+        $this->assertSame($route, $actual);
+    }
+
+    public function sampleMapRoutes()
+    {
+        return [
+            ['get', 'GET'],
+            ['post', 'POST'],
+            ['put', 'PUT'],
+            ['patch', 'PATCH'],
+            ['delete', 'DELETE'],
+            ['options', 'OPTIONS'],
+        ];
+    }
+
+    public function testMap()
     {
         $methods     = [uniqid('method'), uniqid('method')];
         $path        = uniqid('path');
-        $callable    = function () {
-        };
+        $callable    = uniqid('callable');
         $constraints = [uniqid('key') => uniqid('value')];
         $name        = uniqid('name');
 
@@ -109,19 +166,48 @@ class ApplicationTest extends TestCase
             ->method('add')
             ->with($methods, $path, $callable, $constraints, $name);
 
-        $this->fixture->addRoute($methods, $path, $callable, $constraints, $name);
+        $this->fixture->map($methods, $path, $callable, $constraints, $name);
+    }
+
+    public function testMapResponse()
+    {
+        $route  = $this->createMock(RouteInterface::class);
+        $routes = $this->createConfiguredMock(
+            RouteCollectionInterface::class,
+            ['add' => $route]
+        );
+        $this->setUpDependencies(null, null, null, $routes);
+
+        $actual = $this->fixture->map(uniqid(), uniqid(), uniqid(), [uniqid()], uniqid());
+
+        $this->assertSame($route, $actual);
     }
 
     /**
      * @runInSeparateProcess
      */
-    public function testRunCallsRequestHandlerHandle()
+    public function testContainerAwareRouteHandlerSetsContainer()
     {
-        $request        = $this->createMock(ServerRequestInterface::class);
-        $requestHandler = $this->createMock(RequestHandlerInterface::class);
-        $this->setUpDependencies($request, null, $requestHandler);
+        $routeHandler = $this->createMock(ContainerAwareRequestHandlerStubInterface::class);
+        $this->setUpDependencies(null, null, $routeHandler);
 
-        $requestHandler->expects($this->once())
+        $routeHandler->expects($this->once())
+            ->method('setContainer')
+            ->with($this->container);
+
+        $this->fixture->run();
+    }
+
+    /**
+     * @runInSeparateProcess
+     */
+    public function testRunCallsRouteHandlerHandle()
+    {
+        $request      = $this->createMock(ServerRequestInterface::class);
+        $routeHandler = $this->createMock(RequestHandlerInterface::class);
+        $this->setUpDependencies($request, null, $routeHandler);
+
+        $routeHandler->expects($this->once())
             ->method('handle')
             ->with($request);
 
@@ -290,7 +376,7 @@ class ApplicationTest extends TestCase
             ->willReturnMap(
                 [
                     ['request', $request],
-                    ['request.handler', $requestHandler],
+                    ['route.handler', $requestHandler],
                     ['route.collection', $routes],
                 ]
             );

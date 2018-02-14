@@ -36,7 +36,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 $app = new Application();
 
-$app->addRoute('GET', '/', function (ServerRequestInterface $request) {
+$app->get('/', function (ServerRequestInterface $request) {
     return new Response('Hello, world!');
 });
 
@@ -71,4 +71,4 @@ Bitty does not have built-in support for the following. At least not yet.
 
 ## Credits
 
-Bitty follows some design ideas from [Symfony](https://symfony.com/), specifically in the realm of security.
+Bitty follows some design ideas from [Symfony](https://symfony.com/), specifically in the realm of security. The main application follows a similar design as [Slim](https://www.slimframework.com/) and [Silex](https://silex.symfony.com/) (and possibly others).

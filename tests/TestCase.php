@@ -41,23 +41,4 @@ abstract class TestCase extends PHPUnit_Framework_TestCase
 
         return $mock;
     }
-
-    /**
-     * Sets a mock iterator's data.
-     *
-     * @param PHPUnit_Framework_MockObject_MockObject $mock
-     * @param array $data
-     */
-    protected function setMockIteratorData(
-        PHPUnit_Framework_MockObject_MockObject $mock,
-        array $data
-    ) {
-        $iterable = new \ArrayIterator($data);
-
-        $mock->method('current')->willReturnCallback([$iterable, 'current']);
-        $mock->method('key')->willReturnCallback([$iterable, 'key']);
-        $mock->method('next')->willReturnCallback([$iterable, 'next']);
-        $mock->method('rewind')->willReturnCallback([$iterable, 'rewind']);
-        $mock->method('valid')->willReturnCallback([$iterable, 'valid']);
-    }
 }
