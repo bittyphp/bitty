@@ -2,15 +2,15 @@
 
 namespace Bitty;
 
+use Bitty\Application\EventManagerServiceProvider;
+use Bitty\Application\RequestServiceProvider;
+use Bitty\Application\RouterServiceProvider;
 use Bitty\Container\Container;
+use Bitty\Container\ContainerAwareInterface;
 use Bitty\Container\ContainerInterface;
-use Bitty\EventManager\EventManagerServiceProvider;
-use Bitty\Http\RequestServiceProvider;
-use Bitty\Http\ResponseServiceProvider;
-use Bitty\Http\Server\MiddlewareChain;
-use Bitty\Http\Server\MiddlewareInterface;
-use Bitty\Http\Server\RequestHandlerServiceProvider;
-use Bitty\Router\RouterServiceProvider;
+use Bitty\Middleware\MiddlewareChain;
+use Bitty\Middleware\MiddlewareInterface;
+use Bitty\Router\RouteInterface;
 use Interop\Container\ServiceProviderInterface;
 use Psr\Container\ContainerInterface as PsrContainerInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -41,14 +41,12 @@ class Application
         $this->container->register(
             [
                 new EventManagerServiceProvider(),
-                new RequestHandlerServiceProvider(),
                 new RequestServiceProvider(),
-                new ResponseServiceProvider(),
                 new RouterServiceProvider(),
             ]
         );
 
-        $this->middleware = new MiddlewareChain($this->container);
+        $this->middleware = new MiddlewareChain();
     }
 
     /**
@@ -68,6 +66,10 @@ class Application
      */
     public function add(MiddlewareInterface $middleware)
     {
+        if ($middleware instanceof ContainerAwareInterface) {
+            $middleware->setContainer($this->container);
+        }
+
         $this->middleware->add($middleware);
     }
 
@@ -82,28 +84,111 @@ class Application
     }
 
     /**
-     * Adds a route.
+     * Adds a GET route.
+     *
+     * @param string $path
+     * @param \Closure|string $callback
+     * @param string[] $constraints
+     * @param string|null $name
+     *
+     * @return RouteInterface
+     */
+    public function get($path, $callback, array $constraints = [], $name = null)
+    {
+        return $this->map('GET', $path, $callback, $constraints, $name);
+    }
+
+    /**
+     * Adds a POST route.
+     *
+     * @param string $path
+     * @param \Closure|string $callback
+     * @param string[] $constraints
+     * @param string|null $name
+     *
+     * @return RouteInterface
+     */
+    public function post($path, $callback, array $constraints = [], $name = null)
+    {
+        return $this->map('POST', $path, $callback, $constraints, $name);
+    }
+
+    /**
+     * Adds a PUT route.
+     *
+     * @param string $path
+     * @param \Closure|string $callback
+     * @param string[] $constraints
+     * @param string|null $name
+     *
+     * @return RouteInterface
+     */
+    public function put($path, $callback, array $constraints = [], $name = null)
+    {
+        return $this->map('PUT', $path, $callback, $constraints, $name);
+    }
+
+    /**
+     * Adds a PATCH route.
+     *
+     * @param string $path
+     * @param \Closure|string $callback
+     * @param string[] $constraints
+     * @param string|null $name
+     *
+     * @return RouteInterface
+     */
+    public function patch($path, $callback, array $constraints = [], $name = null)
+    {
+        return $this->map('PATCH', $path, $callback, $constraints, $name);
+    }
+
+    /**
+     * Adds a DELETE route.
+     *
+     * @param string $path
+     * @param \Closure|string $callback
+     * @param string[] $constraints
+     * @param string|null $name
+     *
+     * @return RouteInterface
+     */
+    public function delete($path, $callback, array $constraints = [], $name = null)
+    {
+        return $this->map('DELETE', $path, $callback, $constraints, $name);
+    }
+
+    /**
+     * Adds an OPTIONS route.
+     *
+     * @param string $path
+     * @param \Closure|string $callback
+     * @param string[] $constraints
+     * @param string|null $name
+     *
+     * @return RouteInterface
+     */
+    public function options($path, $callback, array $constraints = [], $name = null)
+    {
+        return $this->map('OPTIONS', $path, $callback, $constraints, $name);
+    }
+
+    /**
+     * Maps a route to a specific callback.
      *
      * @param string[]|string $methods
      * @param string $path
      * @param \Closure|string $callback
      * @param string[] $constraints
      * @param string|null $name
+     *
+     * @return RouteInterface
      */
-    public function addRoute(
-        $methods,
-        $path,
-        $callback,
-        array $constraints = [],
-        $name = null
-    ) {
-        $this->container->get('route.collection')->add(
-            $methods,
-            $path,
-            $callback,
-            $constraints,
-            $name
-        );
+    public function map($methods, $path, $callback, array $constraints = [], $name = null)
+    {
+        $routes = $this->container->get('route.collection');
+
+        return $routes->add($methods, $path, $callback, $constraints, $name);
     }
 
     /**
@@ -111,8 +196,11 @@ class Application
      */
     public function run()
     {
-        $requestHandler = $this->container->get('request.handler');
-        $this->middleware->setDefaultHandler($requestHandler);
+        $routeHandler = $this->container->get('route.handler');
+        if ($routeHandler instanceof ContainerAwareInterface) {
+            $routeHandler->setContainer($this->container);
+        }
+        $this->middleware->setDefaultHandler($routeHandler);
 
         $request  = $this->container->get('request');
         $response = $this->middleware->handle($request);
