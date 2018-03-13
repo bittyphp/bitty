@@ -23,6 +23,17 @@ It's best to install Bitty using [Composer](https://getcomposer.org/).
 $ composer require bittyphp/bitty
 ```
 
+Since Bitty doesn't force what view to use or what kind of controller you use, you may or may not want to also require the following:
+
+```sh
+# An abstract controller with common methods added for convenience
+$ composer require bittyphp/bitty-controller
+# A view based on the Twig engine
+$ composer require bittyphp/bitty-twig
+# An alternate view based on the Mustache engine
+$ composer require bittyphp/bitty-mustache
+```
+
 ## Setup
 
 ```php
