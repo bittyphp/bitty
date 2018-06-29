@@ -53,6 +53,11 @@
         <type>warning</type>
         <severity>1</severity>
     </rule>
+    <rule ref="Generic.Commenting.DocComment.SpacingBeforeTags">
+        <!-- If there's no description, there shouldn't be a blank line -->
+        <type>warning</type>
+        <severity>1</severity>
+    </rule>
 
     <rule ref="Generic.ControlStructures.InlineControlStructure" />
 
