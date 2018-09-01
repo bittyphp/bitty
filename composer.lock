@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/bittyphp/bitty-collection.git",
-                "reference": "8860473e8212b3795ee8c64beff539e4aa39ae4a"
+                "reference": "315eb605af158a75955a9902e9db6f08394ef6b0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bittyphp/bitty-collection/zipball/8860473e8212b3795ee8c64beff539e4aa39ae4a",
-                "reference": "8860473e8212b3795ee8c64beff539e4aa39ae4a",
+                "url": "https://api.github.com/repos/bittyphp/bitty-collection/zipball/315eb605af158a75955a9902e9db6f08394ef6b0",
+                "reference": "315eb605af158a75955a9902e9db6f08394ef6b0",
                 "shasum": ""
             },
             "require": {
@@ -44,7 +44,7 @@
                 }
             ],
             "description": "Simple collections.",
-            "time": "2018-03-25T02:08:05+00:00"
+            "time": "2018-06-29T12:06:03+00:00"
         },
         {
             "name": "bittyphp/bitty-container",
@@ -175,16 +175,16 @@
         },
         {
             "name": "bittyphp/bitty-middleware",
-            "version": "v1.0.1",
+            "version": "v1.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bittyphp/bitty-middleware.git",
-                "reference": "b386c7f3ec8e6975b2e15556eb85f6d83e4549e3"
+                "reference": "5f7375f2f210691976ac353126a4e6882eb59467"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bittyphp/bitty-middleware/zipball/b386c7f3ec8e6975b2e15556eb85f6d83e4549e3",
-                "reference": "b386c7f3ec8e6975b2e15556eb85f6d83e4549e3",
+                "url": "https://api.github.com/repos/bittyphp/bitty-middleware/zipball/5f7375f2f210691976ac353126a4e6882eb59467",
+                "reference": "5f7375f2f210691976ac353126a4e6882eb59467",
                 "shasum": ""
             },
             "require": {
@@ -213,7 +213,7 @@
                 }
             ],
             "description": "PSR-15 HTTP Middleware implementation.",
-            "time": "2018-05-05T01:16:37+00:00"
+            "time": "2018-07-27T01:47:21+00:00"
         },
         {
             "name": "bittyphp/bitty-router",
@@ -397,12 +397,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/instantiator.git",
-                "reference": "8e884e78f9f0eb1329e445619e04456e64d8051d"
+                "reference": "83b5716aee90e1f733512942c635ac350cbd533c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/instantiator/zipball/8e884e78f9f0eb1329e445619e04456e64d8051d",
-                "reference": "8e884e78f9f0eb1329e445619e04456e64d8051d",
+                "url": "https://api.github.com/repos/doctrine/instantiator/zipball/83b5716aee90e1f733512942c635ac350cbd533c",
+                "reference": "83b5716aee90e1f733512942c635ac350cbd533c",
                 "shasum": ""
             },
             "require": {
@@ -443,7 +443,7 @@
                 "constructor",
                 "instantiate"
             ],
-            "time": "2015-06-14T21:17:01+00:00"
+            "time": "2018-09-01T02:07:49+00:00"
         },
         {
             "name": "phpdocumentor/reflection-common",
@@ -1408,12 +1408,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/squizlabs/PHP_CodeSniffer.git",
-                "reference": "ccb2118232a8cb919e75e60a4ea9acf3385df14f"
+                "reference": "b0ee3ee6ca2eb72b3f68e1f2bde5578ee0ac1506"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/squizlabs/PHP_CodeSniffer/zipball/ccb2118232a8cb919e75e60a4ea9acf3385df14f",
-                "reference": "ccb2118232a8cb919e75e60a4ea9acf3385df14f",
+                "url": "https://api.github.com/repos/squizlabs/PHP_CodeSniffer/zipball/b0ee3ee6ca2eb72b3f68e1f2bde5578ee0ac1506",
+                "reference": "b0ee3ee6ca2eb72b3f68e1f2bde5578ee0ac1506",
                 "shasum": ""
             },
             "require": {
@@ -1451,7 +1451,7 @@
                 "phpcs",
                 "standards"
             ],
-            "time": "2018-06-28T06:16:50+00:00"
+            "time": "2018-08-28T22:30:41+00:00"
         },
         {
             "name": "symfony/polyfill-ctype",
@@ -1517,12 +1517,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/yaml.git",
-                "reference": "c5010cc1692ce1fa328b1fb666961eb3d4a85bb0"
+                "reference": "c2f4812ead9f847cb69e90917ca7502e6892d6b8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/yaml/zipball/c5010cc1692ce1fa328b1fb666961eb3d4a85bb0",
-                "reference": "c5010cc1692ce1fa328b1fb666961eb3d4a85bb0",
+                "url": "https://api.github.com/repos/symfony/yaml/zipball/c2f4812ead9f847cb69e90917ca7502e6892d6b8",
+                "reference": "c2f4812ead9f847cb69e90917ca7502e6892d6b8",
                 "shasum": ""
             },
             "require": {
@@ -1568,7 +1568,7 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "https://symfony.com",
-            "time": "2018-05-03T23:18:14+00:00"
+            "time": "2018-08-10T07:34:36+00:00"
         },
         {
             "name": "webmozart/assert",
