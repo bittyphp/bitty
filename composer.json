@@ -9,21 +9,16 @@
             "email": "bizurkur@gmail.com"
         }
     ],
-    "config": {
-        "platform": {
-            "php": "5.5.9"
-        }
-    },
     "require": {
-        "php": ">=5.5.9",
+        "php": ">=7.1.0",
         "psr/container": "^1.0",
         "psr/http-message": "^1.0",
-        "container-interop/service-provider": "*",
-        "bittyphp/bitty-container": "^1.0",
-        "bittyphp/bitty-event-manager": "^1.0",
-        "bittyphp/bitty-http": "^1.0",
-        "bittyphp/bitty-middleware": "^1.0",
-        "bittyphp/bitty-router": "^1.0"
+        "container-interop/service-provider": "^0.4",
+        "bittyphp/bitty-container": "^2.0",
+        "bittyphp/bitty-event-manager": "^2.0",
+        "bittyphp/bitty-http": "^2.0",
+        "bittyphp/bitty-middleware": "^2.0",
+        "bittyphp/bitty-router": "^2.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^4.0",
@@ -39,5 +34,5 @@
             "Bitty\\Tests\\": "tests/"
         }
     },
-    "minimum-stability": "dev"
+    "minimum-stability": "stable"
 }
