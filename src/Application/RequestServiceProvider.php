@@ -2,7 +2,7 @@
 
 namespace Bitty\Application;
 
-use Bitty\Http\Request;
+use Bitty\Http\ServerRequest;
 use Interop\Container\ServiceProviderInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -28,7 +28,7 @@ class RequestServiceProvider implements ServiceProviderInterface
                     return $previous;
                 }
 
-                return Request::createFromGlobals();
+                return ServerRequest::createFromGlobals();
             },
         ];
     }

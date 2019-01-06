@@ -2,7 +2,7 @@
 
 namespace Bitty\Application;
 
-use Bitty\Middleware\RequestHandlerInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 use Bitty\Router\CallbackBuilder;
 use Bitty\Router\CallbackBuilderInterface;
 use Bitty\Router\RouteCollection;

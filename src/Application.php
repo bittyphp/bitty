@@ -9,7 +9,7 @@ use Bitty\Container\Container;
 use Bitty\Container\ContainerAwareInterface;
 use Bitty\Container\ContainerInterface;
 use Bitty\Middleware\MiddlewareChain;
-use Bitty\Middleware\MiddlewareInterface;
+use Psr\Http\Server\MiddlewareInterface;
 use Bitty\Router\RouteInterface;
 use Interop\Container\ServiceProviderInterface;
 use Psr\Container\ContainerInterface as PsrContainerInterface;

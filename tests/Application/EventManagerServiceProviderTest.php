@@ -4,8 +4,8 @@ namespace Bitty\Tests\Application;
 
 use Bitty\Application\EventManagerServiceProvider;
 use Bitty\EventManager\EventManagerInterface;
-use Bitty\Tests\TestCase;
 use Interop\Container\ServiceProviderInterface;
+use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 
 class EventManagerServiceProviderTest extends TestCase

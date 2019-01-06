@@ -3,8 +3,8 @@
 namespace Bitty\Tests\Application;
 
 use Bitty\Application\RequestServiceProvider;
-use Bitty\Tests\TestCase;
 use Interop\Container\ServiceProviderInterface;
+use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ServerRequestInterface;
 

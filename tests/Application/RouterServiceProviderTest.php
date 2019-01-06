@@ -3,15 +3,15 @@
 namespace Bitty\Tests\Application;
 
 use Bitty\Application\RouterServiceProvider;
-use Bitty\Middleware\RequestHandlerInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 use Bitty\Router\CallbackBuilderInterface;
 use Bitty\Router\RouteCollectionInterface;
 use Bitty\Router\RouteHandler;
 use Bitty\Router\RouteMatcherInterface;
 use Bitty\Router\RouterInterface;
 use Bitty\Router\UriGeneratorInterface;
-use Bitty\Tests\TestCase;
 use Interop\Container\ServiceProviderInterface;
+use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 
 class RouterServiceProviderTest extends TestCase

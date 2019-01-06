@@ -8,14 +8,15 @@ use Bitty\Application\RequestServiceProvider;
 use Bitty\Application\RouterServiceProvider;
 use Bitty\Container\Container;
 use Bitty\Container\ContainerInterface;
-use Bitty\Middleware\MiddlewareInterface;
-use Bitty\Middleware\RequestHandlerInterface;
+use Psr\Http\Server\MiddlewareInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 use Bitty\Http\Stream;
 use Bitty\Router\RouteCollectionInterface;
+use Bitty\Router\RouteInterface;
 use Bitty\Tests\Stubs\ContainerAwareMiddlewareStubInterface;
 use Bitty\Tests\Stubs\ContainerAwareRequestHandlerStubInterface;
-use Bitty\Tests\TestCase;
 use Interop\Container\ServiceProviderInterface;
+use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -48,7 +49,7 @@ class ApplicationTest extends TestCase
         new Application($this->container);
 
         $actual = [];
-        foreach ($spy->getInvocations()[0]->parameters[0] as $item) {
+        foreach ($spy->getInvocations()[0]->getParameters()[0] as $item) {
             $actual[] = get_class($item);
         }
 
