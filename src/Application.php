@@ -52,9 +52,9 @@ class Application
     /**
      * Gets the container.
      *
-     * @return PsrContainerInterface
+     * @return ContainerInterface
      */
-    public function getContainer(): PsrContainerInterface
+    public function getContainer(): ContainerInterface
     {
         return $this->container;
     }
