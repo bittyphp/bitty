@@ -64,11 +64,12 @@ Bitty adheres the following framework standards:
 - [PSR-4: Autoloading Standard](http://www.php-fig.org/psr/psr-4/)
 - [PSR-7: HTTP Message Interface](http://www.php-fig.org/psr/psr-7/)
 - [PSR-11: Container Interface](http://www.php-fig.org/psr/psr-11/)
+- [PSR-15: HTTP Middleware](http://www.php-fig.org/psr/psr-15/)
+- [PSR-17: HTTP Factories](http://www.php-fig.org/psr/psr-17/)
 
 It also follows (or closely follows) some proposed standards:
 
 - [PSR-14: Event Manager](https://github.com/php-fig/fig-standards/blob/master/proposed/event-manager.md)
-- [PSR-15: HTTP Middleware](https://github.com/php-fig/fig-standards/blob/master/proposed/http-handlers/request-handlers.md)
 
 ## Lacking
 
