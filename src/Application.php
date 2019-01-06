@@ -25,7 +25,7 @@ class Application
     /**
      * @var MiddlewareChain
      */
-    protected $middleware = [];
+    protected $middleware = null;
 
     /**
      * @param ContainerInterface|null $container
@@ -54,7 +54,7 @@ class Application
      *
      * @return PsrContainerInterface
      */
-    public function getContainer()
+    public function getContainer(): PsrContainerInterface
     {
         return $this->container;
     }
@@ -64,7 +64,7 @@ class Application
      *
      * @param MiddlewareInterface $middleware
      */
-    public function add(MiddlewareInterface $middleware)
+    public function add(MiddlewareInterface $middleware): void
     {
         if ($middleware instanceof ContainerAwareInterface) {
             $middleware->setContainer($this->container);
@@ -78,7 +78,7 @@ class Application
      *
      * @param ServiceProviderInterface[] $providers
      */
-    public function register(array $providers)
+    public function register(array $providers): void
     {
         $this->container->register($providers);
     }
@@ -87,14 +87,18 @@ class Application
      * Adds a GET route.
      *
      * @param string $path
-     * @param \Closure|string $callback
+     * @param callable|string $callback
      * @param string[] $constraints
      * @param string|null $name
      *
      * @return RouteInterface
      */
-    public function get($path, $callback, array $constraints = [], $name = null)
-    {
+    public function get(
+        string $path,
+        $callback,
+        array $constraints = [],
+        string $name = null
+    ): RouteInterface {
         return $this->map('GET', $path, $callback, $constraints, $name);
     }
 
@@ -102,14 +106,18 @@ class Application
      * Adds a POST route.
      *
      * @param string $path
-     * @param \Closure|string $callback
+     * @param callable|string $callback
      * @param string[] $constraints
      * @param string|null $name
      *
      * @return RouteInterface
      */
-    public function post($path, $callback, array $constraints = [], $name = null)
-    {
+    public function post(
+        string $path,
+        $callback,
+        array $constraints = [],
+        string $name = null
+    ): RouteInterface {
         return $this->map('POST', $path, $callback, $constraints, $name);
     }
 
@@ -117,14 +125,18 @@ class Application
      * Adds a PUT route.
      *
      * @param string $path
-     * @param \Closure|string $callback
+     * @param callable|string $callback
      * @param string[] $constraints
      * @param string|null $name
      *
      * @return RouteInterface
      */
-    public function put($path, $callback, array $constraints = [], $name = null)
-    {
+    public function put(
+        string $path,
+        $callback,
+        array $constraints = [],
+        string $name = null
+    ): RouteInterface {
         return $this->map('PUT', $path, $callback, $constraints, $name);
     }
 
@@ -132,14 +144,18 @@ class Application
      * Adds a PATCH route.
      *
      * @param string $path
-     * @param \Closure|string $callback
+     * @param callable|string $callback
      * @param string[] $constraints
      * @param string|null $name
      *
      * @return RouteInterface
      */
-    public function patch($path, $callback, array $constraints = [], $name = null)
-    {
+    public function patch(
+        string $path,
+        $callback,
+        array $constraints = [],
+        string $name = null
+    ): RouteInterface {
         return $this->map('PATCH', $path, $callback, $constraints, $name);
     }
 
@@ -147,14 +163,18 @@ class Application
      * Adds a DELETE route.
      *
      * @param string $path
-     * @param \Closure|string $callback
+     * @param callable|string $callback
      * @param string[] $constraints
      * @param string|null $name
      *
      * @return RouteInterface
      */
-    public function delete($path, $callback, array $constraints = [], $name = null)
-    {
+    public function delete(
+        string $path,
+        $callback,
+        array $constraints = [],
+        string $name = null
+    ): RouteInterface {
         return $this->map('DELETE', $path, $callback, $constraints, $name);
     }
 
@@ -162,14 +182,18 @@ class Application
      * Adds an OPTIONS route.
      *
      * @param string $path
-     * @param \Closure|string $callback
+     * @param callable|string $callback
      * @param string[] $constraints
      * @param string|null $name
      *
      * @return RouteInterface
      */
-    public function options($path, $callback, array $constraints = [], $name = null)
-    {
+    public function options(
+        string $path,
+        $callback,
+        array $constraints = [],
+        string $name = null
+    ): RouteInterface {
         return $this->map('OPTIONS', $path, $callback, $constraints, $name);
     }
 
@@ -178,14 +202,19 @@ class Application
      *
      * @param string[]|string $methods
      * @param string $path
-     * @param \Closure|string $callback
+     * @param callable|string $callback
      * @param string[] $constraints
      * @param string|null $name
      *
      * @return RouteInterface
      */
-    public function map($methods, $path, $callback, array $constraints = [], $name = null)
-    {
+    public function map(
+        $methods,
+        string $path,
+        $callback,
+        array $constraints = [],
+        string $name = null
+    ): RouteInterface {
         $routes = $this->container->get('route.collection');
 
         return $routes->add($methods, $path, $callback, $constraints, $name);
@@ -194,7 +223,7 @@ class Application
     /**
      * Runs the application.
      */
-    public function run()
+    public function run(): void
     {
         $routeHandler = $this->container->get('route.handler');
         if ($routeHandler instanceof ContainerAwareInterface) {
@@ -213,7 +242,7 @@ class Application
      *
      * @param ResponseInterface $response
      */
-    protected function sendResponse(ResponseInterface $response)
+    protected function sendResponse(ResponseInterface $response): void
     {
         if (!headers_sent()) {
             header(

@@ -6,7 +6,6 @@ use Bitty\Application;
 use Bitty\Application\EventManagerServiceProvider;
 use Bitty\Application\RequestServiceProvider;
 use Bitty\Application\RouterServiceProvider;
-use Bitty\Container\Container;
 use Bitty\Container\ContainerInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -16,6 +15,7 @@ use Bitty\Router\RouteInterface;
 use Bitty\Tests\Stubs\ContainerAwareMiddlewareStubInterface;
 use Bitty\Tests\Stubs\ContainerAwareRequestHandlerStubInterface;
 use Interop\Container\ServiceProviderInterface;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -28,11 +28,11 @@ class ApplicationTest extends TestCase
     protected $fixture = null;
 
     /**
-     * @var Container
+     * @var ContainerInterface|MockObject
      */
     protected $container = null;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -41,9 +41,9 @@ class ApplicationTest extends TestCase
         $this->fixture = new Application($this->container);
     }
 
-    public function testDefaultServicesRegistered()
+    public function testDefaultServicesRegistered(): void
     {
-        $spy = $this->once();
+        $spy = self::once();
         $this->container->expects($spy)->method('register');
 
         new Application($this->container);
@@ -62,41 +62,41 @@ class ApplicationTest extends TestCase
         sort($actual);
         sort($expected);
 
-        $this->assertEquals($expected, $actual);
+        self::assertEquals($expected, $actual);
     }
 
-    public function testNoContainerSetsContainer()
+    public function testNoContainerSetsContainer(): void
     {
         $fixture = new Application();
 
         $actual = $fixture->getContainer();
 
-        $this->assertInstanceOf(ContainerInterface::class, $actual);
+        self::assertInstanceOf(ContainerInterface::class, $actual);
     }
 
-    public function testGetContainer()
+    public function testGetContainer(): void
     {
         $actual = $this->fixture->getContainer();
 
-        $this->assertSame($this->container, $actual);
+        self::assertSame($this->container, $actual);
     }
 
-    public function testContainerAwareMiddlewareSetsContainer()
+    public function testContainerAwareMiddlewareSetsContainer(): void
     {
         $middleware = $this->createMock(ContainerAwareMiddlewareStubInterface::class);
 
-        $middleware->expects($this->once())
+        $middleware->expects(self::once())
             ->method('setContainer')
             ->with($this->container);
 
         $this->fixture->add($middleware);
     }
 
-    public function testRegister()
+    public function testRegister(): void
     {
         $provider = $this->createMock(ServiceProviderInterface::class);
 
-        $this->container->expects($this->once())
+        $this->container->expects(self::once())
             ->method('register')
             ->with([$provider]);
 
@@ -104,9 +104,12 @@ class ApplicationTest extends TestCase
     }
 
     /**
+     * @param string $method
+     * @param string $expected
+     *
      * @dataProvider sampleMapRoutes
      */
-    public function testMapRoutes($method, $expected)
+    public function testMapRoutes(string $method, string $expected): void
     {
         $path        = uniqid('path');
         $callable    = uniqid('callable');
@@ -116,7 +119,7 @@ class ApplicationTest extends TestCase
         $routes = $this->createMock(RouteCollectionInterface::class);
         $this->setUpDependencies(null, null, null, $routes);
 
-        $routes->expects($this->once())
+        $routes->expects(self::once())
             ->method('add')
             ->with($expected, $path, $callable, $constraints, $name);
 
@@ -124,9 +127,12 @@ class ApplicationTest extends TestCase
     }
 
     /**
+     * @param string $method
+     * @param string $expected
+     *
      * @dataProvider sampleMapRoutes
      */
-    public function testMapRoutesResponse($method, $expected)
+    public function testMapRoutesResponse(string $method, string $expected): void
     {
         $route  = $this->createMock(RouteInterface::class);
         $routes = $this->createConfiguredMock(
@@ -137,10 +143,10 @@ class ApplicationTest extends TestCase
 
         $actual = $this->fixture->$method(uniqid(), uniqid(), [uniqid()], uniqid());
 
-        $this->assertSame($route, $actual);
+        self::assertSame($route, $actual);
     }
 
-    public function sampleMapRoutes()
+    public function sampleMapRoutes(): array
     {
         return [
             ['get', 'GET'],
@@ -152,7 +158,7 @@ class ApplicationTest extends TestCase
         ];
     }
 
-    public function testMap()
+    public function testMap(): void
     {
         $methods     = [uniqid('method'), uniqid('method')];
         $path        = uniqid('path');
@@ -163,14 +169,14 @@ class ApplicationTest extends TestCase
         $routes = $this->createMock(RouteCollectionInterface::class);
         $this->setUpDependencies(null, null, null, $routes);
 
-        $routes->expects($this->once())
+        $routes->expects(self::once())
             ->method('add')
             ->with($methods, $path, $callable, $constraints, $name);
 
         $this->fixture->map($methods, $path, $callable, $constraints, $name);
     }
 
-    public function testMapResponse()
+    public function testMapResponse(): void
     {
         $route  = $this->createMock(RouteInterface::class);
         $routes = $this->createConfiguredMock(
@@ -181,18 +187,18 @@ class ApplicationTest extends TestCase
 
         $actual = $this->fixture->map(uniqid(), uniqid(), uniqid(), [uniqid()], uniqid());
 
-        $this->assertSame($route, $actual);
+        self::assertSame($route, $actual);
     }
 
     /**
      * @runInSeparateProcess
      */
-    public function testContainerAwareRouteHandlerSetsContainer()
+    public function testContainerAwareRouteHandlerSetsContainer(): void
     {
         $routeHandler = $this->createMock(ContainerAwareRequestHandlerStubInterface::class);
         $this->setUpDependencies(null, null, $routeHandler);
 
-        $routeHandler->expects($this->once())
+        $routeHandler->expects(self::once())
             ->method('setContainer')
             ->with($this->container);
 
@@ -202,13 +208,13 @@ class ApplicationTest extends TestCase
     /**
      * @runInSeparateProcess
      */
-    public function testRunCallsRouteHandlerHandle()
+    public function testRunCallsRouteHandlerHandle(): void
     {
         $request      = $this->createMock(ServerRequestInterface::class);
         $routeHandler = $this->createMock(RequestHandlerInterface::class);
         $this->setUpDependencies($request, null, $routeHandler);
 
-        $routeHandler->expects($this->once())
+        $routeHandler->expects(self::once())
             ->method('handle')
             ->with($request);
 
@@ -218,7 +224,7 @@ class ApplicationTest extends TestCase
     /**
      * @runInSeparateProcess
      */
-    public function testRunCallsMiddleware()
+    public function testRunCallsMiddleware(): void
     {
         $request        = $this->createMock(ServerRequestInterface::class);
         $response       = $this->createResponse();
@@ -228,22 +234,25 @@ class ApplicationTest extends TestCase
         $middleware = $this->createMock(MiddlewareInterface::class);
         $this->fixture->add($middleware);
 
-        $middleware->expects($this->once())
+        $middleware->expects(self::once())
             ->method('process')
-            ->with($request, $this->isInstanceOf(RequestHandlerInterface::class))
+            ->with($request, self::isInstanceOf(RequestHandlerInterface::class))
             ->willReturn($response);
 
         $this->fixture->run();
     }
 
     /**
+     * @param array $headers
+     * @param array $expected
+     *
      * @runInSeparateProcess
      * @dataProvider sampleHeaders
      */
-    public function testRunSetsResponseHeaders($headers, $expected)
+    public function testRunSetsResponseHeaders(array $headers, array $expected): void
     {
         if (!function_exists('xdebug_get_headers')) {
-            $this->markTestSkipped('xdebug_get_headers() is not available.');
+            self::markTestSkipped('xdebug_get_headers() is not available.');
 
             return;
         }
@@ -254,10 +263,10 @@ class ApplicationTest extends TestCase
         $this->fixture->run();
         $actual = xdebug_get_headers();
 
-        $this->assertEquals($expected, $actual);
+        self::assertEquals($expected, $actual);
     }
 
-    public function sampleHeaders()
+    public function sampleHeaders(): array
     {
         $headerA = uniqid('header');
         $headerB = uniqid('header');
@@ -301,7 +310,7 @@ class ApplicationTest extends TestCase
     /**
      * @runInSeparateProcess
      */
-    public function testRunOutputsResponseBody()
+    public function testRunOutputsResponseBody(): void
     {
         $body     = uniqid('body');
         $response = $this->createResponse([], $body);
@@ -312,15 +321,15 @@ class ApplicationTest extends TestCase
         $actual = ob_get_contents();
         ob_end_clean();
 
-        $this->assertEquals($body, $actual);
+        self::assertEquals($body, $actual);
     }
 
     /**
      * Creates a container.
      *
-     * @return ContainerInterface
+     * @return ContainerInterface|MockObject
      */
-    protected function createContainer()
+    protected function createContainer(): ContainerInterface
     {
         return $this->createMock(ContainerInterface::class);
     }
@@ -331,9 +340,9 @@ class ApplicationTest extends TestCase
      * @param array $headers
      * @param string $body
      *
-     * @return ResponseInterface
+     * @return ResponseInterface|MockObject
      */
-    protected function createResponse(array $headers = [], $body = '')
+    protected function createResponse(array $headers = [], $body = ''): ResponseInterface
     {
         return $this->createConfiguredMock(
             ResponseInterface::class,
@@ -347,17 +356,17 @@ class ApplicationTest extends TestCase
     /**
      * Sets up dependencies.
      *
-     * @param ServerRequestInterface $request
-     * @param ResponseInterface $response
-     * @param RequestHandlerInterface $requestHandler
-     * @param RouteCollectionInterface $routes
+     * @param ServerRequestInterface|null $request
+     * @param ResponseInterface|null $response
+     * @param RequestHandlerInterface|null $requestHandler
+     * @param RouteCollectionInterface|null $routes
      */
     protected function setUpDependencies(
         ServerRequestInterface $request = null,
         ResponseInterface $response = null,
         RequestHandlerInterface $requestHandler = null,
         RouteCollectionInterface $routes = null
-    ) {
+    ): void {
         if (null === $request) {
             $request = $this->createMock(ServerRequestInterface::class);
         }
@@ -371,7 +380,9 @@ class ApplicationTest extends TestCase
             $routes = $this->createMock(RouteCollectionInterface::class);
         }
 
-        $requestHandler->method('handle')->willReturn($response);
+        if ($requestHandler instanceof MockObject) {
+            $requestHandler->method('handle')->willReturn($response);
+        }
 
         $this->container->method('get')
             ->willReturnMap(
