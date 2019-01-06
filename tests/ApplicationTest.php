@@ -128,11 +128,10 @@ class ApplicationTest extends TestCase
 
     /**
      * @param string $method
-     * @param string $expected
      *
      * @dataProvider sampleMapRoutes
      */
-    public function testMapRoutesResponse(string $method, string $expected): void
+    public function testMapRoutesResponse(string $method): void
     {
         $route  = $this->createMock(RouteInterface::class);
         $routes = $this->createConfiguredMock(
