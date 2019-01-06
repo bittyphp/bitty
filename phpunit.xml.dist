@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:noNamespaceSchemaLocation="http://schema.phpunit.de/4.8/phpunit.xsd"
+    xsi:noNamespaceSchemaLocation="http://schema.phpunit.de/7.5/phpunit.xsd"
     bootstrap="tests/bootstrap.php"
     backupGlobals="false"
     backupStaticAttributes="false"
@@ -33,10 +33,6 @@
     </groups>
 
     <filter>
-        <blacklist>
-            <directory>vendor/</directory>
-            <directory>tests/</directory>
-        </blacklist>
         <whitelist processUncoveredFilesFromWhitelist="true">
             <directory>src/</directory>
         </whitelist>
