@@ -1,40 +1,22 @@
 
-# https://docs.travis-ci.com/user/reference/trusty
 dist: trusty
-sudo: false
 
-# https://docs.travis-ci.com/user/languages/php/
 language: php
 php:
-  - '5.5'
-  - '5.6'
-  - '7.0'
+  # until 2019-12-01
   - '7.1'
+  # until 2020-11-30
   - '7.2'
+  # until 2021-12-06
+  - '7.3'
 
-# https://docs.travis-ci.com/user/customizing-the-build/
 before_script:
   # Install packages
-  - if [[ -n "$CODACY_PROJECT_TOKEN" ]]; then
-        composer require codacy/coverage -n ;
-    else
-        composer install -n ;
-    fi
+  - COMPOSER_MEMORY_LIMIT=-1 travis_retry composer install -n ;
 
 script:
-  # Lint check
-  # https://gist.github.com/mathiasverraes/3096500
-  - for DIR in src tests; do
-        find $DIR -type f -name '*.php' -exec php -l {} \; | (! grep -v "No syntax errors detected" ) ;
-    done
-  # Unit tests
-  - if [[ -n "$CODACY_PROJECT_TOKEN" ]]; then
-        vendor/bin/phpunit --coverage-clover build/coverage/xml ;
-    else
-        vendor/bin/phpunit ;
-    fi
-  # Code sniffer
-  - vendor/bin/phpcs -n
+  # Test all the things
+  - vendor/bin/phing
 
 after_script:
   # Track code coverage

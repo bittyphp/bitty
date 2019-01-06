@@ -2,7 +2,7 @@
 
 namespace Bitty\Application;
 
-use Bitty\Http\Request;
+use Bitty\Http\ServerRequest;
 use Interop\Container\ServiceProviderInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -12,7 +12,7 @@ class RequestServiceProvider implements ServiceProviderInterface
     /**
      * {@inheritDoc}
      */
-    public function getFactories()
+    public function getFactories(): array
     {
         return [];
     }
@@ -20,7 +20,7 @@ class RequestServiceProvider implements ServiceProviderInterface
     /**
      * {@inheritDoc}
      */
-    public function getExtensions()
+    public function getExtensions(): array
     {
         return [
             'request' => function (ContainerInterface $container, ServerRequestInterface $previous = null) {
@@ -28,7 +28,7 @@ class RequestServiceProvider implements ServiceProviderInterface
                     return $previous;
                 }
 
-                return Request::createFromGlobals();
+                return ServerRequest::createFromGlobals();
             },
         ];
     }

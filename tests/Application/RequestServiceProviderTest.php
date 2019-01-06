@@ -3,8 +3,8 @@
 namespace Bitty\Tests\Application;
 
 use Bitty\Application\RequestServiceProvider;
-use Bitty\Tests\TestCase;
 use Interop\Container\ServiceProviderInterface;
+use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -15,53 +15,63 @@ class RequestServiceProviderTest extends TestCase
      */
     protected $fixture = null;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
         $this->fixture = new RequestServiceProvider();
     }
 
-    public function testInstanceOf()
+    public function testInstanceOf(): void
     {
-        $this->assertInstanceOf(ServiceProviderInterface::class, $this->fixture);
+        self::assertInstanceOf(ServiceProviderInterface::class, $this->fixture);
     }
 
-    public function testGetFactories()
+    public function testGetFactories(): void
     {
         $actual = $this->fixture->getFactories();
 
-        $this->assertEquals([], $actual);
+        self::assertEquals([], $actual);
     }
 
-    public function testGetExtensions()
+    public function testGetExtensions(): void
     {
         $actual = $this->fixture->getExtensions();
 
-        $this->assertEquals(['request'], array_keys($actual));
-        $this->assertInternalType('callable', $actual['request']);
+        self::assertEquals(['request'], array_keys($actual));
+        self::assertIsCallable($actual['request']);
     }
 
-    public function testCallbackResponseWithoutPrevious()
+    public function testCallbackResponseWithoutPrevious(): void
     {
         $extensions = $this->fixture->getExtensions();
         $callable   = reset($extensions);
+        if (false === $callable) {
+            self::fail('No callable found.');
+
+            return;
+        }
 
         $container = $this->createMock(ContainerInterface::class);
         $actual    = $callable($container);
 
-        $this->assertInstanceOf(ServerRequestInterface::class, $actual);
+        self::assertInstanceOf(ServerRequestInterface::class, $actual);
     }
 
-    public function testCallbackResponseWithPrevious()
+    public function testCallbackResponseWithPrevious(): void
     {
         $extensions = $this->fixture->getExtensions();
         $callable   = reset($extensions);
+        if (false === $callable) {
+            self::fail('No callable found.');
+
+            return;
+        }
 
         $container = $this->createMock(ContainerInterface::class);
         $previous  = $this->createMock(ServerRequestInterface::class);
         $actual    = $callable($container, $previous);
 
-        $this->assertSame($previous, $actual);
+        self::assertSame($previous, $actual);
     }
 }

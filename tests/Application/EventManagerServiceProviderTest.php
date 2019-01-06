@@ -4,8 +4,8 @@ namespace Bitty\Tests\Application;
 
 use Bitty\Application\EventManagerServiceProvider;
 use Bitty\EventManager\EventManagerInterface;
-use Bitty\Tests\TestCase;
 use Interop\Container\ServiceProviderInterface;
+use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 
 class EventManagerServiceProviderTest extends TestCase
@@ -15,53 +15,63 @@ class EventManagerServiceProviderTest extends TestCase
      */
     protected $fixture = null;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
         $this->fixture = new EventManagerServiceProvider();
     }
 
-    public function testInstanceOf()
+    public function testInstanceOf(): void
     {
-        $this->assertInstanceOf(ServiceProviderInterface::class, $this->fixture);
+        self::assertInstanceOf(ServiceProviderInterface::class, $this->fixture);
     }
 
-    public function testGetFactories()
+    public function testGetFactories(): void
     {
         $actual = $this->fixture->getFactories();
 
-        $this->assertEquals([], $actual);
+        self::assertEquals([], $actual);
     }
 
-    public function testGetExtensions()
+    public function testGetExtensions(): void
     {
         $actual = $this->fixture->getExtensions();
 
-        $this->assertEquals(['event.manager'], array_keys($actual));
-        $this->assertInternalType('callable', $actual['event.manager']);
+        self::assertEquals(['event.manager'], array_keys($actual));
+        self::assertIsCallable($actual['event.manager']);
     }
 
-    public function testCallbackResponseWithoutPrevious()
+    public function testCallbackResponseWithoutPrevious(): void
     {
         $extensions = $this->fixture->getExtensions();
         $callable   = reset($extensions);
+        if (false === $callable) {
+            self::fail('No callable found.');
+
+            return;
+        }
 
         $container = $this->createMock(ContainerInterface::class);
         $actual    = $callable($container);
 
-        $this->assertInstanceOf(EventManagerInterface::class, $actual);
+        self::assertInstanceOf(EventManagerInterface::class, $actual);
     }
 
-    public function testCallbackResponseWithPrevious()
+    public function testCallbackResponseWithPrevious(): void
     {
         $extensions = $this->fixture->getExtensions();
         $callable   = reset($extensions);
+        if (false === $callable) {
+            self::fail('No callable found.');
+
+            return;
+        }
 
         $container = $this->createMock(ContainerInterface::class);
         $previous  = $this->createMock(EventManagerInterface::class);
         $actual    = $callable($container, $previous);
 
-        $this->assertSame($previous, $actual);
+        self::assertSame($previous, $actual);
     }
 }

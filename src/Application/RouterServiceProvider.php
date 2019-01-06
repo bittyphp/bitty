@@ -2,7 +2,7 @@
 
 namespace Bitty\Application;
 
-use Bitty\Middleware\RequestHandlerInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 use Bitty\Router\CallbackBuilder;
 use Bitty\Router\CallbackBuilderInterface;
 use Bitty\Router\RouteCollection;
@@ -22,7 +22,7 @@ class RouterServiceProvider implements ServiceProviderInterface
     /**
      * {@inheritDoc}
      */
-    public function getFactories()
+    public function getFactories(): array
     {
         return [];
     }
@@ -30,7 +30,7 @@ class RouterServiceProvider implements ServiceProviderInterface
     /**
      * {@inheritDoc}
      */
-    public function getExtensions()
+    public function getExtensions(): array
     {
         return [
             'route.collection' => function (

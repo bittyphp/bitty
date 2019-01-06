@@ -1,0 +1,54 @@
+includes:
+    - vendor/phpstan/phpstan-phpunit/extension.neon
+    - vendor/phpstan/phpstan-phpunit/rules.neon
+    - vendor/phpstan/phpstan-deprecation-rules/rules.neon
+    # - vendor/phpstan/phpstan-strict-rules/rules.neon
+
+parameters:
+    level: 7
+    paths:
+        - src
+        - tests
+
+# some of the strict rules
+services:
+    -
+        class: PHPStan\Rules\Cast\UselessCastRule
+        tags:
+            - phpstan.rules.rule
+    -
+        class: PHPStan\Rules\DisallowedConstructs\DisallowedImplicitArrayCreationRule
+        tags:
+            - phpstan.rules.rule
+    -
+        class: PHPStan\Rules\Functions\MissingFunctionParameterTypehintRule
+        tags:
+            - phpstan.rules.rule
+    -
+        class: PHPStan\Rules\Functions\MissingFunctionReturnTypehintRule
+        tags:
+            - phpstan.rules.rule
+    -
+        class: PHPStan\Rules\Methods\MissingMethodParameterTypehintRule
+        tags:
+            - phpstan.rules.rule
+    -
+        class: PHPStan\Rules\Methods\MissingMethodReturnTypehintRule
+        tags:
+            - phpstan.rules.rule
+    -
+        class: PHPStan\Rules\Methods\WrongCaseOfInheritedMethodRule
+        tags:
+            - phpstan.rules.rule
+    -
+        class: PHPStan\Rules\StrictCalls\DynamicCallOnStaticMethodsRule
+        tags:
+            - phpstan.rules.rule
+    -
+        class: PHPStan\Rules\StrictCalls\StrictFunctionCallsRule
+        tags:
+            - phpstan.rules.rule
+    -
+        class: PHPStan\Rules\SwitchConditions\MatchingTypeInSwitchCaseConditionRule
+        tags:
+            - phpstan.rules.rule

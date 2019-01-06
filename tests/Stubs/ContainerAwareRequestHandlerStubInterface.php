@@ -3,7 +3,7 @@
 namespace Bitty\Tests\Stubs;
 
 use Bitty\Container\ContainerAwareInterface;
-use Bitty\Middleware\RequestHandlerInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 
 interface ContainerAwareRequestHandlerStubInterface extends RequestHandlerInterface, ContainerAwareInterface
 {
