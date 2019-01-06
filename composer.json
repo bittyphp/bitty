@@ -28,7 +28,8 @@
         "phpstan/phpstan": "^0.10.7",
         "phpstan/phpstan-deprecation-rules": "^0.10.2",
         "phpstan/phpstan-phpunit": "^0.10.0",
-        "phpstan/phpstan-strict-rules": "^0.10.1"
+        "phpstan/phpstan-strict-rules": "^0.10.1",
+        "phing/phing": "^2.16"
     },
     "autoload": {
         "psr-4": {
