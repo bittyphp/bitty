@@ -154,16 +154,16 @@
         },
         {
             "name": "bittyphp/bitty-http",
-            "version": "v2.0.1",
+            "version": "v2.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bittyphp/bitty-http.git",
-                "reference": "52dde5dee2166ef8265254266868ccb39ca3bae9"
+                "reference": "84ed379e074249b0b726e8ee90d166f756873b95"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bittyphp/bitty-http/zipball/52dde5dee2166ef8265254266868ccb39ca3bae9",
-                "reference": "52dde5dee2166ef8265254266868ccb39ca3bae9",
+                "url": "https://api.github.com/repos/bittyphp/bitty-http/zipball/84ed379e074249b0b726e8ee90d166f756873b95",
+                "reference": "84ed379e074249b0b726e8ee90d166f756873b95",
                 "shasum": ""
             },
             "require": {
@@ -200,7 +200,7 @@
                 }
             ],
             "description": "PSR-7 and PSR-17 HTTP implementation.",
-            "time": "2019-01-05T22:11:42+00:00"
+            "time": "2019-01-06T03:42:19+00:00"
         },
         {
             "name": "bittyphp/bitty-middleware",
