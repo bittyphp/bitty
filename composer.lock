@@ -1,7 +1,7 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
     "content-hash": "f98842cfad30c1b101f6026deb9af88c",
@@ -255,16 +255,16 @@
         },
         {
             "name": "bittyphp/bitty-router",
-            "version": "v2.0.0",
+            "version": "v2.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bittyphp/bitty-router.git",
-                "reference": "ba1b86369b0e3a1e15348fc9fc71e0cd7ddb8c52"
+                "reference": "ed2dda56d57153794ffb7ad98d55e4bc3e96ec9e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bittyphp/bitty-router/zipball/ba1b86369b0e3a1e15348fc9fc71e0cd7ddb8c52",
-                "reference": "ba1b86369b0e3a1e15348fc9fc71e0cd7ddb8c52",
+                "url": "https://api.github.com/repos/bittyphp/bitty-router/zipball/ed2dda56d57153794ffb7ad98d55e4bc3e96ec9e",
+                "reference": "ed2dda56d57153794ffb7ad98d55e4bc3e96ec9e",
                 "shasum": ""
             },
             "require": {
@@ -302,7 +302,7 @@
                 }
             ],
             "description": "HTTP Router implementation.",
-            "time": "2019-01-06T01:55:09+00:00"
+            "time": "2019-01-06T18:49:43+00:00"
         },
         {
             "name": "container-interop/service-provider",
