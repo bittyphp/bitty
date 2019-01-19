@@ -27,11 +27,11 @@ Since Bitty doesn't force what view to use or what kind of controller you use, y
 
 ```sh
 # An abstract controller with common methods added for convenience
-$ composer require bittyphp/bitty-controller
+$ composer require bittyphp/controller
 # A view based on the Twig engine
-$ composer require bittyphp/bitty-twig
+$ composer require bittyphp/view-twig
 # An alternate view based on the Mustache engine
-$ composer require bittyphp/bitty-mustache
+$ composer require bittyphp/view-mustache
 ```
 
 ## Setup
@@ -42,7 +42,7 @@ Starting with Bitty is easy. The main application has shortcuts for adding route
 
 There are helper methods for adding routes for `get`, `post`, `put`, `patch`, `delete`, `options`, and a generic `map` for supporting multiple methods on the same route.
 
-See Bitty's [Router docs](https://github.com/bittyphp/bitty-router) for more details.
+See Bitty's [Router docs](https://github.com/bittyphp/router) for more details.
 
 ```php
 <?php
@@ -88,7 +88,7 @@ $app->run();
 
 ### Accessing the Container
 
-Bitty comes with a [PSR-11](http://www.php-fig.org/psr/psr-11/) container. See the [Container docs](https://github.com/bittyphp/bitty-container) for how you can manage it.
+Bitty comes with a [PSR-11](http://www.php-fig.org/psr/psr-11/) container. See the [Container docs](https://github.com/bittyphp/container) for how you can manage it.
 
 ```php
 <?php

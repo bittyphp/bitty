@@ -4,26 +4,27 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "e31d63e06a94574931cce6dc7f9afb59",
+    "content-hash": "0b48a84aa9cb6d16b2b98deb963619bb",
     "packages": [
         {
-            "name": "bittyphp/bitty-collection",
-            "version": "v1.0.0",
+            "name": "bittyphp/collection",
+            "version": "v1.0.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/bittyphp/bitty-collection.git",
-                "reference": "1503d9e6375214ccfa7972da39265e86d206a9fe"
+                "url": "https://github.com/bittyphp/collection.git",
+                "reference": "50ccefc1a449ce5acbe54da2d128646de2fb3d7c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bittyphp/bitty-collection/zipball/1503d9e6375214ccfa7972da39265e86d206a9fe",
-                "reference": "1503d9e6375214ccfa7972da39265e86d206a9fe",
+                "url": "https://api.github.com/repos/bittyphp/collection/zipball/50ccefc1a449ce5acbe54da2d128646de2fb3d7c",
+                "reference": "50ccefc1a449ce5acbe54da2d128646de2fb3d7c",
                 "shasum": ""
             },
             "require": {
                 "php": ">=7.1.0"
             },
             "require-dev": {
+                "codacy/coverage": "^1.4",
                 "jakub-onderka/php-parallel-lint": "^1.0",
                 "localheinz/composer-normalize": "^1.1",
                 "phing/phing": "^2.16",
@@ -51,20 +52,20 @@
                 }
             ],
             "description": "Simple collections.",
-            "time": "2019-01-05T19:56:12+00:00"
+            "time": "2019-01-19T20:42:15+00:00"
         },
         {
-            "name": "bittyphp/bitty-container",
-            "version": "v3.0.0",
+            "name": "bittyphp/container",
+            "version": "v3.0.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/bittyphp/bitty-container.git",
-                "reference": "ee03b58f5ee44f31ca24fafde60b5468422d1dc5"
+                "url": "https://github.com/bittyphp/container.git",
+                "reference": "f4c07ebd110f4bce265af79f18e42ed22a09ac37"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bittyphp/bitty-container/zipball/ee03b58f5ee44f31ca24fafde60b5468422d1dc5",
-                "reference": "ee03b58f5ee44f31ca24fafde60b5468422d1dc5",
+                "url": "https://api.github.com/repos/bittyphp/container/zipball/f4c07ebd110f4bce265af79f18e42ed22a09ac37",
+                "reference": "f4c07ebd110f4bce265af79f18e42ed22a09ac37",
                 "shasum": ""
             },
             "require": {
@@ -104,26 +105,27 @@
                 }
             ],
             "description": "PSR-11 Container implementation.",
-            "time": "2019-01-19T05:10:44+00:00"
+            "time": "2019-01-19T22:28:04+00:00"
         },
         {
-            "name": "bittyphp/bitty-event-manager",
-            "version": "v2.0.0",
+            "name": "bittyphp/event-manager",
+            "version": "v2.0.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/bittyphp/bitty-event-manager.git",
-                "reference": "3be7b5d1035bfbd0bc5bad81e28c308a8a2f818e"
+                "url": "https://github.com/bittyphp/event-manager.git",
+                "reference": "641195a5406078a0cb0f7b67b53488f2c127461f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bittyphp/bitty-event-manager/zipball/3be7b5d1035bfbd0bc5bad81e28c308a8a2f818e",
-                "reference": "3be7b5d1035bfbd0bc5bad81e28c308a8a2f818e",
+                "url": "https://api.github.com/repos/bittyphp/event-manager/zipball/641195a5406078a0cb0f7b67b53488f2c127461f",
+                "reference": "641195a5406078a0cb0f7b67b53488f2c127461f",
                 "shasum": ""
             },
             "require": {
                 "php": ">=7.1.0"
             },
             "require-dev": {
+                "codacy/coverage": "^1.4",
                 "jakub-onderka/php-parallel-lint": "^1.0",
                 "localheinz/composer-normalize": "^1.1",
                 "phing/phing": "^2.16",
@@ -151,29 +153,34 @@
                 }
             ],
             "description": "PSR-14 Event Manager implementation.",
-            "time": "2019-01-06T03:09:28+00:00"
+            "time": "2019-01-19T23:18:48+00:00"
         },
         {
-            "name": "bittyphp/bitty-http",
-            "version": "v2.0.2",
+            "name": "bittyphp/http",
+            "version": "v2.0.4",
             "source": {
                 "type": "git",
-                "url": "https://github.com/bittyphp/bitty-http.git",
-                "reference": "84ed379e074249b0b726e8ee90d166f756873b95"
+                "url": "https://github.com/bittyphp/http.git",
+                "reference": "2d82de1ce7d93b96718876fd0ef720ec9dbc2147"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bittyphp/bitty-http/zipball/84ed379e074249b0b726e8ee90d166f756873b95",
-                "reference": "84ed379e074249b0b726e8ee90d166f756873b95",
+                "url": "https://api.github.com/repos/bittyphp/http/zipball/2d82de1ce7d93b96718876fd0ef720ec9dbc2147",
+                "reference": "2d82de1ce7d93b96718876fd0ef720ec9dbc2147",
                 "shasum": ""
             },
             "require": {
-                "bittyphp/bitty-collection": "^1.0",
+                "bittyphp/collection": "^1.0",
                 "php": ">=7.1.0",
                 "psr/http-factory": "^1.0",
                 "psr/http-message": "^1.0"
             },
+            "provide": {
+                "psr/http-factory-implementation": "1.0",
+                "psr/http-message-implementation": "1.0"
+            },
             "require-dev": {
+                "codacy/coverage": "^1.4",
                 "jakub-onderka/php-parallel-lint": "^1.0",
                 "localheinz/composer-normalize": "^1.1",
                 "phing/phing": "^2.16",
@@ -201,30 +208,35 @@
                 }
             ],
             "description": "PSR-7 and PSR-17 HTTP implementation.",
-            "time": "2019-01-06T03:42:19+00:00"
+            "time": "2019-01-19T23:05:05+00:00"
         },
         {
-            "name": "bittyphp/bitty-middleware",
-            "version": "v2.0.0",
+            "name": "bittyphp/middleware",
+            "version": "v2.0.2",
             "source": {
                 "type": "git",
-                "url": "https://github.com/bittyphp/bitty-middleware.git",
-                "reference": "118d26b554faedd828db2ff868d87fad1f809780"
+                "url": "https://github.com/bittyphp/middleware.git",
+                "reference": "d2b1deb9b754eb0f649ce845ed65e182a7f261d9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bittyphp/bitty-middleware/zipball/118d26b554faedd828db2ff868d87fad1f809780",
-                "reference": "118d26b554faedd828db2ff868d87fad1f809780",
+                "url": "https://api.github.com/repos/bittyphp/middleware/zipball/d2b1deb9b754eb0f649ce845ed65e182a7f261d9",
+                "reference": "d2b1deb9b754eb0f649ce845ed65e182a7f261d9",
                 "shasum": ""
             },
             "require": {
-                "bittyphp/bitty-http": "^2.0",
+                "bittyphp/http": "^2.0",
                 "php": ">=7.1.0",
                 "psr/http-message": "^1.0",
                 "psr/http-server-handler": "^1.0",
                 "psr/http-server-middleware": "^1.0"
             },
+            "provide": {
+                "psr/http-server-handler-implementation": "1.0",
+                "psr/http-server-middleware-implementation": "1.0"
+            },
             "require-dev": {
+                "codacy/coverage": "^1.4",
                 "jakub-onderka/php-parallel-lint": "^1.0",
                 "localheinz/composer-normalize": "^1.1",
                 "phing/phing": "^2.16",
@@ -252,30 +264,31 @@
                 }
             ],
             "description": "PSR-15 HTTP Middleware implementation.",
-            "time": "2019-01-06T00:30:03+00:00"
+            "time": "2019-01-19T23:10:57+00:00"
         },
         {
-            "name": "bittyphp/bitty-router",
-            "version": "v2.0.1",
+            "name": "bittyphp/router",
+            "version": "v2.0.2",
             "source": {
                 "type": "git",
-                "url": "https://github.com/bittyphp/bitty-router.git",
-                "reference": "ed2dda56d57153794ffb7ad98d55e4bc3e96ec9e"
+                "url": "https://github.com/bittyphp/router.git",
+                "reference": "1101a0e94d546b68c93766f34f18ec770951295c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bittyphp/bitty-router/zipball/ed2dda56d57153794ffb7ad98d55e4bc3e96ec9e",
-                "reference": "ed2dda56d57153794ffb7ad98d55e4bc3e96ec9e",
+                "url": "https://api.github.com/repos/bittyphp/router/zipball/1101a0e94d546b68c93766f34f18ec770951295c",
+                "reference": "1101a0e94d546b68c93766f34f18ec770951295c",
                 "shasum": ""
             },
             "require": {
-                "bittyphp/bitty-http": "^2.0",
-                "bittyphp/bitty-middleware": "^2.0",
+                "bittyphp/http": "^2.0",
+                "bittyphp/middleware": "^2.0",
                 "php": ">=7.1.0",
                 "psr/container": "^1.0",
                 "psr/http-message": "^1.0"
             },
             "require-dev": {
+                "codacy/coverage": "^1.4",
                 "jakub-onderka/php-parallel-lint": "^1.0",
                 "localheinz/composer-normalize": "^1.1",
                 "phing/phing": "^2.16",
@@ -303,7 +316,7 @@
                 }
             ],
             "description": "HTTP Router implementation.",
-            "time": "2019-01-06T18:49:43+00:00"
+            "time": "2019-01-19T22:36:44+00:00"
         },
         {
             "name": "container-interop/service-provider",
