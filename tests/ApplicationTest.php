@@ -43,14 +43,14 @@ class ApplicationTest extends TestCase
 
     public function testDefaultServicesRegistered(): void
     {
-        $spy = self::once();
+        $spy = self::exactly(3);
         $this->container->expects($spy)->method('register');
 
         new Application($this->container);
 
         $actual = [];
-        foreach ($spy->getInvocations()[0]->getParameters()[0] as $item) {
-            $actual[] = get_class($item);
+        foreach ($spy->getInvocations() as $invocation) {
+            $actual[] = get_class($invocation->getParameters()[0]);
         }
 
         $expected = [
@@ -98,9 +98,9 @@ class ApplicationTest extends TestCase
 
         $this->container->expects(self::once())
             ->method('register')
-            ->with([$provider]);
+            ->with($provider);
 
-        $this->fixture->register([$provider]);
+        $this->fixture->register($provider);
     }
 
     /**

@@ -38,13 +38,9 @@ class Application
             $this->container = $container;
         }
 
-        $this->container->register(
-            [
-                new EventManagerServiceProvider(),
-                new RequestServiceProvider(),
-                new RouterServiceProvider(),
-            ]
-        );
+        $this->container->register(new EventManagerServiceProvider());
+        $this->container->register(new RequestServiceProvider());
+        $this->container->register(new RouterServiceProvider());
 
         $this->middleware = new MiddlewareChain();
     }
@@ -74,13 +70,13 @@ class Application
     }
 
     /**
-     * Registers a list of service providers.
+     * Registers a service provider.
      *
-     * @param ServiceProviderInterface[] $providers
+     * @param ServiceProviderInterface $provider
      */
-    public function register(array $providers): void
+    public function register(ServiceProviderInterface $provider): void
     {
-        $this->container->register($providers);
+        $this->container->register($provider);
     }
 
     /**
