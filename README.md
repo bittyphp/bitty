@@ -36,6 +36,14 @@ $ composer require bittyphp/bitty-mustache
 
 ## Setup
 
+Starting with Bitty is easy. The main application has shortcuts for adding routes, managing middleware, accessing the container, and registering services.
+
+### Adding Routes
+
+There are helper methods for adding routes for `get`, `post`, `put`, `patch`, `delete`, `options`, and a generic `map` for supporting multiple methods on the same route.
+
+See Bitty's [Router docs](https://github.com/bittyphp/bitty-router) for more details.
+
 ```php
 <?php
 
@@ -50,6 +58,71 @@ $app = new Application();
 $app->get('/', function (ServerRequestInterface $request) {
     return new Response('Hello, world!');
 });
+
+$app->run();
+
+```
+
+### Managing Middleware
+
+Bitty supports any [PSR-15](http://www.php-fig.org/psr/psr-15/) middleware.
+
+```php
+<?php
+
+require(dirname(__DIR__).'/vendor/autoload.php');
+
+use Bitty\Application;
+use Psr\Http\Server\MiddlewareInterface;
+
+$app = new Application();
+
+/** @var MiddlewareInterface */
+$myMiddleware = ...;
+
+$app->add($myMiddleware);
+
+$app->run();
+
+```
+
+### Accessing the Container
+
+Bitty comes with a [PSR-11](http://www.php-fig.org/psr/psr-11/) container. See the [Container docs](https://github.com/bittyphp/bitty-container) for how you can manage it.
+
+```php
+<?php
+
+require(dirname(__DIR__).'/vendor/autoload.php');
+
+use Bitty\Application;
+
+$app = new Application();
+
+$container = $app->getContainer();
+
+$app->run();
+
+```
+
+### Registering Services
+
+You can easily register services with the container using any [service provider](https://github.com/container-interop/service-provider) implementation.
+
+```php
+<?php
+
+require(dirname(__DIR__).'/vendor/autoload.php');
+
+use Bitty\Application;
+use Interop\Container\ServiceProviderInterface;
+
+$app = new Application();
+
+/** @var ServiceProviderInterface */
+$myProvider = ...;
+
+$app->register($myProvider);
 
 $app->run();
 
