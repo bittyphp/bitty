@@ -2,6 +2,7 @@
 
 [![Build Status](https://travis-ci.org/bittyphp/bitty.svg?branch=master)](https://travis-ci.org/bittyphp/bitty)
 [![Codacy Badge](https://api.codacy.com/project/badge/Coverage/e4d6cdab063548db9a00bd616cf992a0)](https://www.codacy.com/app/bittyphp/bitty)
+[![PHPStan Enabled](https://img.shields.io/badge/PHPStan-enabled-brightgreen.svg?style=flat)](https://github.com/phpstan/phpstan)
 [![Total Downloads](https://poser.pugx.org/bittyphp/bitty/downloads)](https://packagist.org/packages/bittyphp/bitty)
 [![License](https://poser.pugx.org/bittyphp/bitty/license)](https://packagist.org/packages/bittyphp/bitty)
 
@@ -28,11 +29,12 @@ Since Bitty doesn't force what view to use or what kind of controller you use, y
 ```sh
 # An abstract controller with common methods added for convenience
 $ composer require bittyphp/controller
+
 # A view based on the Twig engine
 $ composer require bittyphp/view-twig
-# An alternate view based on the Mustache engine
-$ composer require bittyphp/view-mustache
 ```
+
+There's view layers for [Twig](https://github.com/bittyphp/view-twig), [Mustache](https://github.com/bittyphp/view-mustache), and [Latte](https://github.com/bittyphp/view-latte).
 
 ## Setup
 
