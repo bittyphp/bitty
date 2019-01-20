@@ -1,7 +1,7 @@
 {
     "name": "bittyphp/bitty",
     "type": "library",
-    "description": "A tiny and simple MVC framework. No fuss, no muss, no coconuts.",
+    "description": "A tiny and simple PHP framework. No fuss, no muss, no coconuts.",
     "license": "MIT",
     "authors": [
         {
