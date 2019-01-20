@@ -34,7 +34,7 @@ $ composer require bittyphp/controller
 $ composer require bittyphp/view-twig
 ```
 
-There's view layers for [Twig](https://github.com/bittyphp/view-twig), [Mustache](https://github.com/bittyphp/view-mustache), and [Latte](https://github.com/bittyphp/view-latte).
+There's view layers for [Twig](https://github.com/bittyphp/view-twig), [Mustache](https://github.com/bittyphp/view-mustache), and [Latte](https://github.com/bittyphp/view-latte). If those aren't enough, you can also [make your own](https://github.com/bittyphp/view).
 
 ## Setup
 
@@ -67,7 +67,7 @@ $app->run();
 
 ### Managing Middleware
 
-Bitty supports any [PSR-15](http://www.php-fig.org/psr/psr-15/) middleware.
+Bitty supports any [PSR-15](http://www.php-fig.org/psr/psr-15/) middleware. See the [Middleware docs](https://github.com/bittyphp/middleware) for more info.
 
 ```php
 <?php
