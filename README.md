@@ -6,7 +6,7 @@
 [![Total Downloads](https://poser.pugx.org/bittyphp/bitty/downloads)](https://packagist.org/packages/bittyphp/bitty)
 [![License](https://poser.pugx.org/bittyphp/bitty/license)](https://packagist.org/packages/bittyphp/bitty)
 
-A tiny and simple MVC framework. No fuss, no muss, no coconuts.
+A tiny and simple PHP framework. No fuss, no muss, no coconuts.
 
 ## Work in Progress
 
