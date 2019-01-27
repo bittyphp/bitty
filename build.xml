@@ -11,6 +11,12 @@
         phpstan
     " />
 
+    <target name="fix" depends="
+        composer-normalize-fix,
+        cs-fix,
+        lint
+    " />
+
     <target name="composer-validate">
         <exec
             executable="composer"
@@ -113,6 +119,20 @@
         >
             <arg value="--coverage-clover" />
             <arg value="build/coverage/xml" />
+        </exec>
+    </target>
+
+    <target name="coverage">
+        <exec
+            executable="phpdbg"
+            logoutput="true"
+            passthru="true"
+            checkreturn="true"
+        >
+            <arg value="-qrr" />
+            <arg value="vendor/bin/phpunit" />
+            <arg value="--coverage-html" />
+            <arg value="build/coverage/html" />
         </exec>
     </target>
 
