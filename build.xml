@@ -8,7 +8,8 @@
         composer-normalize-check,
         test-configuration-validate,
         test-cc,
-        phpstan
+        phpstan,
+        mutate
     " />
 
     <target name="fix" depends="
@@ -144,6 +145,21 @@
             checkreturn="true"
         >
             <arg value="analyse" />
+        </exec>
+    </target>
+
+    <target name="mutate">
+        <exec
+            executable="phpdbg"
+            logoutput="true"
+            passthru="true"
+            checkreturn="true"
+        >
+            <arg value="-qrr" />
+            <arg value="vendor/bin/infection" />
+            <arg value="--threads=4" />
+            <arg value="--min-msi=100" />
+            <arg value="--min-covered-msi=100" />
         </exec>
     </target>
 </project>
