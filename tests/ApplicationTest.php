@@ -256,13 +256,15 @@ class ApplicationTest extends TestCase
             return;
         }
 
-        $response = $this->createResponse($headers);
+        $code     = rand(400, 404);
+        $response = $this->createResponse($headers, '', $code);
         $this->setUpDependencies(null, $response, null);
 
         $this->fixture->run();
         $actual = xdebug_get_headers();
 
         self::assertEquals($expected, $actual);
+        self::assertEquals($code, http_response_code());
     }
 
     public function sampleHeaders(): array
@@ -341,13 +343,19 @@ class ApplicationTest extends TestCase
      *
      * @return ResponseInterface|MockObject
      */
-    private function createResponse(array $headers = [], string $body = ''): ResponseInterface
-    {
+    private function createResponse(
+        array $headers = [],
+        string $body = '',
+        int $code = 200
+    ): ResponseInterface {
         return $this->createConfiguredMock(
             ResponseInterface::class,
             [
                 'getHeaders' => $headers,
                 'getBody' => new Stream($body),
+                'getProtocolVersion' => '1.1',
+                'getReasonPhrase' => 'OK',
+                'getStatusCode' => $code,
             ]
         );
     }
