@@ -341,7 +341,7 @@ class ApplicationTest extends TestCase
      *
      * @return ResponseInterface|MockObject
      */
-    private function createResponse(array $headers = [], $body = ''): ResponseInterface
+    private function createResponse(array $headers = [], string $body = ''): ResponseInterface
     {
         return $this->createConfiguredMock(
             ResponseInterface::class,
