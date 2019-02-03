@@ -20,12 +20,12 @@ class Application
     /**
      * @var ContainerInterface
      */
-    protected $container = null;
+    private $container = null;
 
     /**
      * @var MiddlewareChain
      */
-    protected $middleware = null;
+    private $middleware = null;
 
     /**
      * @param ContainerInterface|null $container
@@ -238,7 +238,7 @@ class Application
      *
      * @param ResponseInterface $response
      */
-    protected function sendResponse(ResponseInterface $response): void
+    private function sendResponse(ResponseInterface $response): void
     {
         if (!headers_sent()) {
             header(
