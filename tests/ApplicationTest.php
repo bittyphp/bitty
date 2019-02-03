@@ -25,12 +25,12 @@ class ApplicationTest extends TestCase
     /**
      * @var Application
      */
-    protected $fixture = null;
+    private $fixture = null;
 
     /**
      * @var ContainerInterface|MockObject
      */
-    protected $container = null;
+    private $container = null;
 
     protected function setUp(): void
     {
@@ -256,13 +256,15 @@ class ApplicationTest extends TestCase
             return;
         }
 
-        $response = $this->createResponse($headers);
+        $code     = rand(400, 404);
+        $response = $this->createResponse($headers, '', $code);
         $this->setUpDependencies(null, $response, null);
 
         $this->fixture->run();
         $actual = xdebug_get_headers();
 
         self::assertEquals($expected, $actual);
+        self::assertEquals($code, http_response_code());
     }
 
     public function sampleHeaders(): array
@@ -328,7 +330,7 @@ class ApplicationTest extends TestCase
      *
      * @return ContainerInterface|MockObject
      */
-    protected function createContainer(): ContainerInterface
+    private function createContainer(): ContainerInterface
     {
         return $this->createMock(ContainerInterface::class);
     }
@@ -341,13 +343,19 @@ class ApplicationTest extends TestCase
      *
      * @return ResponseInterface|MockObject
      */
-    protected function createResponse(array $headers = [], $body = ''): ResponseInterface
-    {
+    private function createResponse(
+        array $headers = [],
+        string $body = '',
+        int $code = 200
+    ): ResponseInterface {
         return $this->createConfiguredMock(
             ResponseInterface::class,
             [
                 'getHeaders' => $headers,
                 'getBody' => new Stream($body),
+                'getProtocolVersion' => '1.1',
+                'getReasonPhrase' => 'OK',
+                'getStatusCode' => $code,
             ]
         );
     }
@@ -360,7 +368,7 @@ class ApplicationTest extends TestCase
      * @param RequestHandlerInterface|null $requestHandler
      * @param RouteCollectionInterface|null $routes
      */
-    protected function setUpDependencies(
+    private function setUpDependencies(
         ServerRequestInterface $request = null,
         ResponseInterface $response = null,
         RequestHandlerInterface $requestHandler = null,

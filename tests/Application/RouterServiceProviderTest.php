@@ -19,7 +19,7 @@ class RouterServiceProviderTest extends TestCase
     /**
      * @var RouterServiceProvider
      */
-    protected $fixture = null;
+    private $fixture = null;
 
     protected function setUp(): void
     {
