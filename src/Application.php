@@ -12,7 +12,6 @@ use Bitty\Middleware\MiddlewareChain;
 use Psr\Http\Server\MiddlewareInterface;
 use Bitty\Router\RouteInterface;
 use Interop\Container\ServiceProviderInterface;
-use Psr\Container\ContainerInterface as PsrContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 
 class Application
@@ -258,6 +257,6 @@ class Application
             }
         }
 
-        echo (string) $response->getBody();
+        echo $response->getBody();
     }
 }
