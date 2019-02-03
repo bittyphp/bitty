@@ -35,7 +35,7 @@ $ composer require bittyphp/controller
 $ composer require bittyphp/view-twig
 ```
 
-There's view layers for [Twig](https://github.com/bittyphp/view-twig), [Mustache](https://github.com/bittyphp/view-mustache), and [Latte](https://github.com/bittyphp/view-latte). If those aren't enough, you can also [make your own](https://github.com/bittyphp/view).
+There's view layers for [Twig](https://github.com/bittyphp/view-twig), [Mustache](https://github.com/bittyphp/view-mustache), [Latte](https://github.com/bittyphp/view-latte), and [Plates](https://github.com/bittyphp/view-plates). If those aren't enough, you can also [make your own](https://github.com/bittyphp/view).
 
 ## Setup
 
