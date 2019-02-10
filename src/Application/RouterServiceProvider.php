@@ -2,7 +2,6 @@
 
 namespace Bitty\Application;
 
-use Psr\Http\Server\RequestHandlerInterface;
 use Bitty\Router\CallbackBuilder;
 use Bitty\Router\CallbackBuilderInterface;
 use Bitty\Router\RouteCollection;
@@ -16,6 +15,7 @@ use Bitty\Router\UriGenerator;
 use Bitty\Router\UriGeneratorInterface;
 use Interop\Container\ServiceProviderInterface;
 use Psr\Container\ContainerInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 
 class RouterServiceProvider implements ServiceProviderInterface
 {
@@ -35,7 +35,7 @@ class RouterServiceProvider implements ServiceProviderInterface
         return [
             'route.collection' => function (
                 ContainerInterface $container,
-                RouteCollectionInterface $previous = null
+                ?RouteCollectionInterface $previous = null
             ) {
                 if ($previous) {
                     return $previous;
@@ -45,7 +45,7 @@ class RouterServiceProvider implements ServiceProviderInterface
             },
             'route.matcher' => function (
                 ContainerInterface $container,
-                RouteMatcherInterface $previous = null
+                ?RouteMatcherInterface $previous = null
             ) {
                 if ($previous) {
                     return $previous;
@@ -57,7 +57,7 @@ class RouterServiceProvider implements ServiceProviderInterface
             },
             'route.callback.builder' => function (
                 ContainerInterface $container,
-                CallbackBuilderInterface $previous = null
+                ?CallbackBuilderInterface $previous = null
             ) {
                 if ($previous) {
                     return $previous;
@@ -67,7 +67,7 @@ class RouterServiceProvider implements ServiceProviderInterface
             },
             'uri.generator' => function (
                 ContainerInterface $container,
-                UriGeneratorInterface $previous = null
+                ?UriGeneratorInterface $previous = null
             ) {
                 if ($previous) {
                     return $previous;
@@ -83,7 +83,7 @@ class RouterServiceProvider implements ServiceProviderInterface
             },
             'router' => function (
                 ContainerInterface $container,
-                RouterInterface $previous = null
+                ?RouterInterface $previous = null
             ) {
                 if ($previous) {
                     return $previous;
@@ -95,7 +95,7 @@ class RouterServiceProvider implements ServiceProviderInterface
 
                 return new Router($routes, $matcher, $generator);
             },
-            'route.handler' => function (ContainerInterface $container, RequestHandlerInterface $previous = null) {
+            'route.handler' => function (ContainerInterface $container, ?RequestHandlerInterface $previous = null) {
                 if ($previous) {
                     return $previous;
                 }

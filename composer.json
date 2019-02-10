@@ -21,6 +21,7 @@
         "psr/http-message": "^1.0"
     },
     "require-dev": {
+        "bizurkur/coding-standard": "^1.0",
         "codacy/coverage": "^1.4",
         "infection/infection": "^0.12.0",
         "jakub-onderka/php-parallel-lint": "^1.0",

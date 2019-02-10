@@ -7,8 +7,6 @@ use Bitty\Application\EventManagerServiceProvider;
 use Bitty\Application\RequestServiceProvider;
 use Bitty\Application\RouterServiceProvider;
 use Bitty\Container\ContainerInterface;
-use Psr\Http\Server\MiddlewareInterface;
-use Psr\Http\Server\RequestHandlerInterface;
 use Bitty\Http\Stream;
 use Bitty\Router\RouteCollectionInterface;
 use Bitty\Router\RouteInterface;
@@ -19,6 +17,8 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\MiddlewareInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 
 class ApplicationTest extends TestCase
 {
@@ -369,21 +369,21 @@ class ApplicationTest extends TestCase
      * @param RouteCollectionInterface|null $routes
      */
     private function setUpDependencies(
-        ServerRequestInterface $request = null,
-        ResponseInterface $response = null,
-        RequestHandlerInterface $requestHandler = null,
-        RouteCollectionInterface $routes = null
+        ?ServerRequestInterface $request = null,
+        ?ResponseInterface $response = null,
+        ?RequestHandlerInterface $requestHandler = null,
+        ?RouteCollectionInterface $routes = null
     ): void {
-        if (null === $request) {
+        if ($request === null) {
             $request = $this->createMock(ServerRequestInterface::class);
         }
-        if (null === $response) {
+        if ($response === null) {
             $response = $this->createResponse();
         }
-        if (null === $requestHandler) {
+        if ($requestHandler === null) {
             $requestHandler = $this->createMock(RequestHandlerInterface::class);
         }
-        if (null === $routes) {
+        if ($routes === null) {
             $routes = $this->createMock(RouteCollectionInterface::class);
         }
 

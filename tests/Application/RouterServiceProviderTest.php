@@ -3,7 +3,6 @@
 namespace Bitty\Tests\Application;
 
 use Bitty\Application\RouterServiceProvider;
-use Psr\Http\Server\RequestHandlerInterface;
 use Bitty\Router\CallbackBuilderInterface;
 use Bitty\Router\RouteCollectionInterface;
 use Bitty\Router\RouteHandler;
@@ -13,6 +12,7 @@ use Bitty\Router\UriGeneratorInterface;
 use Interop\Container\ServiceProviderInterface;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 
 class RouterServiceProviderTest extends TestCase
 {
