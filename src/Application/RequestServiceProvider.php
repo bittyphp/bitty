@@ -23,7 +23,7 @@ class RequestServiceProvider implements ServiceProviderInterface
     public function getExtensions(): array
     {
         return [
-            'request' => function (ContainerInterface $container, ServerRequestInterface $previous = null) {
+            'request' => function (ContainerInterface $container, ?ServerRequestInterface $previous = null) {
                 if ($previous) {
                     return $previous;
                 }

@@ -9,10 +9,10 @@ use Bitty\Container\Container;
 use Bitty\Container\ContainerAwareInterface;
 use Bitty\Container\ContainerInterface;
 use Bitty\Middleware\MiddlewareChain;
-use Psr\Http\Server\MiddlewareInterface;
 use Bitty\Router\RouteInterface;
 use Interop\Container\ServiceProviderInterface;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Server\MiddlewareInterface;
 
 class Application
 {
@@ -29,9 +29,9 @@ class Application
     /**
      * @param ContainerInterface|null $container
      */
-    public function __construct(ContainerInterface $container = null)
+    public function __construct(?ContainerInterface $container = null)
     {
-        if (null === $container) {
+        if ($container === null) {
             $this->container = new Container();
         } else {
             $this->container = $container;
@@ -92,7 +92,7 @@ class Application
         string $path,
         $callback,
         array $constraints = [],
-        string $name = null
+        ?string $name = null
     ): RouteInterface {
         return $this->map('GET', $path, $callback, $constraints, $name);
     }
@@ -111,7 +111,7 @@ class Application
         string $path,
         $callback,
         array $constraints = [],
-        string $name = null
+        ?string $name = null
     ): RouteInterface {
         return $this->map('POST', $path, $callback, $constraints, $name);
     }
@@ -130,7 +130,7 @@ class Application
         string $path,
         $callback,
         array $constraints = [],
-        string $name = null
+        ?string $name = null
     ): RouteInterface {
         return $this->map('PUT', $path, $callback, $constraints, $name);
     }
@@ -149,7 +149,7 @@ class Application
         string $path,
         $callback,
         array $constraints = [],
-        string $name = null
+        ?string $name = null
     ): RouteInterface {
         return $this->map('PATCH', $path, $callback, $constraints, $name);
     }
@@ -168,7 +168,7 @@ class Application
         string $path,
         $callback,
         array $constraints = [],
-        string $name = null
+        ?string $name = null
     ): RouteInterface {
         return $this->map('DELETE', $path, $callback, $constraints, $name);
     }
@@ -187,7 +187,7 @@ class Application
         string $path,
         $callback,
         array $constraints = [],
-        string $name = null
+        ?string $name = null
     ): RouteInterface {
         return $this->map('OPTIONS', $path, $callback, $constraints, $name);
     }
@@ -208,7 +208,7 @@ class Application
         string $path,
         $callback,
         array $constraints = [],
-        string $name = null
+        ?string $name = null
     ): RouteInterface {
         $routes = $this->container->get('route.collection');
 

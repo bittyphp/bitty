@@ -46,7 +46,7 @@ class EventManagerServiceProviderTest extends TestCase
     {
         $extensions = $this->fixture->getExtensions();
         $callable   = reset($extensions);
-        if (false === $callable) {
+        if ($callable === false) {
             self::fail('No callable found.');
 
             return;
@@ -62,7 +62,7 @@ class EventManagerServiceProviderTest extends TestCase
     {
         $extensions = $this->fixture->getExtensions();
         $callable   = reset($extensions);
-        if (false === $callable) {
+        if ($callable === false) {
             self::fail('No callable found.');
 
             return;
