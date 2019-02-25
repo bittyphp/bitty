@@ -268,16 +268,16 @@
         },
         {
             "name": "bittyphp/router",
-            "version": "v2.0.2",
+            "version": "v2.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bittyphp/router.git",
-                "reference": "1101a0e94d546b68c93766f34f18ec770951295c"
+                "reference": "e4ce04ff8ef1b7adcc37bdc8508985d441627030"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bittyphp/router/zipball/1101a0e94d546b68c93766f34f18ec770951295c",
-                "reference": "1101a0e94d546b68c93766f34f18ec770951295c",
+                "url": "https://api.github.com/repos/bittyphp/router/zipball/e4ce04ff8ef1b7adcc37bdc8508985d441627030",
+                "reference": "e4ce04ff8ef1b7adcc37bdc8508985d441627030",
                 "shasum": ""
             },
             "require": {
@@ -288,7 +288,9 @@
                 "psr/http-message": "^1.0"
             },
             "require-dev": {
+                "bizurkur/coding-standard": "^1.0",
                 "codacy/coverage": "^1.4",
+                "infection/infection": "^0.12.0",
                 "jakub-onderka/php-parallel-lint": "^1.0",
                 "localheinz/composer-normalize": "^1.1",
                 "phing/phing": "^2.16",
@@ -315,8 +317,8 @@
                     "email": "bizurkur@gmail.com"
                 }
             ],
-            "description": "HTTP Router implementation.",
-            "time": "2019-01-19T22:36:44+00:00"
+            "description": "HTTP Router middleware.",
+            "time": "2019-02-24T00:29:37+00:00"
         },
         {
             "name": "container-interop/service-provider",
