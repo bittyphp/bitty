@@ -210,9 +210,9 @@ class Application
         array $constraints = [],
         ?string $name = null
     ): RouteInterface {
-        $routes = $this->container->get('route.collection');
+        $router = $this->container->get('router');
 
-        return $routes->add($methods, $path, $callback, $constraints, $name);
+        return $router->add($methods, $path, $callback, $constraints, $name);
     }
 
     /**

@@ -8,8 +8,8 @@ use Bitty\Application\RequestServiceProvider;
 use Bitty\Application\RouterServiceProvider;
 use Bitty\Container\ContainerInterface;
 use Bitty\Http\Stream;
-use Bitty\Router\RouteCollectionInterface;
 use Bitty\Router\RouteInterface;
+use Bitty\Router\RouterInterface;
 use Bitty\Tests\Stubs\ContainerAwareMiddlewareStubInterface;
 use Bitty\Tests\Stubs\ContainerAwareRequestHandlerStubInterface;
 use Interop\Container\ServiceProviderInterface;
@@ -116,10 +116,10 @@ class ApplicationTest extends TestCase
         $constraints = [uniqid('key') => uniqid('value')];
         $name        = uniqid('name');
 
-        $routes = $this->createMock(RouteCollectionInterface::class);
-        $this->setUpDependencies(null, null, null, $routes);
+        $router = $this->createMock(RouterInterface::class);
+        $this->setUpDependencies(null, null, null, $router);
 
-        $routes->expects(self::once())
+        $router->expects(self::once())
             ->method('add')
             ->with($expected, $path, $callable, $constraints, $name);
 
@@ -134,11 +134,11 @@ class ApplicationTest extends TestCase
     public function testMapRoutesResponse(string $method): void
     {
         $route  = $this->createMock(RouteInterface::class);
-        $routes = $this->createConfiguredMock(
-            RouteCollectionInterface::class,
+        $router = $this->createConfiguredMock(
+            RouterInterface::class,
             ['add' => $route]
         );
-        $this->setUpDependencies(null, null, null, $routes);
+        $this->setUpDependencies(null, null, null, $router);
 
         $actual = $this->fixture->$method(uniqid(), uniqid(), [uniqid()], uniqid());
 
@@ -165,10 +165,10 @@ class ApplicationTest extends TestCase
         $constraints = [uniqid('key') => uniqid('value')];
         $name        = uniqid('name');
 
-        $routes = $this->createMock(RouteCollectionInterface::class);
-        $this->setUpDependencies(null, null, null, $routes);
+        $router = $this->createMock(RouterInterface::class);
+        $this->setUpDependencies(null, null, null, $router);
 
-        $routes->expects(self::once())
+        $router->expects(self::once())
             ->method('add')
             ->with($methods, $path, $callable, $constraints, $name);
 
@@ -178,11 +178,11 @@ class ApplicationTest extends TestCase
     public function testMapResponse(): void
     {
         $route  = $this->createMock(RouteInterface::class);
-        $routes = $this->createConfiguredMock(
-            RouteCollectionInterface::class,
+        $router = $this->createConfiguredMock(
+            RouterInterface::class,
             ['add' => $route]
         );
-        $this->setUpDependencies(null, null, null, $routes);
+        $this->setUpDependencies(null, null, null, $router);
 
         $actual = $this->fixture->map(uniqid(), uniqid(), uniqid(), [uniqid()], uniqid());
 
@@ -366,13 +366,13 @@ class ApplicationTest extends TestCase
      * @param ServerRequestInterface|null $request
      * @param ResponseInterface|null $response
      * @param RequestHandlerInterface|null $requestHandler
-     * @param RouteCollectionInterface|null $routes
+     * @param RouterInterface|null $router
      */
     private function setUpDependencies(
         ?ServerRequestInterface $request = null,
         ?ResponseInterface $response = null,
         ?RequestHandlerInterface $requestHandler = null,
-        ?RouteCollectionInterface $routes = null
+        ?RouterInterface $router = null
     ): void {
         if ($request === null) {
             $request = $this->createMock(ServerRequestInterface::class);
@@ -383,8 +383,8 @@ class ApplicationTest extends TestCase
         if ($requestHandler === null) {
             $requestHandler = $this->createMock(RequestHandlerInterface::class);
         }
-        if ($routes === null) {
-            $routes = $this->createMock(RouteCollectionInterface::class);
+        if ($router === null) {
+            $router = $this->createMock(RouterInterface::class);
         }
 
         if ($requestHandler instanceof MockObject) {
@@ -396,7 +396,7 @@ class ApplicationTest extends TestCase
                 [
                     ['request', $request],
                     ['route.handler', $requestHandler],
-                    ['route.collection', $routes],
+                    ['router', $router],
                 ]
             );
     }
