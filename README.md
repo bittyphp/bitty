@@ -62,6 +62,14 @@ $app->get('/', function (ServerRequestInterface $request) {
     return new Response('Hello, world!');
 });
 
+$app->patch('/foo', function (ServerRequestInterface $request) {
+    return new Response('PATCHed /foo');
+});
+
+$app->map(['GET', 'POST'], '/foo', function (ServerRequestInterface $request) {
+    return new Response('I support GET and POST');
+});
+
 $app->run();
 
 ```
