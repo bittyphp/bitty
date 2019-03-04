@@ -16,5 +16,5 @@
         "@default": true
     },
     "testFramework": "phpunit",
-    "bootstrap": "./tests/bootstrap.php"
+    "bootstrap": "vendor/autoload.php"
 }
