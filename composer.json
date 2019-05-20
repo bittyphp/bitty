@@ -23,7 +23,7 @@
     "require-dev": {
         "bizurkur/coding-standard": "^1.0",
         "codacy/coverage": "^1.4",
-        "infection/infection": "^0.12.0",
+        "infection/infection": "^0.12.0 || ^0.13.0",
         "jakub-onderka/php-parallel-lint": "^1.0",
         "localheinz/composer-normalize": "^1.1",
         "phing/phing": "^2.16",
