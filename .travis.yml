@@ -3,12 +3,10 @@ dist: trusty
 
 language: php
 php:
-  # until 2019-12-01
   - '7.1'
-  # until 2020-11-30
   - '7.2'
-  # until 2021-12-06
   - '7.3'
+  - '7.4'
 
 before_script:
   # Install packages
